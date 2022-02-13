@@ -44,7 +44,7 @@ const Inputbox = (props: InputProps) => {
     case 'terminal':
         command = (<TerminalInput {...props} />);
       break;
-    case 'DM':
+    case 'message':
         command = (<DMInput {...props} />);
       break;
     default:

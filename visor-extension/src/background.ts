@@ -96,56 +96,6 @@ function handleCommandLauncherCall(request: any, sender: any, sendResponse: any)
                 chrome.tabs.create({
 	    url: request.data.url
 	    }, (tab) => {tabIdd = tab.id; console.log(tabIdd)});
-	    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (tabId === tabIdd) {
-	    const injection =
-`
-(() => {
-	    const request = ${JSON.stringify(request)};
-	    setTimeout(() => console.log(document.querySelector(request.data.target).CodeMirror), 10000)
-	      document.onreadystatechange = function () {
-     if (document.readyState == "complete") {
-	    var timeout = 100000;
-	    function getCodeMirror(timeout) {
-    var start = Date.now();
-    return new Promise(waitForCodeMirror); // set the promise object within the ensureFooIsSet object
-
-    // waitForFoo makes the decision whether the condition is met
-    // or not met or the timeout has been exceeded which means
-    // this promise will be rejected
-    function waitForCodeMirror(resolve, reject) {
-        if (document.querySelector(request.data.target).CodeMirror)
-            resolve(document.querySelector(request.data.target).CodeMirror);
-        else if (timeout && (Date.now() - start) >= timeout)
-            reject(new Error("timeout"));
-        else
-            setTimeout(waitForCodeMirror.bind(this, resolve, reject), 30);
-    }
-}
-
-// This runs the promise code
-	    getCodeMirror(timeout).then(cm => {
-	    cm ? console.log("codemirror loaded") : console.log("codemirror not loaded")
-	    cm.setValue(request.data.targetContent)
-let evt = {
-  type: 'keydown',
-  keyCode: 13
-}
-	    cm.triggerOnKeyDown(evt)
-});
-   }
- }
-	    })()
-`
-        chrome.tabs.executeScript(tabId, {
-	    code: injection
-        });
-    }
-});
-	    /*
-                chrome.tabs.executeScript(tabId, {
-	    code: `(() => console.log(request.data.targetContent, request.data.target))()`
-	    });*/
                 sendResponse("ok")
               break;
 	    }

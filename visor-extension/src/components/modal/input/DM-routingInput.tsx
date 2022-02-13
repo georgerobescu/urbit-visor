@@ -3,7 +3,7 @@ import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from "react";
 import { Messaging } from "../../../messaging";
 import Urbit from "@urbit/http-api";
-import Input from "../Input";
+import RoutingInput from "../RoutingInput";
 import { Command } from "../types";
 
 interface InputProps {
@@ -15,20 +15,15 @@ interface InputProps {
 }
 
 const DMInput = (props: InputProps) => {
-
   const [refs, setRefs] = useState(null)
-  const our = 'bicnub-lorlec-ramsyx-fordec--dasdux-hocnep-monmel-samzod'
-  const schemaArgs = [our, 'default', 'default']
+  const [url, setUrl] = useState('')
+  const [routeData, setRouteData] = useState(null)
+  const [targetContent, setTargetContent] = useState(null)
 
-  useEffect(() => {
-     if (refs) {
-      const data = { url: `http://localhost:8080/apps/landscape/~landscape/messages/dm/${refs[0]}` }
-      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data}).then(res => console.log(res));
-    }},
-    [refs])
-
+  useEffect(() => {if (refs) setRouteData({ url: `http://localhost:8080/apps/landscape/~landscape/messages/dm/${refs[0]}`, target: props.selected?.routingTarget, targetContent: refs[1] })}, [refs])
+  useEffect(() => {console.log(routeData)}, [routeData])
   return (
-  <Input {...props} schemaArgs={schemaArgs} refs={(res: any) => setRefs(res)} />
+  <RoutingInput {...props} refs={(res: any) => setRefs(res)} routeData={routeData} />
   )
 };
 

@@ -11,6 +11,8 @@ interface InputProps {
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   selected: Command;
+  schemaArgs?: any[];
+  refs?: (refs: any) => void;
 }
 
 const Input = (props: InputProps) => {
@@ -28,14 +30,17 @@ const Input = (props: InputProps) => {
     console.log(inputRef.current)
     if (!props.sendCommand) return;
     else if (inputRef.current.every(el => (el?.innerHTML) ? true : false)) {
+      if (props.refs)
+        { props.refs(inputRef.current.map(ref => ref.innerHTML)); }
       let args: any[];
-      if (!props.selected.schemaArgs) {args = inputRef.current}
-      else {args = props.selected.schemaArgs.map(arg => arg == 'default' ? inputRef.current : arg)};
+      if (!props.schemaArgs) {args = inputRef.current}
+      else {args = props.schemaArgs.map(arg => arg == 'default' ? inputRef.current : arg)};
       console.log(args)
       const f = async () => {
         for (const [i, message] of props.selected.schema.entries()) {
         console.log(message)
-        const data = { action: props.selected.command, argument: message(props.selected.schemaArgs ? args[i] : args)}
+        const data = { action: props.selected.command, argument: message(args)}
+        console.log(data);
         const res = await Messaging.sendToBackground({action: "call_airlock", data: data})
         handleAirlockResponse(res);
         console.log(res)

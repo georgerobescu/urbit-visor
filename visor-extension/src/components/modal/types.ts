@@ -7,7 +7,6 @@ export interface Command {
   description: String;
   arguments: string[];
   schema?: ((props: any[]) => {})[];
-  schemaArgs?: any[];
   routingTarget?: string;
   routingFill?: string;
 }
