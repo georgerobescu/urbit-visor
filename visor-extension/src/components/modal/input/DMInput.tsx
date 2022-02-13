@@ -20,7 +20,7 @@ const DMInput = (props: InputProps) => {
   const [routeData, setRouteData] = useState(null)
   const [targetContent, setTargetContent] = useState(null)
 
-  useEffect(() => {if (refs) setRouteData({ url: `http://www.neti.ee`, target: props.selected?.routingTarget, targetContent: refs[1] })}, [refs])
+  useEffect(() => {if (refs) setRouteData({ url: `http://localhost:8080/apps/landscape/~landscape/messages/dm/${refs[0]}`, target: props.selected?.routingTarget, targetContent: refs[1] })}, [refs])
   useEffect(() => {console.log(routeData)}, [routeData])
   return (
   <RoutingInput {...props} refs={(res: any) => setRefs(res)} routeData={routeData} />

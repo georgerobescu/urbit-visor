@@ -59,6 +59,7 @@
   "permissions": [
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "*://*/_generated_background_page.html"
  ]
 }
