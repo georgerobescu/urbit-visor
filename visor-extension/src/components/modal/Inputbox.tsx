@@ -7,6 +7,7 @@ import ScryInput from "./input/ScryInput";
 import SubscribeInput from "./input/SubscribeInput";
 import SpiderInput from "./input/SpiderInput";
 import TerminalInput from "./input/TerminalInput";
+import DMInput from "./input/DMInput";
 import { Command } from "./types";
 import Input from "./Input";
 
@@ -42,6 +43,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'terminal':
         command = (<TerminalInput {...props} />);
+      break;
+    case 'message':
+        command = (<DMInput {...props} />);
       break;
     default:
       command = (<input ref={baseInput} type={'text'} style={inputStyle} />);

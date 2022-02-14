@@ -11,11 +11,11 @@ interface InputProps {
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   selected: Command;
-  schemaArgs?: any[];
-  refs?: (refs: any) => void;
+  routeData: any;
+  refs: (refs: any) => void;
 }
 
-const Input = (props: InputProps) => {
+const RoutingInput = (props: InputProps) => {
   const inputRef = useRef([])
   const [currentFocus, setCurrentFocus] = useState(null)
 
@@ -30,26 +30,7 @@ const Input = (props: InputProps) => {
     console.log(inputRef.current)
     if (!props.sendCommand) return;
     else if (inputRef.current.every(el => (el?.innerHTML) ? true : false)) {
-      if (props.refs)
-        { props.refs(inputRef.current.map(ref => ref.innerHTML)); }
-      let args: any[];
-      if (!props.schemaArgs) {args = inputRef.current}
-      else {args = props.schemaArgs.map(arg => arg == 'default' ? inputRef.current : arg)};
-      console.log(args)
-      const f = async () => {
-        for (const [i, message] of props.selected.schema.entries()) {
-        console.log(message)
-        const data = { action: props.selected.command, argument: message(args)}
-        console.log(data);
-        const res = await Messaging.sendToBackground({action: "call_airlock", data: data})
-        handleAirlockResponse(res);
-        console.log(res)
-        //console.log(message(props.selected.schemaArgs ? args[i] : args))
-      }}
-      f()
-      inputRef.current.forEach(input => {input.innerHTML = ''})
-      inputRef.current[0].focus();
-      setCurrentFocus(0)
+      props.refs(inputRef.current.map(ref => ref.innerHTML));
     }
     else {
       console.log('not sending poke')
@@ -57,7 +38,16 @@ const Input = (props: InputProps) => {
     }},
     [props.sendCommand])
 
-  const handleAirlockResponse = (res: any) => {props.airlockResponse(res)}
+  useEffect(() => {
+    if (props.routeData) {
+      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: props.routeData}).then(res => console.log(res));
+
+      inputRef.current.forEach(input => {input.innerHTML = ''})
+      inputRef.current[0].focus();
+      setCurrentFocus(0)
+    }},
+    [props.routeData])
+
 
   return (
   <div style={divStyle}> 
@@ -108,4 +98,4 @@ const inputStyle: CSS.Properties = {
   width: 'fit-content'
 }
 
-export default Input;
+export default RoutingInput;

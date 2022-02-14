@@ -104,6 +104,11 @@ export interface UrbitVisorRequest {
     action: UrbitVisorAction,
     data?: UrbitVisorRequestType
 }
+export interface CommandLauncherRequest {
+    app: "command-launcher",
+    action: string,
+    data?: any
+}
 export interface UrbitVisorResponse {
     id: string,
     status: "locked" | "noperms" | "ok"

@@ -40,6 +40,7 @@
     "@dcspark/uv-core": "^0.3.1",
     "@tlon/sigil-js": "^1.4.5",
     "@urbit/http-api": "^2.1.0",
+    "@urbit/api": "^2.1.0",
     "crx": "^5.0.1",
     "crypto-js": "^4.1.1",
     "csstype": "^3.0.10",

@@ -12,9 +12,10 @@ import { Scry } from "./commands/Scry";
 import { Subscribe } from "./commands/Subscribe";
 import { Spider } from "./commands/Spider";
 import { Terminal } from "./commands/Terminal";
+import { DM } from "./commands/DM";
 import { Command } from "./types";
 
-const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal]
+const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM]
 
 const Modal = () => {
   const rootRef = useRef(null);

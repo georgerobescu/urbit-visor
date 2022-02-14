@@ -47,6 +47,7 @@ function messageListener() {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.app == "urbit-visor-internal") handleInternalMessage(request, sender, sendResponse);
     else if (request.app == "urbitVisor") handleVisorCall(request, sender, sendResponse, "website");
+    else if (request.app == "command-launcher") handleCommandLauncherCall(request, sender, sendResponse);
     else sendResponse("ng")
     return true
   });
@@ -86,6 +87,18 @@ function hotkeyListener() {
     });
     }
   });
+}
+
+function handleCommandLauncherCall(request: any, sender: any, sendResponse: any) {
+	    switch (request.action) {
+	      case "route":
+	        let tabIdd: number;
+                chrome.tabs.create({
+	    url: request.data.url
+	    }, (tab) => {tabIdd = tab.id; console.log(tabIdd)});
+                sendResponse("ok")
+              break;
+	    }
 }
 
 function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, sendResponse: any) {
