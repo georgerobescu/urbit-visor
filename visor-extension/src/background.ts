@@ -1,6 +1,6 @@
 import { Messaging } from "@dcspark/uv-core";
 import { SubscriptionRequestInterface } from "@urbit/http-api/src/types";
-import { EncryptedShipCredentials, UrbitVisorAction, UrbitVisorInternalAction, UrbitVisorInternalComms, UrbitVisorState } from "./types";
+import { EncryptedShipCredentials, UrbitVisorAction, UrbitVisorInternalAction, UrbitVisorInternalComms, UrbitVisorState, TabID, ExtensionID } from "./types";
 
 import { fetchAllPerms } from "./urbit"
 import { useStore } from "./store";
@@ -200,7 +200,8 @@ type visorCallType = "website" | "extension"
 
 function handleVisorCall(request: any, sender: any, sendResponse: any, callType: visorCallType) {
   const state = useStore.getState();
-  if (callType !== "website") state.addConsumerExtension({ tabs: [sender.tab.id], id: sender.id, name: request?.data?.consumerName || "" });
+  const tabID = sender.tab ? [sender.tab.id] : []
+  if (callType !== "website") state.addConsumerExtension({ tabs: tabID, id: sender.id, name: request?.data?.consumerName || "" });
   else state.addConsumerTab({ tab: sender.tab.id, url: new URL(sender.tab.url) });
   if (request.action == "register_name") sendResponse({ status: "ok" })
   else if (request.action == "check_connection") sendResponse({ status: "ok", response: !!state.activeShip })
@@ -234,9 +235,8 @@ function notifyUser(state: UrbitVisorState, type: Lock, sendResponse: any) {
 }
 
 function checkPerms(state: UrbitVisorState, callType: visorCallType, request: any, sender: any, sendResponse: any) {
-  let id: string;
-  if (callType === "extension") id = sender.id;
-  else if (callType === "website") id = sender.origin;
+  const id: string = callType === "extension" ? sender.id : sender.origin;
+  const recipient = sender.tab ? sender.tab.id : sender.id;
   const extension = state.consumer_extensions.find(sumer => sumer.id === id);
   const name = extension ? extension.name : "";
   const existingPerms = state.permissions[id] || [];
@@ -247,7 +247,7 @@ function checkPerms(state: UrbitVisorState, callType: visorCallType, request: an
         notifyUser(state, "noperms", sendResponse);
       }
       else {
-        if (request.action == "poke" || request.action == "subscribe") pubsub(state, callType, request, sender, sendResponse);
+        if (request.action == "poke" || request.action == "subscribe") pubsub(state, callType, recipient, request, sender, sendResponse);
         else reqres(state, request, sendResponse)
       }
 };
@@ -297,8 +297,7 @@ function reqres(state: UrbitVisorState, request: any, sendResponse: any): void {
   }
 }
 
-function pubsub(state: UrbitVisorState, callType: visorCallType, request: any, sender: any, sendResponse: any): void {
-  const eventRecipient = sender.tab.id;
+function pubsub(state: UrbitVisorState, callType: visorCallType, eventRecipient: TabID | ExtensionID, request: any, sender: any, sendResponse: any): void {
   switch (request.action) {
     case "poke":
       const pokePayload = Object.assign(request.data, {
