@@ -1023,6 +1023,13 @@ You are free to clone the repo and modify it to your own taste.
 
 In the coming weeks we will be releasing a following guide taking you through how to build UV Extensions; Urbit Visor-powered chrome web extensions. This will open up a whole new layer to Web3, wherein Visor truly starts to become a meta-layer that lives on top of the existing web which enables seamless integration between Urbit and every website you know and love.
 
+### Disclaimer
+
+It is important to note that while Urbit Visor exposes the user's Urbit ship seamlessly, it cannot be used to authenticate the user without using a more advanced protocol on top such as [Authenticate With Urbit ID](https://github.com/dcSpark/authenticate-with-urbit-id).
+
+Allowing users to login to Web2 sites/services must go through a secure authentication protocol, or else hackers/bad actors can easily spoof the identity of users and login into their accounts on said services. As such, building Urbit Web Apps, UV Extensions, and Urbit integrations into Blockchain dApps which do not rely on a web2 backend is the easiest route without having to worry about attack vectors. Interoping with the old Web2 world is inherently a lot more dangerous, and as such requires [authentication protocols](https://github.com/dcSpark/authenticate-with-urbit-id). to be secure.
+
+
 ### Credits
 
 **Author:** ~mirtyl-wacdec
