@@ -1027,7 +1027,7 @@ In the coming weeks we will be releasing a following guide taking you through ho
 
 It is important to note that while Urbit Visor exposes the user's Urbit ship seamlessly, it cannot be used to authenticate the user without using a more advanced protocol on top such as [Authenticate With Urbit ID](https://github.com/dcSpark/authenticate-with-urbit-id).
 
-Allowing users to login to Web2 sites/services must go through a secure authentication protocol, or else hackers/bad actors can easily spoof the identity of users and login into their accounts on said services. As such, building Urbit Web Apps, UV Extensions, and Urbit integrations into Blockchain dApps which do not rely on a web2 backend is the easiest route without having to worry about attack vectors. Interoping with the old Web2 world is inherently a lot more dangerous, and as such requires [authentication protocols](https://github.com/dcSpark/authenticate-with-urbit-id). to be secure.
+Allowing users to login to Web2 sites/services must go through a secure authentication protocol, or else hackers/bad actors can easily spoof the identity of users and login into their accounts on said services. As such, building Urbit Web Apps, UV Extensions, and Urbit integrations into Blockchain dApps which do not rely on a web2 backend is the easiest route without having to worry about attack vectors. Interoping with the old Web2 world is inherently a lot more dangerous, and as such requires [authentication protocols](https://github.com/dcSpark/authenticate-with-urbit-id) to be secure.
 
 
 ### Credits
