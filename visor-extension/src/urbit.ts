@@ -66,9 +66,16 @@ export async function initPerms(shipName: string, url: string) {
   airlock.ship = shipName;
   try {
     const res = await fetchAllPerms(url);
-    return "exist"
+    return grantPerms(airlock, {
+      key: "chrome-extension://oadimaacghcacmfipakhadejgalcaepg", 
+      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"]
+    })
   } catch {
-    return setPerms(airlock);
+    await setPerms(airlock);
+    return grantPerms(airlock, {
+      key: "chrome-extension://oadimaacghcacmfipakhadejgalcaepg", 
+      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"]
+    })
   }
 }
 export async function setPerms(airlock: Urbit) {

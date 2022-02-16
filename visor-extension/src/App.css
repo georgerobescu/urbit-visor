@@ -427,6 +427,11 @@ button:hover {
     transform: translate(0, -100%);
 }
 
+.collapse-header {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .confirm-string::after {
     position: absolute;
     content: "";

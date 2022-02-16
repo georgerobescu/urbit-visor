@@ -1,6 +1,6 @@
 {
   "name": "urbit-visor",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -45,6 +45,7 @@
     "crypto-js": "^4.1.1",
     "csstype": "^3.0.10",
     "framer-motion": "^4.1.17",
+    "node-forge": ">=1.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0",
@@ -53,8 +54,7 @@
     "rxjs": "^7.5.2",
     "ts-node": "^10.3.0",
     "zustand": "^3.6.9",
-    "follow-redirects": ">=1.14.7",
-    "node-forge": ">=1.0.0"
+    "follow-redirects": ">=1.14.7"
   },
   "engines": {
     "node": "14.17.6",

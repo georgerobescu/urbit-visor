@@ -4,7 +4,7 @@
 </h1>
 <p align="center">Urbit Visor is an extension which <b>transforms your web browser</b> into a <b>first class Urbit client</b>. Its goal is to allow existing web tech to seamlessly integrate together with the novel functionality of Urbit. </p>
 
-<p align="center"><img src="https://img.shields.io/badge/version-v0.3.2-blue?style=for-the-badge&logo=none" />&nbsp;&nbsp;<img src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&logo=none" alt="license" /></p>
+<p align="center"><img src="https://img.shields.io/badge/version-v0.3.4-blue?style=for-the-badge&logo=none" />&nbsp;&nbsp;<img src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&logo=none" alt="license" /></p>
 
 ## Getting Started
 
@@ -83,11 +83,12 @@ If you are looking for the whole data structure you can just pass an empty array
 
 ### .require()
 
-Visor 0.3.3 introduces a new endpoint to make the initial setup of your app much easier and clean up most of the boilerplate.
+Visor offers a new endpoint to make the initial setup of your app much easier, thereby cleaning up most of the boilerplate.
 Any app will need a defined set of permissions required to run it, e.g. you might want the ship name early on to display it to the user, as well as making sure you can scry or poke.
 On the top page of your app (e.g. `App.tsx`) run `urbitVisor.require` and pass it two pieces of data: one array with the permissions you want, and a callback function to automatically query for the data that you know you will need.
 
 e.g.
+
 ```
 urbitVisor.require(["shipName", "scry", "subscribe"], setData);
 
@@ -103,7 +104,7 @@ function handleGraphUpdate(data){...}
 ```
 
 The code above will make sure that your app checks the active ship on your Urbit visor for permissions to read the ship name, scry and subscribe; if they exist, it will run the `setData` callback, which sets the ship name into your application and subscribes to graph-store updates, then passes those updates to another function (with whatever behavior you need).
-If the ship does not have the permissions required, it will automatically request them, and once granted, it will know that they were granted and automatically run the setData callback, greatly reducing the amount of initial code you need to write so you can focus on your business logic. 
+If the ship does not have the permissions required, it will automatically request them, and once granted, it will know that they were granted and automatically run the setData callback, greatly reducing the amount of initial code you need to write so you can focus on your business logic.
 
 ## FAQ
 

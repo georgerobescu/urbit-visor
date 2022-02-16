@@ -1,8 +1,7 @@
 import { Messaging } from "./messaging";
 import { SubscriptionRequestInterface } from "@urbit/http-api/dist/types";
-import { EncryptedShipCredentials, UrbitVisorAction, UrbitVisorInternalAction, UrbitVisorInternalComms, UrbitVisorState } from "./types";
+import { EncryptedShipCredentials, ExtensionID, TabID, UrbitVisorAction, UrbitVisorInternalComms, UrbitVisorState } from "./types";
 
-import { fetchAllPerms } from "./urbit"
 import { useStore } from "./store";
 import { EventEmitter } from 'events';
 
@@ -198,10 +197,10 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
         .then(res => {
           const tbs = new Set(state.consumer_tabs.filter(tab => tab.url.origin === request.data.domain).map(tab => tab.tab));
           const xtns = new Set(state.consumer_extensions.filter(ext => ext.id === request.data.domain).map(ext => ext.id));
-          const xtns_tabs = new Set(state.consumer_extensions.filter(ext => ext.id === request.data.request.key).map(ext => ext.tabs).flat());
+          const xtns_tabs = new Set(state.consumer_extensions.filter(ext => ext.id === request.data.domain).map(ext => ext.tabs).flat());
           recipients = new Set([...tbs, ...xtns, ...xtns_tabs]);
-          Messaging.pushEvent({ action: "permissions_revoked", data: request.data }, recipients)
-          sendResponse("ok")
+          Messaging.pushEvent({ action: "permissions_revoked", data: request.data }, recipients);
+          sendResponse("ok");
         })
       break;
     case "revoke_perm":
@@ -248,7 +247,8 @@ type visorCallType = "website" | "extension"
 
 function handleVisorCall(request: any, sender: any, sendResponse: any, callType: visorCallType) {
   const state = useStore.getState();
-  if (callType !== "website") state.addConsumerExtension({ tabs: [sender.tab.id], id: sender.id, name: request?.data?.consumerName || "" });
+  const tabID = sender.tab ? [sender.tab.id] : []
+  if (callType !== "website") state.addConsumerExtension({ tabs: tabID, id: sender.id, name: request?.data?.consumerName || "" });
   else state.addConsumerTab({ tab: sender.tab.id, url: new URL(sender.tab.url) });
   if (request.action == "register_name") sendResponse({ status: "ok" })
   else if (request.action == "check_connection") sendResponse({ status: "ok", response: !!state.activeShip })
@@ -282,25 +282,21 @@ function notifyUser(state: UrbitVisorState, type: Lock, sendResponse: any) {
 }
 
 function checkPerms(state: UrbitVisorState, callType: visorCallType, request: any, sender: any, sendResponse: any) {
-  let id: string;
-  if (callType === "extension") id = sender.id;
-  else if (callType === "website") id = sender.origin;
+  const id: string = callType === "extension" ? sender.id : sender.origin;
+  const recipient = sender.tab ? sender.tab.id : sender.id;
   const extension = state.consumer_extensions.find(sumer => sumer.id === id);
   const name = extension ? extension.name : "";
-  fetchAllPerms(state.airlock.url)
-    .then(res => {
-      const existingPerms = res.bucket[id] || [];
-      if (request.action === "check_perms") sendResponse({ status: "ok", response: existingPerms });
+  const existingPerms = state.permissions[id] || [];
+  if (request.action === "check_perms") sendResponse({ status: "ok", response: existingPerms });
       else if (request.action === "perms") bulkRequest(state, id, name, existingPerms, request, sender, sendResponse)
       else if (!existingPerms || !existingPerms.includes(request.action)) {
         state.requestPerms({ key: id, name: name, permissions: [request.action], existing: existingPerms })
         notifyUser(state, "noperms", sendResponse);
       }
       else {
-        if (request.action == "poke" || request.action == "subscribe") pubsub(state, callType, request, sender, sendResponse);
+        if (request.action == "poke" || request.action == "subscribe") pubsub(state, callType, recipient, request, sender, sendResponse);
         else reqres(state, request, sendResponse)
       }
-    })
 };
 
 function bulkRequest(state: UrbitVisorState, requester: string, name: string, existingPerms: any, request: any, sender: any, sendResponse: any) {
@@ -348,8 +344,7 @@ function reqres(state: UrbitVisorState, request: any, sendResponse: any): void {
   }
 }
 
-function pubsub(state: UrbitVisorState, callType: visorCallType, request: any, sender: any, sendResponse: any): void {
-  const eventRecipient = sender.tab.id;
+function pubsub(state: UrbitVisorState, callType: visorCallType, eventRecipient: TabID | ExtensionID, request: any, sender: any, sendResponse: any): void {
   switch (request.action) {
     case "poke":
       const pokePayload = Object.assign(request.data, {

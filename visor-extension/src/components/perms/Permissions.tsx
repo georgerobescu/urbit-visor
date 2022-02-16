@@ -56,7 +56,11 @@ export default function Permissions({
       action: "remove_whole_domain",
       data: { url: shipURL, ship: ship.shipName, domain: domain },
     })
-      .then((res) => fetchAllPerms(shipURL).then((res) => setPerms(res.bucket)))
+      .then((res) => {
+        fetchAllPerms(shipURL).then((res) => {
+          setPerms(res.bucket)
+        })
+      })
       .catch((err) => console.log(err, "error"));
   }
   function revokePerm(domain: string, perm: Permission) {
@@ -70,7 +74,6 @@ export default function Permissions({
     })
       .then((res) => {
         fetchAllPerms(shipURL).then((res) => {
-          console.log(res, "bucket after revoking");
           setPerms(res.bucket);
         });
       })
@@ -169,9 +172,6 @@ function Domain({
 
   function handleHover() {
     const cords = toolTipParent.current.getBoundingClientRect();
-    console.log(cords, "cords")
-    console.log(toolTipParent.current, "parent")
-    console.log(toolTipParent.current.offsetTop, "top")
     const height = cords.top - 40;
     setTooltip(true)
     setTooltipStyles({ top: `${height}px`, left: "2rem" })
@@ -186,10 +186,12 @@ function Domain({
   }
 
   function promptDelete() {
+    console.log("deleting domain")
     setRevoking(null);
     setDeleting(true);
   }
   function promptRevoke(perm: Permission) {
+    console.log("revoking perm")
     setDeleting(false);
     setRevoking(perm);
   }

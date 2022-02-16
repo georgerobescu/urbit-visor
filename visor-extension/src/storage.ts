@@ -26,7 +26,7 @@ export const setStorage = (item: { [key: string]: any; }) : Promise<any> =>
   new Promise((res, rej) =>
     chrome.storage.local.set(item, () => {
       if (chrome.runtime.lastError) rej(chrome.runtime.lastError);
-      res(true);
+      res(item);
     })
   );
 
@@ -70,12 +70,12 @@ async function saveShip(ship: EncryptedShipCredentials): Promise<EncryptedShipCr
         const ships = res["ships"];
         const filteredShips = ships.filter(sp => sp.shipName !== ship.shipName);
         const new_ships = [...filteredShips, ship];
-        await setStorage({ ships: new_ships });
-        return ship;
+        await setStorage({ ships: new_ships })
+        return ship
     } else{
         const new_ships = [ship];
         await setStorage({ ships: new_ships });
-        return ship;
+        return ship
     }
 }
 
@@ -110,7 +110,7 @@ export async function reEncryptAll(oldPassword: string, newPassword: string): Pr
   const ships = await getShips();
   for (const ship of ships.ships){
     const newShip = reEncrypt(ship, oldPassword, newPassword);
-    saveShip(newShip);
+    await saveShip(newShip);
   }
 }
 
