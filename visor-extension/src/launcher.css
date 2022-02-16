@@ -5,6 +5,10 @@
   height: 370px;
 }
 
+.command-launcher-menu {
+  width: 160px;
+}
+
 .command-launcher-display {
   width: -webkit-fill-available;
   height: 100%;
@@ -18,12 +22,62 @@
   display: flex;
 }
 
+.modal-input-box {
+  padding: '2px';
+  font-size: '18px';
+  height: '34px';
+  outline: 'none';
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.root-input {
+  font-size: '18px';
+  height: '34px';
+  width: '-webkit-fill-available';
+  padding: '0';
+}
+
+.cl-input {
+  display: 'flex';
+}
+
+.arg-input {
+  display: inline-block;
+  vertical-align: top;
+  min-width: 1em;
+  width: fit-content;
+  padding: 0px 5px 0px 5px;
+  cursor: text;
+}
+
+.arg-input:empty:before {
+  content: attr(data-placeholder);
+  color: #ccc;
+}
+.arg-input br {
+  display: none;
+}
+.arg-input * {
+  display: inline;
+}
+.highlight-required {
+  border: red;
+  border-style: solid;
+  border-width: thin;
+}
+
 .icon {
   width: 100px;
 }
 
 .airlock-subscription-display-line {
   color: black;
+  text-align: left;
 }
 
 ::-webkit-scrollbar {

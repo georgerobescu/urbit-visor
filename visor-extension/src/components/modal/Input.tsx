@@ -85,43 +85,14 @@ const Input = (props: InputProps) => {
   };
 
   return (
-    <div style={divStyle}>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: [
-            '.div-input {',
-            '  display: inline-block;',
-            '  vertical-align: top;',
-            '  min-width: 1em;',
-            '  padding: 0px 5px 0px 5px;',
-            '  cursor: text;',
-            '}',
-            '.div-input:empty:before {',
-            '  content: attr(data-placeholder);',
-            '  color: #ccc;',
-            '}',
-            '.div-input br {',
-            '  display: none;',
-            '}',
-            '.div-input * {',
-            '  display: inline;',
-            '}',
-            '.highlight-required {',
-            '  border: red;',
-            '  border-style: solid;',
-            '  border-width: thin;',
-            '}',
-          ].join('\n'),
-        }}
-      ></style>
+    <div className="cl-input">
       <div>{props.selected?.title}</div>
       <div>
         {props.selected.arguments.map((arg: string, i: number) => (
           <div
             key={i}
-            className="div-input"
+            className="arg-input"
             contentEditable="true"
-            style={inputStyle}
             data-placeholder={arg}
             onKeyDown={(event: React.KeyboardEvent) => {
               if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
@@ -136,13 +107,6 @@ const Input = (props: InputProps) => {
       </div>
     </div>
   );
-};
-
-const divStyle: CSS.Properties = {
-  display: 'flex',
-};
-const inputStyle: CSS.Properties = {
-  width: 'fit-content',
 };
 
 export default Input;

@@ -35,7 +35,7 @@ const MenuOptions = (props: MenuOptionProps) => {
   }, [props.keyDown]);
 
   return (
-    <div /*style={listStyle}*/ className="command-launcher-menu-list">
+    <div className="command-launcher-menu-list">
       {props.commands.map((option, index) => (
         <div
           className="command-launcher-menu-option"

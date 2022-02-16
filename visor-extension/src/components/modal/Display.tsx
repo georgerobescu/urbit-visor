@@ -67,11 +67,7 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
   return (
     <div className="airlock-subscription-display">
       {props.airlockResponse.map((line: any, index: number) => (
-        <div
-          key={index}
-          style={{ textAlign: 'left' }}
-          className="airlock-subscription-display-line"
-        >
+        <div key={index} className="airlock-subscription-display-line">
           {JSON.stringify(line)}
         </div>
       ))}

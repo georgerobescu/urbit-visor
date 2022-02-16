@@ -117,8 +117,8 @@ const Modal = () => {
   };
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
       ref={rootRef}
+      className="modal-container"
       id={'modalContainer'}
       onKeyDown={(event: React.KeyboardEvent) => handleKeyDown(event)}
       tabIndex={-1}

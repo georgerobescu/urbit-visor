@@ -13,7 +13,7 @@ interface MenuOptionProps {
 
 const Menu = (props: MenuOptionProps) => {
   return (
-    <div style={divStyle} className="command-launcher-menu">
+    <div className="command-launcher-menu">
       <MenuOptions
         commands={props.commands}
         selected={props.selected}
@@ -22,10 +22,6 @@ const Menu = (props: MenuOptionProps) => {
       />
     </div>
   );
-};
-
-const divStyle: CSS.Properties = {
-  width: '160px',
 };
 
 export default Menu;

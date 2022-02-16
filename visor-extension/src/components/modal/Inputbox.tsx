@@ -48,28 +48,10 @@ const Inputbox = (props: InputProps) => {
       command = <DMInput {...props} />;
       break;
     default:
-      command = <input ref={baseInput} type={'text'} style={inputStyle} />;
+      command = <input ref={baseInput} className="root-input" type={'text'} />;
   }
 
-  return (
-    <div style={divStyle} className="modal-input-box">
-      {command}
-    </div>
-  );
-};
-
-const inputStyle: CSS.Properties = {
-  fontSize: '18px',
-  height: '34px',
-  width: '-webkit-fill-available',
-  padding: '0',
-};
-
-const divStyle: CSS.Properties = {
-  padding: '2px',
-  fontSize: '18px',
-  height: '34px',
-  outline: 'none',
+  return <div className="modal-input-box">{command}</div>;
 };
 
 export default Inputbox;
