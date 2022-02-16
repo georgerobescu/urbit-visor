@@ -3,7 +3,7 @@ import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
 import Display from './Display';
-import { Command } from "./types";
+import { Command } from './types';
 
 interface BodyProps {
   handleSelection: (command: Command) => void;
@@ -16,7 +16,12 @@ interface BodyProps {
 const Body = (props: BodyProps) => {
   return (
     <div className="command-launcher-body">
-      <Menu commands={props.commands} selected={props.selected} handleSelection={props.handleSelection} keyDown={props.keyDown} />
+      <Menu
+        commands={props.commands}
+        selected={props.selected}
+        handleSelection={props.handleSelection}
+        keyDown={props.keyDown}
+      />
       <Display selected={props.selected} airlockResponse={props.airlockResponse} />
     </div>
   );

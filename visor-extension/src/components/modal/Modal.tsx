@@ -1,21 +1,21 @@
-import React from "react";
+import React from 'react';
 import * as CSS from 'csstype';
-import { useEffect, useLayoutEffect, useState, useRef, useCallback } from "react";
-import { urbitVisor } from "@dcspark/uv-core";
-import Urbit from "@urbit/http-api";
-import { Messaging } from "../../messaging";
-import { VisorSubscription } from "../../types";
-import Inputbox from "./Inputbox";
-import Body from "./Body";
-import { Poke } from "./commands/Poke";
-import { Scry } from "./commands/Scry";
-import { Subscribe } from "./commands/Subscribe";
-import { Spider } from "./commands/Spider";
-import { Terminal } from "./commands/Terminal";
-import { DM } from "./commands/DM";
-import { Command } from "./types";
+import { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react';
+import { urbitVisor } from '@dcspark/uv-core';
+import Urbit from '@urbit/http-api';
+import { Messaging } from '../../messaging';
+import { VisorSubscription } from '../../types';
+import Inputbox from './Inputbox';
+import Body from './Body';
+import { Poke } from './commands/Poke';
+import { Scry } from './commands/Scry';
+import { Subscribe } from './commands/Subscribe';
+import { Spider } from './commands/Spider';
+import { Terminal } from './commands/Terminal';
+import { DM } from './commands/DM';
+import { Command } from './types';
 
-const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM]
+const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM];
 
 const Modal = () => {
   const rootRef = useRef(null);
@@ -32,31 +32,39 @@ const Modal = () => {
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
 
-  useEffect(() => {setNextArg(null); setPreviousArg(null); setSendCommand(null); setBaseFocus(false); setClearSelected(null)}, [nextArg, previousArg, sendCommand, baseFocus, clearSelected])
-  useEffect(() => {if (clearSelected) {setSelectedToInput(null);setSelected('');setBaseFocus(true)}}, [clearSelected])
+  useEffect(() => {
+    setNextArg(null);
+    setPreviousArg(null);
+    setSendCommand(null);
+    setBaseFocus(false);
+    setClearSelected(null);
+  }, [nextArg, previousArg, sendCommand, baseFocus, clearSelected]);
+  useEffect(() => {
+    if (clearSelected) {
+      setSelectedToInput(null);
+      setSelected('');
+      setBaseFocus(true);
+    }
+  }, [clearSelected]);
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
-      console.log('focusing')
-    if (selectedToInput) {
-      rootRef.current.focus()
-    }
-    else
-      setBaseFocus(true)
-    }
-    else if (e.data == 'closing') {
+      console.log('focusing');
+      if (selectedToInput) {
+        rootRef.current.focus();
+      } else setBaseFocus(true);
+    } else if (e.data == 'closing') {
       setSelectedToInput(null);
-      setSelected(null)
-    }
-    else return
-  }
+      setSelected(null);
+    } else return;
+  };
 
   useEffect(() => {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  })
+  });
 
-/*
+  /*
   useEffect(() => {
     const sub = urbitVisor.on("connected", [], () => {
       handleConnection()
@@ -86,38 +94,52 @@ const Modal = () => {
     if (event.key == 'Enter' && selectedToInput !== selected) {
       event.preventDefault();
       setSelectedToInput(selected);
-      setAirlockResponse(null)
-    }
-    else if (event.key == 'Enter' && selected == selectedToInput) {
+      setAirlockResponse(null);
+    } else if (event.key == 'Enter' && selected == selectedToInput) {
       event.preventDefault();
-      setSendCommand(true)
-      setSpaceAllowed(false)
-    }
-    else if (event.key == 'Tab' && selected == selectedToInput) {
-        setNextArg(true)
-      }
-    else if (event.key == 'Escape') {
-      console.log('sending close')
+      setSendCommand(true);
+      setSpaceAllowed(false);
+    } else if (event.key == 'Tab' && selected == selectedToInput) {
+      setNextArg(true);
+    } else if (event.key == 'Escape') {
+      console.log('sending close');
       event.preventDefault();
-      window.top.postMessage('close', "*");
+      window.top.postMessage('close', '*');
       setSelectedToInput(null);
-      setSelected(null)
-    }
-    else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+      setSelected(null);
+    } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
       event.preventDefault();
       setKeyDown(event);
-      return
+      return;
+    } else {
+      return;
     }
-    else {
-    return
-    }
-  }
+  };
   return (
-  <div style={{display: 'flex', flexDirection: 'column', height: '100%'}} ref={rootRef} id={"modalContainer"} onKeyDown={(event: React.KeyboardEvent) => handleKeyDown(event)} tabIndex={-1}>
-    <Inputbox baseFocus={baseFocus} selected={selectedToInput} clearSelected={(clear: Boolean) => setClearSelected(clear)} nextArg={nextArg} sendCommand={sendCommand} airlockResponse={(res: any) => setAirlockResponse(res)} />
-    <Body commands={commands} handleSelection={(i: Command) => setSelected(i)} selected={selected} keyDown={keyDown} airlockResponse={airlockResponse} />
-  </div>
-  )
+    <div
+      style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      ref={rootRef}
+      id={'modalContainer'}
+      onKeyDown={(event: React.KeyboardEvent) => handleKeyDown(event)}
+      tabIndex={-1}
+    >
+      <Inputbox
+        baseFocus={baseFocus}
+        selected={selectedToInput}
+        clearSelected={(clear: Boolean) => setClearSelected(clear)}
+        nextArg={nextArg}
+        sendCommand={sendCommand}
+        airlockResponse={(res: any) => setAirlockResponse(res)}
+      />
+      <Body
+        commands={commands}
+        handleSelection={(i: Command) => setSelected(i)}
+        selected={selected}
+        keyDown={keyDown}
+        airlockResponse={airlockResponse}
+      />
+    </div>
+  );
 };
 
 export default Modal;

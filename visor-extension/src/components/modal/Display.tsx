@@ -2,7 +2,7 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
-import { Command } from "./types";
+import { Command } from './types';
 
 interface DisplayProps {
   selected: Command;
@@ -13,8 +13,8 @@ const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
 
   useLayoutEffect(() => {
-      if (scrollable.current.scrollTop > -1)
-          scrollable.current.scrollTop = scrollable.current.scrollHeight;
+    if (scrollable.current.scrollTop > -1)
+      scrollable.current.scrollTop = scrollable.current.scrollHeight;
   }, [props.airlockResponse]);
 
   // Define variable for content which will be held in the display area
@@ -55,7 +55,11 @@ const Display = (props: DisplayProps) => {
   }
 
   // Return the html to be rendered for Display with the content inside
-  return <div ref={scrollable} className="command-launcher-display">{displayContent}</div>;
+  return (
+    <div ref={scrollable} className="command-launcher-display">
+      {displayContent}
+    </div>
+  );
 };
 
 // Display the airlock subscription response UI
@@ -77,28 +81,20 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
 
 const SelectionPreview = (props: DisplayProps) => {
   let selectionPreviewContent;
-  const Icon = props.selected?.icon
+  const Icon = props.selected?.icon;
 
   if (props.selected) {
     selectionPreviewContent = (
       <div className="command-launcher-display-preview-container">
-        {
-        props.selected.icon ? <Icon /> : <div></div>
-        }
+        {props.selected.icon ? <Icon /> : <div></div>}
         <div>
-          <div>
-            {props.selected.title}
-          </div>
-          <div>
-            {props.selected.description}
-          </div>
+          <div>{props.selected.title}</div>
+          <div>{props.selected.description}</div>
         </div>
       </div>
-    )
+    );
   }
-  return (
-    <div className="command-launcher-display-preview">{selectionPreviewContent}</div>
-  )
-}
+  return <div className="command-launcher-display-preview">{selectionPreviewContent}</div>;
+};
 
 export default Display;

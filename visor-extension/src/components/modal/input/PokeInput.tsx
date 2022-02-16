@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import * as CSS from 'csstype';
-import { useEffect, useState, useRef } from "react";
-import { Messaging } from "../../../messaging";
-import Urbit from "@urbit/http-api";
-import Input from "../Input";
-import { Command } from "../types";
+import { useEffect, useState, useRef } from 'react';
+import { Messaging } from '../../../messaging';
+import Urbit from '@urbit/http-api';
+import Input from '../Input';
+import { Command } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
@@ -15,9 +15,7 @@ interface InputProps {
 }
 
 const PokeInput = (props: InputProps) => {
-  return (
-  <Input {...props} />
-  )
+  return <Input {...props} />;
 };
 
 export default PokeInput;

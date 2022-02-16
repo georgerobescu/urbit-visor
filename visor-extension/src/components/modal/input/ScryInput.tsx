@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import * as CSS from 'csstype';
-import { useEffect, useState, useRef } from "react";
-import { urbitVisor } from "@dcspark/uv-core";
-import { Messaging } from "../../../messaging";
-import Urbit from "@urbit/http-api";
-import Input from "../Input";
-import { Command } from "../types";
+import { useEffect, useState, useRef } from 'react';
+import { urbitVisor } from '@dcspark/uv-core';
+import { Messaging } from '../../../messaging';
+import Urbit from '@urbit/http-api';
+import Input from '../Input';
+import { Command } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
@@ -16,9 +16,7 @@ interface InputProps {
 }
 
 const ScryInput = (props: InputProps) => {
-  return (
-  <Input {...props} />
-  )
+  return <Input {...props} />;
 };
 
 export default ScryInput;

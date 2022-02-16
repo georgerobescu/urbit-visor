@@ -1,7 +1,7 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { Command } from "./types";
+import { Command } from './types';
 
 interface MenuOptionProps {
   handleSelection: (command: Command) => void;
@@ -9,7 +9,6 @@ interface MenuOptionProps {
   selected: Command;
   commands: Command[];
 }
-
 
 const MenuOptions = (props: MenuOptionProps) => {
   const [clickedIndex, setClickedIndex] = useState(-1);
@@ -41,11 +40,11 @@ const MenuOptions = (props: MenuOptionProps) => {
         <div
           className="command-launcher-menu-option"
           style={
-            (!props.selected)
+            !props.selected
               ? { ...listItemStyle, border: 'none' }
               : index == clickedIndex
-                 ? { ...listItemStyle, border: 'outset' }
-                 : { ...listItemStyle, border: 'none' }
+              ? { ...listItemStyle, border: 'outset' }
+              : { ...listItemStyle, border: 'none' }
           }
           key={index}
         >
