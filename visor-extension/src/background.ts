@@ -216,8 +216,8 @@ function openWindow() {
     url: chrome.runtime.getURL("popup.html"),
     type: "popup",
     focused: true,
-    height: 600,
-    width: 357,
+    height: 900,
+    width: 600,
   });
 }
 type Lock = "locked" | "noperms";
