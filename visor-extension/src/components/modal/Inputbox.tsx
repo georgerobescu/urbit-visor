@@ -48,7 +48,9 @@ const Inputbox = (props: InputProps) => {
       command = <DMInput {...props} />;
       break;
     default:
-      command = <input ref={baseInput} className="root-input" type={'text'} />;
+      command = (
+        <input ref={baseInput} className="root-input" type={'text'} placeholder="Type..." />
+      );
   }
 
   return <div className="modal-input-box">{command}</div>;
