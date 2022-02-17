@@ -8,6 +8,8 @@ import SubscribeInput from './input/SubscribeInput';
 import SpiderInput from './input/SpiderInput';
 import TerminalInput from './input/TerminalInput';
 import DMInput from './input/DMInput';
+import NotificationInput from './input/NotificationInput';
+
 import { Command } from './types';
 import Input from './Input';
 
@@ -46,6 +48,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'message':
       command = <DMInput {...props} />;
+      break;
+    case 'notifications':
+      command = <NotificationInput {...props} />;
       break;
     default:
       command = <input ref={baseInput} className="root-input" type={'text'} />;
