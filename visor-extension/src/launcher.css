@@ -83,10 +83,20 @@
 }
 
 .div-input {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 5px 8px;
   font-family: 'Inter', sans-serif;
   color: #fff;
+}
+
+.div-input:empty:before {
+  content: attr(data-placeholder);
+  color: #1b231f;
+}
+
+.div-input:focus-visible {
+  border: 1px solid #f1f5f3;
+  border-radius: 8px;
+  outline: none;
 }
 
 ::-webkit-scrollbar {
@@ -101,4 +111,18 @@
 ::-webkit-scrollbar-track {
   background: #969494;
   border-radius: 20px;
+}
+
+.inputs-wrapper {
+  display: flex;
+  align-items: center;
+  height: 72px;
+}
+
+.modal-input-box input {
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-input-box input::placeholder {
+  color: #ccc;
 }
