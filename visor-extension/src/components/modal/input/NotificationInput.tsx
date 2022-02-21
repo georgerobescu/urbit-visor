@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
 import Input from '../Input';
+import BaseInput from '../BaseInput';
+
 import { Command } from '../types';
 
 interface InputProps {
@@ -16,6 +18,7 @@ interface InputProps {
 
 const NotificationInput = (props: InputProps) => {
   const [url, setUrl] = useState(null);
+  const [focus, setFocus] = useState(null);
 
   useEffect(() => {
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
@@ -32,7 +35,7 @@ const NotificationInput = (props: InputProps) => {
     }
   }, [url]);
 
-  return <></>;
+  return <BaseInput {...props} />;
 };
 
 export default NotificationInput;

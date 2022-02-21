@@ -9,6 +9,7 @@ import SpiderInput from './input/SpiderInput';
 import TerminalInput from './input/TerminalInput';
 import DMInput from './input/DMInput';
 import NotificationInput from './input/NotificationInput';
+import BaseInput from './BaseInput';
 
 import { Command } from './types';
 import Input from './Input';
@@ -23,11 +24,6 @@ interface InputProps {
 }
 
 const Inputbox = (props: InputProps) => {
-  const baseInput = useRef(null);
-  useEffect(() => {
-    if (!props.selected) baseInput.current.focus();
-  }, [props.baseFocus]);
-
   let command;
 
   switch (props.selected?.title) {
@@ -53,7 +49,7 @@ const Inputbox = (props: InputProps) => {
       command = <NotificationInput {...props} />;
       break;
     default:
-      command = <input ref={baseInput} className="root-input" type={'text'} />;
+      command = <BaseInput {...props} />;
   }
 
   return <div className="modal-input-box">{command}</div>;
