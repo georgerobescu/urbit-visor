@@ -9,6 +9,7 @@ import { Command } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
+  previousArg: Boolean;
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;

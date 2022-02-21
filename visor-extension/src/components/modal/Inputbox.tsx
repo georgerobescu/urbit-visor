@@ -18,6 +18,7 @@ interface InputProps {
   selected: Command;
   baseFocus: Boolean;
   nextArg: Boolean;
+  previousArg: Boolean;
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
