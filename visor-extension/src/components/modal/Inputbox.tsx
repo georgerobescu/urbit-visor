@@ -42,7 +42,7 @@ const Inputbox = (props: InputProps) => {
     case 'terminal':
       command = <TerminalInput {...props} />;
       break;
-    case 'message':
+    case 'DM':
       command = <DMInput {...props} />;
       break;
     case 'notifications':
