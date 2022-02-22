@@ -26,9 +26,11 @@
 
 .modal-input-box {
   padding: 2px;
-  font-size: 18px;
-  height: 34px;
+  padding-left: 16px;
+  height: 72px;
   outline: none;
+  background-color: #1b231f;
+  font-size: 18px;
 }
 
 .modal-container {
@@ -38,14 +40,36 @@
 }
 
 .root-input {
-  font-size: 18px;
-  height: 34px;
   width: -webkit-fill-available;
+  height: 72px;
   padding: 0;
+  outline: none;
+  border: none;
+  background-color: #1b231f;
+  font-size: 18px;
+  color: #fff;
 }
 
 .cl-input {
-  display: flex;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 1em;
+  cursor: text;
+}
+.cl-input:empty:before {
+  content: attr(data-placeholder);
+  color: #a5b0ab;
+}
+.cl-input br {
+  display: none;
+}
+.cl-input * {
+  display: inline;
+}
+.highlight-required {
+  border: red;
+  border-style: solid;
+  border-width: thin;
 }
 
 .arg-input {
@@ -57,16 +81,6 @@
   cursor: text;
 }
 
-.arg-input:empty:before {
-  content: attr(data-placeholder);
-  color: #ccc;
-}
-.arg-input br {
-  display: none;
-}
-.arg-input * {
-  display: inline;
-}
 .highlight-required {
   border: red;
   border-style: solid;
@@ -82,18 +96,18 @@
   text-align: left;
 }
 
-.div-input {
+.arg-input {
   padding: 5px 8px;
   font-family: 'Inter', sans-serif;
   color: #fff;
 }
 
-.div-input:empty:before {
+.arg-input:empty:before {
   content: attr(data-placeholder);
-  color: #1b231f;
+  color: #a5b0ab;
 }
 
-.div-input:focus-visible {
+.arg-input:focus-visible {
   border: 1px solid #f1f5f3;
   border-radius: 8px;
   outline: none;
@@ -124,5 +138,5 @@
 }
 
 .modal-input-box input::placeholder {
-  color: #ccc;
+  color: #a5b0ab;
 }

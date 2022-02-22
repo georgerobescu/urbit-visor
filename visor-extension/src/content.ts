@@ -29,6 +29,7 @@ function appendLauncher() {
   modal.style.borderWidth = '2px';
   modal.style.backgroundColor = 'white';
   modal.style.borderRadius = '24px';
+  modal.style.borderColor = 'transparent';
   const frame = document.createElement('iframe');
   frame.src = 'chrome-extension://oadimaacghcacmfipakhadejgalcaepg/launcher.html';
   frame.id = 'frame';
