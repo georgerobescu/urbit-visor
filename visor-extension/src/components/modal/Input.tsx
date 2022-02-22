@@ -7,6 +7,7 @@ import { Command } from './types';
 
 interface InputProps {
   nextArg: Boolean;
+  previousArg: Boolean;
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
@@ -41,6 +42,14 @@ const Input = (props: InputProps) => {
       setCurrentFocus(currentFocus + 1);
     }
   }, [props.nextArg]);
+  useEffect(() => {
+    if (!props.previousArg) {
+      return;
+    } else {
+      inputRef.current[currentFocus - 1].focus();
+      setCurrentFocus(currentFocus - 1);
+    }
+  }, [props.previousArg]);
 
   useEffect(() => {
     console.log(inputRef.current);

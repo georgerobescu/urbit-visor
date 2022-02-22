@@ -100,6 +100,8 @@ const Modal = () => {
       event.preventDefault();
       setSendCommand(true);
       setSpaceAllowed(false);
+    } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
+      setPreviousArg(true);
     } else if (event.key == 'Tab' && selected == selectedToInput) {
       setNextArg(true);
     } else if (event.key == 'Escape') {
@@ -129,6 +131,7 @@ const Modal = () => {
         selected={selectedToInput}
         clearSelected={(clear: Boolean) => setClearSelected(clear)}
         nextArg={nextArg}
+        previousArg={previousArg}
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
       />
