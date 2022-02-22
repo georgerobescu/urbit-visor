@@ -5,8 +5,8 @@ import { addDmMessage } from '@urbit/api';
 
 export const DM: Command = {
   command: 'poke',
-  title: 'message',
-  description: 'send a message to a ship',
+  title: 'DM',
+  description: 'send a direct message to a ship',
   arguments: ['ship', 'message'],
   schema: [
     (props: any[]) =>

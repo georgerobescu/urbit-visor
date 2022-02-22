@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
 import Input from '../Input';
+import BaseInput from '../BaseInput';
+
 import { Command } from '../types';
 
 interface InputProps {
@@ -15,32 +17,26 @@ interface InputProps {
   selected: Command;
 }
 
-const DMInput = (props: InputProps) => {
-  const [refs, setRefs] = useState(null);
-  const [our, setOur] = useState(null);
+const NotificationInput = (props: InputProps) => {
   const [url, setUrl] = useState(null);
+  const [focus, setFocus] = useState(null);
 
   useEffect(() => {
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
-      setOur(res.active.shipName);
       setUrl(res.airlock.url);
     });
-  });
-
-  const schemaArgs = [our, 'default', 'default'];
+  }, [props.selected]);
 
   useEffect(() => {
-    if (refs) {
-      const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs[0]}` };
+    if (url) {
+      const data = { url: `${url}/apps/grid/leap/notifications` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );
     }
-  }, [refs]);
+  }, [url]);
 
-  return (
-    <Input {...props} response={false} schemaArgs={schemaArgs} refs={(res: any) => setRefs(res)} />
-  );
+  return <BaseInput {...props} />;
 };
 
-export default DMInput;
+export default NotificationInput;

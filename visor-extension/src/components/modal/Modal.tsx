@@ -13,9 +13,10 @@ import { Subscribe } from './commands/Subscribe';
 import { Spider } from './commands/Spider';
 import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
+import { Notifications } from './commands/Notifications';
 import { Command } from './types';
 
-const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM];
+const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Notifications];
 
 const Modal = () => {
   const rootRef = useRef(null);
@@ -99,6 +100,8 @@ const Modal = () => {
       event.preventDefault();
       setSendCommand(true);
       setSpaceAllowed(false);
+    } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
+      setPreviousArg(true);
     } else if (event.key == 'Tab' && selected == selectedToInput) {
       setNextArg(true);
     } else if (event.key == 'Escape') {
@@ -128,6 +131,7 @@ const Modal = () => {
         selected={selectedToInput}
         clearSelected={(clear: Boolean) => setClearSelected(clear)}
         nextArg={nextArg}
+        previousArg={previousArg}
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
       />
