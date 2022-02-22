@@ -13,6 +13,7 @@ interface InputProps {
   selected: Command;
   schemaArgs?: any[];
   refs?: (refs: any) => void;
+  response?: Boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -61,8 +62,9 @@ const Input = (props: InputProps) => {
           const data = { action: props.selected.command, argument: message(args) };
           console.log(data);
           const res = await Messaging.sendToBackground({ action: 'call_airlock', data: data });
-          handleAirlockResponse(res);
-          console.log(res);
+          props.response == true || props.response == undefined
+            ? handleAirlockResponse(res)
+            : void console.log(res);
           //console.log(message(props.selected.schemaArgs ? args[i] : args))
         }
       };
@@ -81,7 +83,11 @@ const Input = (props: InputProps) => {
   }, [props.sendCommand]);
 
   const handleAirlockResponse = (res: any) => {
-    props.airlockResponse(res);
+    if (props.selected.command == 'poke') {
+      res.status !== 'error'
+        ? props.airlockResponse('poke sucessful')
+        : props.airlockResponse('poke error');
+    } else props.airlockResponse(res);
   };
 
   return (

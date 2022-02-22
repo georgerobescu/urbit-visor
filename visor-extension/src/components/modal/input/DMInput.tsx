@@ -37,7 +37,9 @@ const DMInput = (props: InputProps) => {
     }
   }, [refs]);
 
-  return <Input {...props} schemaArgs={schemaArgs} refs={(res: any) => setRefs(res)} />;
+  return (
+    <Input {...props} response={false} schemaArgs={schemaArgs} refs={(res: any) => setRefs(res)} />
+  );
 };
 
 export default DMInput;
