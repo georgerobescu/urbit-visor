@@ -101,8 +101,8 @@ const Input = (props: InputProps) => {
 
   return (
     <div className="cl-input">
-      <div>{props.selected?.title}</div>
-      <div>
+      {/* <div>{props.selected?.title}</div> */}
+      <div className="inputs-wrapper">
         {props.selected.arguments.map((arg: string, i: number) => (
           <div
             key={i}

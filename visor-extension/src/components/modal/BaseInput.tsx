@@ -27,7 +27,7 @@ const BaseInput = (props: InputProps) => {
     baseInput.current.focus();
   }, [baseInput]);
 
-  return <div ref={baseInput} contentEditable className="cl-base-input"></div>;
+  return <input ref={baseInput} contentEditable className="cl-base-input" placeholder="Type..." />;
 };
 
 export default BaseInput;

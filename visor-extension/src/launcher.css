@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 .command-launcher-body {
   display: flex;
   justify-content: flex-start;
@@ -24,9 +26,11 @@
 
 .modal-input-box {
   padding: 2px;
-  font-size: 18px;
-  height: 34px;
+  padding-left: 16px;
+  height: 72px;
   outline: none;
+  background-color: #1b231f;
+  font-size: 18px;
 }
 
 .modal-container {
@@ -36,14 +40,36 @@
 }
 
 .cl-base-input {
-  font-size: 18px;
-  height: 34px;
   width: -webkit-fill-available;
+  height: 72px;
   padding: 0;
+  outline: none;
+  border: none;
+  background-color: #1b231f;
+  font-size: 18px;
+  color: #fff;
 }
 
 .cl-input {
-  display: flex;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 1em;
+  cursor: text;
+}
+.cl-input:empty:before {
+  content: attr(data-placeholder);
+  color: #a5b0ab;
+}
+.cl-input br {
+  display: none;
+}
+.cl-input * {
+  display: inline;
+}
+.highlight-required {
+  border: red;
+  border-style: solid;
+  border-width: thin;
 }
 
 .arg-input {
@@ -55,16 +81,6 @@
   cursor: text;
 }
 
-.arg-input:empty:before {
-  content: attr(data-placeholder);
-  color: #ccc;
-}
-.arg-input br {
-  display: none;
-}
-.arg-input * {
-  display: inline;
-}
 .highlight-required {
   border: red;
   border-style: solid;
@@ -80,6 +96,23 @@
   text-align: left;
 }
 
+.arg-input {
+  padding: 5px 8px;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+.arg-input:empty:before {
+  content: attr(data-placeholder);
+  color: #a5b0ab;
+}
+
+.arg-input:focus-visible {
+  border: 1px solid #f1f5f3;
+  border-radius: 8px;
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -92,4 +125,18 @@
 ::-webkit-scrollbar-track {
   background: #969494;
   border-radius: 20px;
+}
+
+.inputs-wrapper {
+  display: flex;
+  align-items: center;
+  height: 72px;
+}
+
+.modal-input-box input {
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-input-box input::placeholder {
+  color: #a5b0ab;
 }
