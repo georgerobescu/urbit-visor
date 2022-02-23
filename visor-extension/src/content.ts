@@ -26,7 +26,7 @@ function appendLauncher() {
   const modal = document.createElement('dialog');
   modal.id = 'command-launcher-container';
   modal.style.padding = '0';
-  modal.style.borderWidth = '2px';
+  modal.style.borderWidth = '0px';
   modal.style.backgroundColor = 'white';
   modal.style.borderRadius = '24px';
   modal.style.borderColor = 'transparent';
