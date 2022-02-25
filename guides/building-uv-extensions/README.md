@@ -478,6 +478,7 @@ This code will insert an iframe into every website the user goes to (stylized ac
 ```
 
 Now run the build command, reload the extension, and visit any website ([https://dcspark.io](https://dcspark.io) for example). You will see the extension iframe show up almost immediately, and upon testing you can write notes with it!
+![Screenshot with injected window](assets/injected2.png)
 
 However, we don't want it to just pop up on page load. We want the user to trigger it themselves with a keyboard shortcut.
 
@@ -714,7 +715,10 @@ And this our `iframe.html`:
 
 ```
 
-Then let's create variables to modify our HTML elements if the channel doesn't exist.
+The extension markup will now look like this if the user's ship doesn't have an Urbit Notes notebook in his graph-store.
+![Screenshot with injected window](assets/injected1.png)
+
+Now let's create variables to modify our HTML elements if the channel doesn't exist.
 
 ```ts
 const iframe = document.getElementById("background");
