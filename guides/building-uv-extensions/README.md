@@ -223,7 +223,7 @@ As you see it's a rather simple website. There's one div, containing one header 
 
 Now click on the extension icon and you should see our beautiful markup:
 
-![screenshot of popup]()
+![screenshot of popup](assets/popup.png)
 
 This does nothing yet, because the `popup.js` is empty. We need to make sure something happens when we click on the "Save in Mars" button.
 
@@ -237,14 +237,14 @@ First import Urbit Visor:
 import { urbitVisor } from "@dcspark/uv-core";
 ```
 
-This app needs to be able to post notes on `graph-store`; meaning it must be able to `poke` the users Urbit server. `graph-store` nodes need the users ship name in order to poke, however, so we will need to fetch the user's `shipName` too.
+This app needs to be able to post notes on `graph-store`; meaning it must be able to `poke` the users Urbit server. `graph-store` nodes need the users ship name in order to poke, however, so we will need to fetch the user's `shipName` too. We also want to check if the Urbit Notes channel has been created already, and if not we'll want to offer the option to create one in the extension. This means that we'll need to do a `scry` and issue a `thread` on the user's Urbit ship.
 
-Let's ask for permissions for these now upfront.
+Let's ask for permissions for that upfront. We'll start slowly and first just save the ship name in our script.
 
 ```ts
 let myShip = "";
 function initiateVisor() {
-  urbitVisor.require(["shipName", "poke"], setData);
+  urbitVisor.require(["shipName", "scry", "poke", "thread"], setData);
 }
 function setData() {
   urbitVisor.getShip().then((res) => (myShip = res.response));
@@ -260,7 +260,7 @@ npm run build
 
 Reload the extension at `chrome://extensions`, and click on the extension icon to open the popup. You should see a prompt for granting Permissions in your Visor.
 
-![Permission prompt screenshot]()
+![Permission prompt screenshot](assets/prompt1.png)
 
 You'll see something is a bit odd, though. Urbit Visor stores permissions by domain, so if you are using Urbit Dashboard you will see that your ship has given permissions to `https://urbitdashboard.com`.
 
@@ -277,7 +277,7 @@ function initiateVisor() {
 
 Again, build, reload, and click on the icon.
 
-![Permission prompt screenshot with extension name]()
+![Permission prompt screenshot with extension name](assets/prompt2.png)
 
 Much better.
 
@@ -333,9 +333,7 @@ function addNotebookPost(title: string, text: string) {
 }
 ```
 
-You may have noticed, one difference compared to the Urbit Notes web app is that we don't have access to our existing notes in the extension. We are not _scrying_ anything.
-
-Furthermore, the Urbit Notes web app generated indexes for new posts by incrementing the last existing index. We don't have access to these generated indexes, as such we will generate the indexes from scratch using a function provided by the built-in Urbit Groups app (open sourced by the good people at Tlon).
+You may have noticed that we are changing the logic for new posts a bit. The Urbit Notes webapp generated indexes for new posts by incrementing the last existing index; doing the same here would add some needless overhead (we aren't listing existing posts anyway), so we will generate the indexes from scratch using a function provided by the built-in Urbit Groups app (open sourced by the good people at Tlon).
 
 Note: `graph-store` notebooks take both a title string and text body. To make our UI simpler we decided to have only one single textarea as input. As such we will be extracting the title from the text body. We'll make it so that the first line (up to a reasonable length of 50 characters) gets extracted as the title, and the rest becomes the text.
 
@@ -481,6 +479,8 @@ This code will insert an iframe into every website the user goes to (stylized ac
 
 Now run the build command, reload the extension, and visit any website ([https://dcspark.io](https://dcspark.io) for example). You will see the extension iframe show up almost immediately, and upon testing you can write notes with it!
 
+![Screenshot with injected window](assets/injected2.png)
+
 However, we don't want it to just pop up on page load. We want the user to trigger it themselves with a keyboard shortcut.
 
 Let's change `content.ts` to:
@@ -488,6 +488,7 @@ Let's change `content.ts` to:
 ```ts
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (e.altKey && e.code === "Comma") toggleFrame();
+  else if (e.code === "Escape") removeFrame();
 });
 function createFrame() {
   const el = document.createElement("iframe");
@@ -505,11 +506,17 @@ function toggleFrame() {
   if (!existingPopup) document.body.appendChild(popup);
   else document.body.removeChild(existingPopup);
 }
+function removeFrame() {
+  const existingPopup = document.getElementById(
+    "urbit-visor-notes-everywhere-popup"
+  );
+  if (existingPopup) document.body.removeChild(existingPopup);
+}
 ```
 
-With this new code added, when the user inputs `ALT+,` (comma) on their keyboard, the Urbit Notes Everywhere window is toggled. Build the app, reload the extension, and try it again to get a feel fro the new UX for yourself.
+With this new code added, when the user inputs `ALT+,` (comma) on their keyboard, the Urbit Notes Everywhere window is toggled. Build the app, reload the extension, and try it again to get a feel for the new UX for yourself.
 
-### Finising touches
+### Finishing touches
 
 All of the basic pieces of functionality of the extension are now implemented. There's one little caveat though; the notes window doesn't disappear after sending a note as the popup (the one that appears on clicking the extension icon) did.
 
@@ -531,10 +538,274 @@ And then set a listener for window messages on `content.ts` to handle that messa
 ```ts
 window.addEventListener("message", (m) => {
   if (m.data === "close_iframe") toggleFrame();
+  else if (m.data === "remove_iframe") removeFrame();
+});
+```
+
+iframes being sandboxed also means that the content script will stop receiving events once we put focus on the iframe because it is technically a different page. As such, the keyboard shortcut at the content script will stop working once we click on the iframe. That obviously breaks the desired functionality, so we'll need to add another keyboard event handler on the iframe itself to forward the events to the content script. Thus the iframe will close when the user presses Escape.
+
+```ts
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+  if (e.altKey && e.code === "Comma")
+    window.parent.postMessage("close_iframe", "*");
+  if (e.code === "Escape") window.parent.postMessage("remove_iframe", "*");
 });
 ```
 
 Our extension is now complete.
+
+### Adding Guarantees
+
+While the base functionality of the extension is now finished, we haven'ted implemented any error handling.
+
+For example, what if a user doesn't have an Urbit Notes channel created yet? We need to account for that.
+
+Let's add some error handling for that case. As often happens, handling edge cases results in just as much if not more code than the core functionality of the app itself, but such is the world of user interfaces.
+
+First we'll need to scry graph-store to see if the user has an Urbit Notes notebook among his `keys`.
+
+```ts
+interface Key {
+  name: string; // the name of the channel, in kebab-case.
+  ship: string; // the ship that hosts the channel
+}
+function checkChannelExists(ship: string) {
+  urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
+    if (res.status === "ok") {
+      const keys: Key[] = res.response["graph-update"].keys;
+      const haveKey = !!keys.find(
+        (key: Key) => key.ship === ship && key.name === "my-urbit-notes"
+      );
+      if (haveKey) allow();
+      else disallow();
+    } else error();
+  });
+}
+```
+
+We want to stay minimalistic, so our error messages are going to be injected directly inside of our tiny iframe, with no added markup. We'll inject some text into the textarea, and add a hidden button that only shows up when the required channel does not exist. This will allow users to create the channel when they click on it.
+
+Let's modify our markup first. This will be our `popup.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbit Visor Notes Everywhere</title>
+  </head>
+  <body>
+    <div id="popup">
+      <h3>Urbit Notes Everywhere</h3>
+      <textarea id="textarea"></textarea>
+      <button id="button">Save in Mars</button>
+      <button id="create-button">Create Channel</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+  <style>
+    #popup {
+      width: 400px;
+      height: 300px;
+    }
+    h3 {
+      text-align: center;
+    }
+    textarea {
+      outline: none;
+      background-color: white;
+      border: 1px solid black;
+      resize: none;
+      width: 80%;
+      height: 62%;
+      display: block;
+      margin: auto;
+      padding: 1rem;
+    }
+    button {
+      background-color: white;
+      border: 1px solid black;
+      height: 2rem;
+      display: block;
+      margin: 0.5rem auto;
+      padding: 0.3rem;
+    }
+    #create-button {
+      display: none;
+    }
+  </style>
+</html>
+```
+
+And this our `iframe.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbit Visor Notes Everywhere</title>
+  </head>
+  <body>
+    <div id="background">
+      <div id="popup">
+        <textarea id="textarea"></textarea>
+        <button id="button">Save in Mars</button>
+        <button id="create-button">Create Channel</button>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: rgb(0, 0, 0, 0.8);
+      z-index: 2147483645;
+      display: none;
+    }
+    #welcome {
+      position: fixed;
+      background-color: white;
+      color: black;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2147483646;
+      width: 400px;
+      height: 300px;
+      display: none;
+    }
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2147483646;
+      width: 400px;
+      height: 300px;
+    }
+    textarea {
+      outline: none;
+      background-color: white;
+      border: 1px solid black;
+      resize: none;
+      width: 100%;
+      height: 80%;
+      display: block;
+      padding: 1rem;
+    }
+    button {
+      background-color: white;
+      border: 1px solid black;
+      height: 2rem;
+      display: block;
+      margin: 0.5rem auto;
+      padding: 0.3rem;
+    }
+    #create-button {
+      display: none;
+    }
+  </style>
+</html>
+```
+
+The extension markup will now appear as such if the user's ship doesn't have an Urbit Notes notebook in his graph-store.
+
+![Screenshot with injected window](assets/injected1.png)
+
+Next we'll create variables to modify our HTML elements if the channel doesn't exist.
+
+```ts
+const iframe = document.getElementById("background");
+const textarea = <HTMLTextAreaElement>document.getElementById("textarea");
+const button = <HTMLButtonElement>document.getElementById("button");
+const createButton = <HTMLButtonElement>(
+  document.getElementById("create-button")
+);
+button.addEventListener("click", saveNote);
+createButton.addEventListener("click", createChannel);
+```
+
+We will be taking the `createChannel()` function we wrote in the Urbit Notes webapp as it will work just the same here.
+
+```ts
+async function createChannel() {
+  const body = {
+    create: {
+      resource: {
+        ship: `~${myShip}`,
+        name: "my-urbit-notes",
+      },
+      title: "My Urbit Notes",
+      description: "My Awesome Private Urbit Notebook",
+      associated: {
+        policy: {
+          invite: { pending: [] },
+        },
+      },
+      module: "publish",
+      mark: "graph-validator-publish",
+    },
+  };
+  urbitVisor
+    .thread({
+      threadName: "graph-create",
+      inputMark: "landscape/graph-view-action",
+      outputMark: "json",
+      body: body,
+    })
+    .then((res) => {
+      if (res.status === "ok") checkChannelExists(myShip);
+    });
+}
+```
+
+Now let's create the callback functions that will be called by `checkChannelExists()` depending on the result.
+
+```ts
+function allow() {
+  textarea.value = "";
+  createButton.style.display = "none";
+  button.style.display = "block";
+}
+function disallow() {
+  textarea.value = `
+  Welcome to Urbit Notes Everywhere
+  It appears you don't have an Urbit Notes Notebook yet
+  Click the button below to create it
+  `;
+  button.style.display = "none";
+  createButton.style.display = "block";
+}
+function error() {
+  button.innerText = "Error";
+  button.disabled = true;
+}
+```
+
+And lastly we'll modify our `setData()` function so that all this logic runs as soon as the app starts.
+
+```ts
+function setData() {
+  urbitVisor.getShip().then((res) => {
+    console.log(res.response, "r");
+    myShip = res.response;
+    if (iframe) iframe.style.display = "block";
+    checkChannelExists(res.response);
+  });
+}
+```
 
 ## Conclusion
 
