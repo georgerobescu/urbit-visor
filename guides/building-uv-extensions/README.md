@@ -237,9 +237,9 @@ First import Urbit Visor:
 import { urbitVisor } from "@dcspark/uv-core";
 ```
 
-This app needs to be able to post notes on `graph-store`; meaning it must be able to `poke` the users Urbit server. `graph-store` nodes need the users ship name in order to poke, however, so we will need to fetch the user's `shipName` too.  We also want to check if the Urbit Notes channel has been created already, and if not we'll want to offer the option to create one in the extension, so that's a `scry` and a `thread` the user's Urbit Visor will have to do. So let's ask for permissions for that upfront. We'll start slowly and first just save the ship name in our script.
+This app needs to be able to post notes on `graph-store`; meaning it must be able to `poke` the users Urbit server. `graph-store` nodes need the users ship name in order to poke, however, so we will need to fetch the user's `shipName` too. We also want to check if the Urbit Notes channel has been created already, and if not we'll want to offer the option to create one in the extension. This means that we'll need to do a `scry` and issue a `thread` on the user's Urbit ship.
 
-Let's ask for permissions for these now upfront.
+Let's ask for permissions for that upfront. We'll start slowly and first just save the ship name in our script.
 
 ```ts
 let myShip = "";
@@ -333,7 +333,7 @@ function addNotebookPost(title: string, text: string) {
 }
 ```
 
-We are changing here the logic for new posts a bit. The Urbit Notes webapp generated indexes for new posts by incrementing the last existing index; doing the same here would add some needless overhead (we aren't listing existing posts anyway), so we will generate the indexes from scratch, using a function provided by the built-in Urbit Groups app (open sourced by the good people at Tlon).
+You may have noticed that we are changing the logic for new posts a bit. The Urbit Notes webapp generated indexes for new posts by incrementing the last existing index; doing the same here would add some needless overhead (we aren't listing existing posts anyway), so we will generate the indexes from scratch using a function provided by the built-in Urbit Groups app (open sourced by the good people at Tlon).
 
 Note: `graph-store` notebooks take both a title string and text body. To make our UI simpler we decided to have only one single textarea as input. As such we will be extracting the title from the text body. We'll make it so that the first line (up to a reasonable length of 50 characters) gets extracted as the title, and the rest becomes the text.
 
@@ -478,6 +478,7 @@ This code will insert an iframe into every website the user goes to (stylized ac
 ```
 
 Now run the build command, reload the extension, and visit any website ([https://dcspark.io](https://dcspark.io) for example). You will see the extension iframe show up almost immediately, and upon testing you can write notes with it!
+
 ![Screenshot with injected window](assets/injected2.png)
 
 However, we don't want it to just pop up on page load. We want the user to trigger it themselves with a keyboard shortcut.
@@ -487,8 +488,7 @@ Let's change `content.ts` to:
 ```ts
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (e.altKey && e.code === "Comma") toggleFrame();
-  else if (e.code === "Escape")
-  removeFrame();
+  else if (e.code === "Escape") removeFrame();
 });
 function createFrame() {
   const el = document.createElement("iframe");
@@ -506,9 +506,11 @@ function toggleFrame() {
   if (!existingPopup) document.body.appendChild(popup);
   else document.body.removeChild(existingPopup);
 }
-function removeFrame(){
-  const existingPopup = document.getElementById("urbit-visor-notes-everywhere-popup");
-  if (existingPopup) document.body.removeChild(existingPopup)
+function removeFrame() {
+  const existingPopup = document.getElementById(
+    "urbit-visor-notes-everywhere-popup"
+  );
+  if (existingPopup) document.body.removeChild(existingPopup);
 }
 ```
 
@@ -534,15 +536,13 @@ function close() {
 And then set a listener for window messages on `content.ts` to handle that message.
 
 ```ts
-window.addEventListener("message", (m)=>{
-  if (m.data === "close_iframe")
-  toggleFrame()
-  else if (m.data === "remove_iframe")
-  removeFrame()
-})
+window.addEventListener("message", (m) => {
+  if (m.data === "close_iframe") toggleFrame();
+  else if (m.data === "remove_iframe") removeFrame();
+});
 ```
 
-iframes being sandboxed also means that the content script will stop receiving events once we put focus on the iframe (which is technically a different page), so the keyboard shortcut at the content script will stop working once we click on the iframe. That obviously breaks the desired functionality of our shortcut, so we'll need to add another keyboard event handler at the iframe itself to forward the events to the content script, so so that the iframe is closed when we use the shortcut or press Escape.
+iframes being sandboxed also means that the content script will stop receiving events once we put focus on the iframe because it is technically a different page. As such, the keyboard shortcut at the content script will stop working once we click on the iframe. That obviously breaks the desired functionality, so we'll need to add another keyboard event handler on the iframe itself to forward the events to the content script. Thus the iframe will close when the user presses Escape.
 
 ```ts
 document.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -556,9 +556,13 @@ Our extension is now complete.
 
 ### Adding Guarantees
 
-Well, it's done but we don't have any error handling. What if a user doesn't have a Urbit Notes channel created yet? We should want to account for that. Let's add some handling for that case. As it often happens handling edge cases results in as much if not more code than the core functionality of the app, but such is the world of user interfaces.
+While the base functionality of the extension is now finished, we haven'ted implemented any error handling.
 
-First we'll need to scry graph-store to see if the user has a Urbit Notes notebook among his `keys`.
+For example, what if a user doesn't have an Urbit Notes channel created yet? We need to account for that.
+
+Let's add some error handling for that case. As often happens, handling edge cases results in just as much if not more code than the core functionality of the app itself, but such is the world of user interfaces.
+
+First we'll need to scry graph-store to see if the user has an Urbit Notes notebook among his `keys`.
 
 ```ts
 interface Key {
@@ -579,8 +583,9 @@ function checkChannelExists(ship: string) {
 }
 ```
 
-We want to stay minimalistic, so our error messages are going to be injected directly inside our tiny iframe, with no added markup. We'll just inject some text into the textarea, and add a hidden button that only shows up when the required channel does not exist, so users can create the channel when they click on it.
-So let's modify our markup first. This will be our `popup.html`:
+We want to stay minimalistic, so our error messages are going to be injected directly inside of our tiny iframe, with no added markup. We'll inject some text into the textarea, and add a hidden button that only shows up when the required channel does not exist. This will allow users to create the channel when they click on it.
+
+Let's modify our markup first. This will be our `popup.html`:
 
 ```html
 <!DOCTYPE html>
@@ -633,6 +638,7 @@ So let's modify our markup first. This will be our `popup.html`:
   </style>
 </html>
 ```
+
 And this our `iframe.html`:
 
 ```html
@@ -712,13 +718,13 @@ And this our `iframe.html`:
     }
   </style>
 </html>
-
 ```
 
-The extension markup will now look like this if the user's ship doesn't have an Urbit Notes notebook in his graph-store.
+The extension markup will now appear as such if the user's ship doesn't have an Urbit Notes notebook in his graph-store.
+
 ![Screenshot with injected window](assets/injected1.png)
 
-Now let's create variables to modify our HTML elements if the channel doesn't exist.
+Next we'll create variables to modify our HTML elements if the channel doesn't exist.
 
 ```ts
 const iframe = document.getElementById("background");
@@ -731,7 +737,7 @@ button.addEventListener("click", saveNote);
 createButton.addEventListener("click", createChannel);
 ```
 
-The `createChannel()` function we can just copy from the Urbit Notes webapp source code.
+We will be taking the `createChannel()` function we wrote in the Urbit Notes webapp as it will work just the same here.
 
 ```ts
 async function createChannel() {
@@ -764,10 +770,11 @@ async function createChannel() {
     });
 }
 ```
-Now let's create some the callback functions that will be called by `checkChannelExists()` depending on the result.
+
+Now let's create the callback functions that will be called by `checkChannelExists()` depending on the result.
 
 ```ts
-function allow(){
+function allow() {
   textarea.value = "";
   createButton.style.display = "none";
   button.style.display = "block";
@@ -787,7 +794,7 @@ function error() {
 }
 ```
 
-And now let's modify our `setData()` function so that all this logic runs as soon as the app starts.
+And lastly we'll modify our `setData()` function so that all this logic runs as soon as the app starts.
 
 ```ts
 function setData() {
