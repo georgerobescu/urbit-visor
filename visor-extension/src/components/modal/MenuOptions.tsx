@@ -1,13 +1,14 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { Command } from './types';
+import { MenuItem } from './types';
 
 interface MenuOptionProps {
-  handleSelection: (command: Command) => void;
+  handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
-  selected: Command;
-  commands: Command[];
+  selected: MenuItem;
+  commands: MenuItem[];
+  contextItems: MenuItem[];
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
@@ -16,9 +17,14 @@ const MenuOptions = (props: MenuOptionProps) => {
   useEffect(() => {
     if (!props.keyDown) {
       return;
-    } else if (props.keyDown.key === 'ArrowDown' && clickedIndex < props.commands.length - 1) {
+    } else if (
+      props.keyDown.key === 'ArrowDown' &&
+      clickedIndex < (props.contextItems ? props.contextItems.length : props.commands.length) - 1
+    ) {
       setClickedIndex(clickedIndex + 1);
-      props.handleSelection(props.commands[clickedIndex + 1]);
+      props.handleSelection(
+        props.contextItems ? props.contextItems[clickedIndex + 1] : props.commands[clickedIndex + 1]
+      );
     } else {
       return;
     }
@@ -36,7 +42,7 @@ const MenuOptions = (props: MenuOptionProps) => {
 
   return (
     <div className="command-launcher-menu-list">
-      {props.commands.map((option, index) => (
+      {(props.commands ? props.commands : props.contextItems).map((option, index) => (
         <div
           className="command-launcher-menu-option"
           style={

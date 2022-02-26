@@ -14,13 +14,14 @@ import { Spider } from './commands/Spider';
 import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
 import { Notifications } from './commands/Notifications';
-import { Command } from './types';
+import { MenuItem } from './types';
 
-const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Notifications];
+const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Notifications];
 
 const Modal = () => {
   const rootRef = useRef(null);
   const [selected, setSelected] = useState(null);
+  const [contextItems, setContextItems] = useState(null);
   const [baseFocus, setBaseFocus] = useState(null);
   const [dims, setDims] = useState(null);
   const [selectedToInput, setSelectedToInput] = useState(null);
@@ -137,10 +138,11 @@ const Modal = () => {
       />
       <Body
         commands={commands}
-        handleSelection={(i: Command) => setSelected(i)}
+        handleSelection={(i: MenuItem) => setSelected(i)}
         selected={selected}
         keyDown={keyDown}
         airlockResponse={airlockResponse}
+        contextItems={contextItems}
       />
     </div>
   );

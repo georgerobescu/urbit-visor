@@ -3,14 +3,15 @@ import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
 import Display from './Display';
-import { Command } from './types';
+import { MenuItem } from './types';
 
 interface BodyProps {
-  handleSelection: (command: Command) => void;
+  contextItems?: MenuItem[];
+  handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
-  selected: Command;
+  selected: MenuItem;
   airlockResponse: any;
-  commands: Command[];
+  commands: MenuItem[];
 }
 
 const Body = (props: BodyProps) => {
@@ -21,6 +22,7 @@ const Body = (props: BodyProps) => {
         selected={props.selected}
         handleSelection={props.handleSelection}
         keyDown={props.keyDown}
+        contextItems={props.contextItems}
       />
       <Display selected={props.selected} airlockResponse={props.airlockResponse} />
     </div>

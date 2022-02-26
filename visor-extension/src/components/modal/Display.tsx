@@ -2,10 +2,10 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
-import { Command } from './types';
+import { MenuItem, Command, ContextMenuItem } from './types';
 
 interface DisplayProps {
-  selected: Command;
+  selected: MenuItem;
   airlockResponse: any;
 }
 
@@ -76,18 +76,25 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
 };
 
 const SelectionPreview = (props: DisplayProps) => {
-  let selectionPreviewContent;
-  const Icon = props.selected?.icon;
+  const selectedCommand = () => props.selected as Command;
+  const selectedContext = () => props.selected as ContextMenuItem;
 
-  if (props.selected) {
+  let selectionPreviewContent;
+  const Icon = selectedCommand()?.icon;
+
+  if (selectedCommand()) {
     selectionPreviewContent = (
       <div className="command-launcher-display-preview-container">
-        {props.selected.icon ? <Icon /> : <div></div>}
+        {selectedCommand()?.icon ? <Icon /> : <div></div>}
         <div>
           <div>{props.selected.title}</div>
           <div>{props.selected.description}</div>
         </div>
       </div>
+    );
+  } else if (selectedContext()) {
+    selectionPreviewContent = (
+      <div className="command-launcher-display-preview-container">context selected</div>
     );
   }
   return <div className="command-launcher-display-preview">{selectionPreviewContent}</div>;
