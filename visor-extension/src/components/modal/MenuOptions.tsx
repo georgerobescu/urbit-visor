@@ -1,18 +1,22 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { MenuItem } from './types';
+import { MenuItem, ContextMenuItem } from './types';
 
 interface MenuOptionProps {
-  handleSelection: (command: MenuItem) => void;
+  handleSelection: (menuItem: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
   commands: MenuItem[];
-  contextItems: MenuItem[];
+  contextItems: ContextMenuItem[];
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
   const [clickedIndex, setClickedIndex] = useState(-1);
+
+  useEffect(() => {
+    setClickedIndex(-1);
+  }, [props.contextItems]);
 
   useEffect(() => {
     if (!props.keyDown) {
@@ -34,7 +38,9 @@ const MenuOptions = (props: MenuOptionProps) => {
       return;
     } else if (props.keyDown.key === 'ArrowUp' && clickedIndex > 0) {
       setClickedIndex(clickedIndex - 1);
-      props.handleSelection(props.commands[clickedIndex - 1]);
+      props.handleSelection(
+        props.contextItems ? props.contextItems[clickedIndex - 1] : props.commands[clickedIndex - 1]
+      );
     } else {
       return;
     }
@@ -42,7 +48,7 @@ const MenuOptions = (props: MenuOptionProps) => {
 
   return (
     <div className="command-launcher-menu-list">
-      {(props.commands ? props.commands : props.contextItems).map((option, index) => (
+      {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
         <div
           className="command-launcher-menu-option"
           style={

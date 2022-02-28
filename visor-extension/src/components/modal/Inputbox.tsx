@@ -8,10 +8,11 @@ import SubscribeInput from './input/SubscribeInput';
 import SpiderInput from './input/SpiderInput';
 import TerminalInput from './input/TerminalInput';
 import DMInput from './input/DMInput';
+import GroupsInput from './input/GroupsInput';
 import NotificationInput from './input/NotificationInput';
 import BaseInput from './BaseInput';
 
-import { Command } from './types';
+import { Command, ContextMenuItem } from './types';
 import Input from './Input';
 
 interface InputProps {
@@ -22,6 +23,7 @@ interface InputProps {
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
+  contextItems: (items: ContextMenuItem[]) => void;
 }
 
 const Inputbox = (props: InputProps) => {
@@ -45,6 +47,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'DM':
       command = <DMInput {...props} />;
+      break;
+    case 'groups':
+      command = <GroupsInput {...props} />;
       break;
     case 'notifications':
       command = <NotificationInput {...props} />;

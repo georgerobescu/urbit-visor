@@ -15,8 +15,9 @@ import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
 import { Notifications } from './commands/Notifications';
 import { MenuItem } from './types';
+import { Groups } from './commands/Groups';
 
-const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Notifications];
+const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Groups, Notifications];
 
 const Modal = () => {
   const rootRef = useRef(null);
@@ -135,6 +136,7 @@ const Modal = () => {
         previousArg={previousArg}
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
+        contextItems={items => setContextItems(items)}
       />
       <Body
         commands={commands}

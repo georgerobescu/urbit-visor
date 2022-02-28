@@ -2,14 +2,14 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import MenuOptions from './MenuOptions';
-import { MenuItem } from './types';
+import { MenuItem, ContextMenuItem, Command } from './types';
 
 interface MenuOptionProps {
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
-  commands: MenuItem[];
-  contextItems?: MenuItem[];
+  commands: Command[];
+  contextItems?: ContextMenuItem[];
 }
 
 const Menu = (props: MenuOptionProps) => {

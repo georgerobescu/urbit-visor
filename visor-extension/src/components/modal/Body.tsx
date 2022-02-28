@@ -3,10 +3,10 @@ import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
 import Display from './Display';
-import { MenuItem } from './types';
+import { ContextMenuItem, MenuItem } from './types';
 
 interface BodyProps {
-  contextItems?: MenuItem[];
+  contextItems?: ContextMenuItem[];
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
