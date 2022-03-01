@@ -39,11 +39,12 @@ Existing apps already exist using React and Svelte, but any other framework, or 
 
 To improve the developer experience, Urbit Visor exposes a few TypeScript types for type safety. In this guide we will be using TypeScript, but if you're not, feel free to ignore the type annotations.
 
-As mentioned earlier, we will be creating a simple note-taking Urbit web app which will be called `urbit-notes`. Let's create the base boilerplate for your project using `create-react-app`:
+As mentioned earlier, we will be creating a simple note-taking Urbit web app which will be called `urbit-notes`. Let's create the base boilerplate for your project using [vite](https://vitejs.dev), a great build tool for JavaScript applications:
 
 ```bash
-npx create-react-app urbit-notes --template typescript
+npm create vite@latest
 ```
+Then choose a name, and `react-ts` as our template.
 
 To enable Urbit Visor functionality in your app you need to install the library `@dcspark/uv-core`. If you use npm, go to your app folder, and run
 
