@@ -12,11 +12,11 @@ import GroupsInput from './input/GroupsInput';
 import NotificationInput from './input/NotificationInput';
 import BaseInput from './BaseInput';
 
-import { Command, ContextMenuItem } from './types';
+import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
 
 interface InputProps {
-  selected: Command;
+  selected: MenuItem;
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;
@@ -29,7 +29,14 @@ interface InputProps {
 const Inputbox = (props: InputProps) => {
   let command;
 
-  switch (props.selected?.title) {
+  const selectedCommand = (selected: any): selected is Command => selected;
+  const selectedContext = (selected: any): selected is ContextMenuItem => selected;
+
+  switch (
+    selectedCommand(props.selected)
+      ? props.selected?.title
+      : (props.selected as ContextMenuItem)?.commandTitle
+  ) {
     case 'poke':
       command = <PokeInput {...props} />;
       break;

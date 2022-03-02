@@ -12,6 +12,7 @@ export interface Command {
 }
 
 export interface ContextMenuItem {
+  commandTitle: string;
   title: string;
   description: string;
 }

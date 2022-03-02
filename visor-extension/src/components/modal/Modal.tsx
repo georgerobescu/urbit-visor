@@ -47,6 +47,7 @@ const Modal = () => {
       setSelectedToInput(null);
       setSelected('');
       setBaseFocus(true);
+      setContextItems(null);
     }
   }, [clearSelected]);
 

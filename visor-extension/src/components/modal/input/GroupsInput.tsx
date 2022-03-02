@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../../messaging';
@@ -22,6 +22,7 @@ const GroupsInput = (props: InputProps) => {
   const [our, setOur] = useState(null);
   const [url, setUrl] = useState(null);
   const [contextItems, setContextItems] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
     window.addEventListener('message', handleResponse);
@@ -40,9 +41,11 @@ const GroupsInput = (props: InputProps) => {
   useEffect(() => {
     let number = 0;
     const setData = () => {
-      urbitVisor
-        .subscribe({ app: 'group-store', path: '/groups' })
-        .then(res => (number = res.response));
+      urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
+
+      urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+        console.log(res);
+      });
     };
     urbitVisor.require(['subscribe'], setData);
     return () => {
@@ -51,16 +54,36 @@ const GroupsInput = (props: InputProps) => {
     };
   }, []);
 
-  const handleResponse = (response: any) => {
+  const handleResponse = (response: Object) => {
     console.log(response);
 
-    if (response.data.event.data.groupUpdate.initial) {
-      const groups = Object.keys(response.data.event.data.groupUpdate.initial as Object).map(
-        group => ({ title: group, description: '' } as ContextMenuItem)
+    const groups = Object.values(response)
+      .filter(data => data['app-name'] == 'groups')
+      .map(
+        group =>
+          ({
+            commandTitle: 'groups',
+            title: (group.group as string).substring(6),
+            description: group.metadata.description,
+          } as ContextMenuItem)
       );
+    setContextItems(groups);
 
-      console.log(groups);
-      props.contextItems(groups);
+    console.log(groups);
+    props.contextItems(groups);
+  };
+
+  const handleInputChange = (change: any) => {
+    if (change.target) {
+      const inp = change.target.innerText.toLowerCase();
+
+      if (inp.length > 0) {
+        const filtered = (contextItems as ContextMenuItem[]).filter(group =>
+          group.title.toLowerCase().includes(inp)
+        );
+
+        props.contextItems(filtered);
+      }
     }
   };
 
@@ -73,7 +96,14 @@ const GroupsInput = (props: InputProps) => {
     }
   }, [props.sendCommand]);
 
-  return <Input {...props} response={false} refs={(res: any) => setRefs(res)} />;
+  return (
+    <Input
+      {...props}
+      response={false}
+      refs={(res: any) => setRefs(res)}
+      inputChange={(change: any) => handleInputChange(change)}
+    />
+  );
 };
 
 export default GroupsInput;

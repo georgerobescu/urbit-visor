@@ -15,6 +15,7 @@ interface InputProps {
   schemaArgs?: any[];
   refs?: (refs: any) => void;
   response?: Boolean;
+  inputChange?: (change: any) => void;
 }
 
 const Input = (props: InputProps) => {
@@ -33,6 +34,7 @@ const Input = (props: InputProps) => {
   useEffect(() => {
     inputRef.current[0].focus();
     setCurrentFocus(0);
+    props.refs(inputRef);
   }, [inputRef]);
   useEffect(() => {
     if (!props.nextArg) {
@@ -109,11 +111,14 @@ const Input = (props: InputProps) => {
             className="arg-input"
             contentEditable="true"
             data-placeholder={arg}
+            onKeyUp={props.inputChange}
             onKeyDown={(event: React.KeyboardEvent) => {
               if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
                 props.clearSelected(true);
-              } else {
+              } else if ((event.target as Element).classList.contains('highlight-required')) {
                 (event.target as Element).classList.remove('highlight-required');
+              } else {
+                return;
               }
             }}
             ref={el => (inputRef.current[i] = el)}
