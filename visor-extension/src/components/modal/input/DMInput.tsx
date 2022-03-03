@@ -31,7 +31,7 @@ const DMInput = (props: InputProps) => {
   const schemaArgs = [our, 'default', 'default'];
 
   useEffect(() => {
-    if (refs) {
+    if (refs?.length > 0) {
       const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs[0]}` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
