@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../../messaging';
@@ -14,6 +14,7 @@ interface InputProps {
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   contextItems: (items: ContextMenuItem[]) => void;
+  selectedToInput: MenuItem;
   selected: MenuItem;
 }
 
@@ -21,7 +22,8 @@ const GroupsInput = (props: InputProps) => {
   const [refs, setRefs] = useState(null);
   const [our, setOur] = useState(null);
   const [url, setUrl] = useState(null);
-  const [contextItems, setContextItems] = useState(null);
+  const [contextItems, setContextItems] = useState([] as ContextMenuItem[]);
+  const [groups, setGroups] = useState([] as ContextMenuItem[]);
   const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const GroupsInput = (props: InputProps) => {
             description: group.metadata.description,
           } as ContextMenuItem)
       );
-    setContextItems(groups);
+    setGroups(groups);
 
     console.log(groups);
     props.contextItems(groups);
@@ -78,32 +80,46 @@ const GroupsInput = (props: InputProps) => {
       const inp = change.target.innerText.toLowerCase();
 
       if (inp.length > 0) {
-        const filtered = (contextItems as ContextMenuItem[]).filter(group =>
-          group.title.toLowerCase().includes(inp)
-        );
+        const filtered = groups.filter(group => group.title.toLowerCase().includes(inp));
 
-        props.contextItems(filtered);
+        if (contextItems.length == filtered.length) {
+          console.log('same');
+        } else {
+          setContextItems(filtered);
+        }
       }
     }
   };
 
   useEffect(() => {
+    props.contextItems(contextItems);
+  }, [contextItems]);
+
+  useEffect(() => {
     if (props.sendCommand) {
-      const data = { url: `${url}/apps/landscape/~landscape/ship/${refs[0]}` };
+      const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );
     }
   }, [props.sendCommand]);
 
-  return (
-    <Input
-      {...props}
-      response={false}
-      refs={(res: any) => setRefs(res)}
-      inputChange={(change: any) => handleInputChange(change)}
-    />
-  );
+  let input;
+
+  if (props.sendCommand) {
+    input = <></>;
+  } else {
+    input = (
+      <Input
+        {...props}
+        response={false}
+        refs={(res: any) => setRefs(res)}
+        inputChange={(change: any) => handleInputChange(change)}
+      />
+    );
+  }
+
+  return input;
 };
 
 export default GroupsInput;

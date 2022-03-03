@@ -95,11 +95,16 @@ const Modal = () => {
 */
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key == 'Enter' && selectedToInput !== selected) {
+    if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
+      console.log('selecting to input');
       event.preventDefault();
       setSelectedToInput(selected);
       setAirlockResponse(null);
     } else if (event.key == 'Enter' && selected == selectedToInput) {
+      event.preventDefault();
+      setSendCommand(true);
+      setSpaceAllowed(false);
+    } else if (event.key == 'Enter' && contextItems) {
       event.preventDefault();
       setSendCommand(true);
       setSpaceAllowed(false);
@@ -131,7 +136,8 @@ const Modal = () => {
     >
       <Inputbox
         baseFocus={baseFocus}
-        selected={selectedToInput}
+        selectedToInput={selectedToInput}
+        selected={selected}
         clearSelected={(clear: Boolean) => setClearSelected(clear)}
         nextArg={nextArg}
         previousArg={previousArg}

@@ -16,7 +16,9 @@ import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
 
 interface InputProps {
+  selectedToInput: MenuItem;
   selected: MenuItem;
+
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;
@@ -29,13 +31,17 @@ interface InputProps {
 const Inputbox = (props: InputProps) => {
   let command;
 
-  const selectedCommand = (selected: any): selected is Command => selected;
-  const selectedContext = (selected: any): selected is ContextMenuItem => selected;
+  const selectedCommand = (selected: any): selected is Command => (selected?.title ? true : false);
+  const selectedContext = (selected: any): selected is ContextMenuItem =>
+    selected?.commandTitle ? true : false;
+
+  useEffect(() => {
+    console.log(selectedCommand(props.selected));
+    console.log(selectedContext(props.selected));
+  });
 
   switch (
-    selectedCommand(props.selected)
-      ? props.selected?.title
-      : (props.selected as ContextMenuItem)?.commandTitle
+    selectedContext(props.selected) ? props.selected?.commandTitle : props.selectedToInput?.title
   ) {
     case 'poke':
       command = <PokeInput {...props} />;
