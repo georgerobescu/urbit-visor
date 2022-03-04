@@ -15,14 +15,17 @@
 .command-launcher-display {
   width: calc(100% - 184px);
   height: 100%;
-  background: lightgray;
   overflow-y: scroll;
   overflow-x: hidden;
+  background-color: #1b231f;
+  color: #ffffff;
 }
 
 .command-launcher-display-preview-container {
   height: 100%;
   display: flex;
+  justify-content: center;
+  text-align: center;
 }
 
 .modal-input-box {
@@ -180,4 +183,26 @@
 
 .menu-option.selected .command-icon img {
   filter: brightness(0) invert(1);
+}
+
+.command-launcher-display {
+  background-color: #1b231f;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.command-launcher-display .command-title {
+  text-transform: capitalize;
+  font-size: 18px;
+}
+
+.command-launcher-display .tab-symbol {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 4px 16px;
+  border-radius: 2px;
+  background-color: #3a423e;
+  color: #19c586;
+  font-size: 14px;
 }

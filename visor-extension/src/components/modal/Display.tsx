@@ -57,7 +57,7 @@ const Display = (props: DisplayProps) => {
   // Return the html to be rendered for Display with the content inside
   return (
     <div ref={scrollable} className="command-launcher-display">
-      {displayContent}
+      {displayContent ? displayContent : 'hello'}
     </div>
   );
 };
@@ -88,8 +88,12 @@ const SelectionPreview = (props: DisplayProps) => {
         {/* temporarily comment out */}
         {/* {selectedCommand()?.icon ? <Icon /> : <div></div>} */}
         <div>
-          <div>{props.selected.title}</div>
+          <div className="command-title">{props.selected.title}</div>
           <div>{props.selected.description}</div>
+          <div>
+            Press <span className="tab-symbol">TAB</span> to focuse on each input variable as a
+            separate block to move forward
+          </div>
         </div>
       </div>
     );
