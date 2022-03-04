@@ -1,24 +1,35 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { Command } from './types';
+import { MenuItem, ContextMenuItem } from './types';
 
 interface MenuOptionProps {
-  handleSelection: (command: Command) => void;
+  handleSelection: (menuItem: MenuItem) => void;
   keyDown: React.KeyboardEvent;
-  selected: Command;
-  commands: Command[];
+  selected: MenuItem;
+  commands: MenuItem[];
+  contextItems: ContextMenuItem[];
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
   const [clickedIndex, setClickedIndex] = useState(-1);
 
   useEffect(() => {
+    console.log('contextitems rerendered');
+    setClickedIndex(-1);
+  }, [props.contextItems]);
+
+  useEffect(() => {
     if (!props.keyDown) {
       return;
-    } else if (props.keyDown.key === 'ArrowDown' && clickedIndex < props.commands.length - 1) {
+    } else if (
+      props.keyDown.key === 'ArrowDown' &&
+      clickedIndex < (props.contextItems ? props.contextItems.length : props.commands.length) - 1
+    ) {
       setClickedIndex(clickedIndex + 1);
-      props.handleSelection(props.commands[clickedIndex + 1]);
+      props.handleSelection(
+        props.contextItems ? props.contextItems[clickedIndex + 1] : props.commands[clickedIndex + 1]
+      );
     } else {
       return;
     }
@@ -28,7 +39,9 @@ const MenuOptions = (props: MenuOptionProps) => {
       return;
     } else if (props.keyDown.key === 'ArrowUp' && clickedIndex > 0) {
       setClickedIndex(clickedIndex - 1);
-      props.handleSelection(props.commands[clickedIndex - 1]);
+      props.handleSelection(
+        props.contextItems ? props.contextItems[clickedIndex - 1] : props.commands[clickedIndex - 1]
+      );
     } else {
       return;
     }
@@ -36,7 +49,7 @@ const MenuOptions = (props: MenuOptionProps) => {
 
   return (
     <div className="command-launcher-menu-list">
-      {props.commands.map((option, index) => (
+      {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
         <div
           className="command-launcher-menu-option"
           style={

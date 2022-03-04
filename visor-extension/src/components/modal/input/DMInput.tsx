@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
 import Input from '../Input';
-import { Command } from '../types';
+import { Command, MenuItem } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
@@ -12,7 +12,8 @@ interface InputProps {
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
-  selected: Command;
+  selectedToInput: Command;
+  selected: MenuItem;
 }
 
 const DMInput = (props: InputProps) => {
@@ -30,7 +31,7 @@ const DMInput = (props: InputProps) => {
   const schemaArgs = [our, 'default', 'default'];
 
   useEffect(() => {
-    if (refs) {
+    if (refs?.length > 0) {
       const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs[0]}` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)

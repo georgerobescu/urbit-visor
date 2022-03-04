@@ -6,7 +6,7 @@ import Urbit from '@urbit/http-api';
 import Input from '../Input';
 import BaseInput from '../BaseInput';
 
-import { Command } from '../types';
+import { Command, MenuItem } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
@@ -14,7 +14,8 @@ interface InputProps {
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
-  selected: Command;
+  selectedToInput: Command;
+  selected: MenuItem;
 }
 
 const NotificationInput = (props: InputProps) => {
@@ -25,7 +26,7 @@ const NotificationInput = (props: InputProps) => {
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
       setUrl(res.airlock.url);
     });
-  }, [props.selected]);
+  }, [props.selectedToInput]);
 
   useEffect(() => {
     if (url) {

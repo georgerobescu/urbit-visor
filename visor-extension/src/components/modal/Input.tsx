@@ -11,10 +11,11 @@ interface InputProps {
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
-  selected: Command;
+  selectedToInput: Command;
   schemaArgs?: any[];
   refs?: (refs: any) => void;
   response?: Boolean;
+  inputChange?: (change: any) => void;
 }
 
 const Input = (props: InputProps) => {
@@ -28,11 +29,12 @@ const Input = (props: InputProps) => {
     return () => {
       ref.current = [];
     };
-  }, [props.selected]);
+  }, [props.selectedToInput]);
 
   useEffect(() => {
     inputRef.current[0].focus();
     setCurrentFocus(0);
+    props.refs ? props.refs(inputRef) : null;
   }, [inputRef]);
   useEffect(() => {
     if (!props.nextArg) {
@@ -66,9 +68,9 @@ const Input = (props: InputProps) => {
       }
       console.log(args);
       const f = async () => {
-        for (const [i, message] of props.selected.schema.entries()) {
+        for (const [i, message] of props.selectedToInput.schema.entries()) {
           console.log(message);
-          const data = { action: props.selected.command, argument: message(args) };
+          const data = { action: props.selectedToInput.command, argument: message(args) };
           console.log(data);
           const res = await Messaging.sendToBackground({ action: 'call_airlock', data: data });
           props.response == true || props.response == undefined
@@ -92,7 +94,7 @@ const Input = (props: InputProps) => {
   }, [props.sendCommand]);
 
   const handleAirlockResponse = (res: any) => {
-    if (props.selected.command == 'poke') {
+    if (props.selectedToInput.command == 'poke') {
       res.status !== 'error'
         ? props.airlockResponse('poke sucessful')
         : props.airlockResponse('poke error');
@@ -103,17 +105,24 @@ const Input = (props: InputProps) => {
     <div className="cl-input">
       {/* <div>{props.selected?.title}</div> */}
       <div className="inputs-wrapper">
-        {props.selected.arguments.map((arg: string, i: number) => (
+        {props.selectedToInput.arguments.map((arg: string, i: number) => (
+
           <div
             key={i}
             className="arg-input"
             contentEditable="true"
             data-placeholder={arg}
+            onKeyUp={(event: React.KeyboardEvent) => {
+              if ((props.inputChange && event.key.length == 1) || event.key == 'Backspace')
+                props.inputChange(event);
+            }}
             onKeyDown={(event: React.KeyboardEvent) => {
               if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
                 props.clearSelected(true);
-              } else {
+              } else if ((event.target as Element).classList.contains('highlight-required')) {
                 (event.target as Element).classList.remove('highlight-required');
+              } else {
+                return;
               }
             }}
             ref={el => (inputRef.current[i] = el)}

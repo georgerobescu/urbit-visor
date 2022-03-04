@@ -8,26 +8,41 @@ import SubscribeInput from './input/SubscribeInput';
 import SpiderInput from './input/SpiderInput';
 import TerminalInput from './input/TerminalInput';
 import DMInput from './input/DMInput';
+import GroupsInput from './input/GroupsInput';
 import NotificationInput from './input/NotificationInput';
 import BaseInput from './BaseInput';
 
-import { Command } from './types';
+import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
 
 interface InputProps {
-  selected: Command;
+  selectedToInput: MenuItem;
+  selected: MenuItem;
+
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
+  contextItems: (items: ContextMenuItem[]) => void;
 }
 
 const Inputbox = (props: InputProps) => {
   let command;
 
-  switch (props.selected?.title) {
+  const selectedCommand = (selected: any): selected is Command => (selected?.title ? true : false);
+  const selectedContext = (selected: any): selected is ContextMenuItem =>
+    selected?.commandTitle ? true : false;
+
+  useEffect(() => {
+    console.log(selectedCommand(props.selected));
+    console.log(selectedContext(props.selected));
+  });
+
+  switch (
+    selectedContext(props.selected) ? props.selected?.commandTitle : props.selectedToInput?.title
+  ) {
     case 'poke':
       command = <PokeInput {...props} />;
       break;
@@ -45,6 +60,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'DM':
       command = <DMInput {...props} />;
+      break;
+    case 'groups':
+      command = <GroupsInput {...props} />;
       break;
     case 'notifications':
       command = <NotificationInput {...props} />;

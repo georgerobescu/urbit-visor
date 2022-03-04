@@ -11,7 +11,7 @@ interface InputProps {
   baseFocus?: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
-  selected: Command;
+  selectedToInput: Command;
   schemaArgs?: any[];
   refs?: (refs: any) => void;
 }

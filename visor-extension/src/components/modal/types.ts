@@ -10,3 +10,11 @@ export interface Command {
   routingTarget?: string;
   routingFill?: string;
 }
+
+export interface ContextMenuItem {
+  commandTitle: string;
+  title: string;
+  description: string;
+}
+
+export type MenuItem = Command | ContextMenuItem;

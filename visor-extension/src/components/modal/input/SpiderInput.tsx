@@ -5,7 +5,7 @@ import { urbitVisor } from '@dcspark/uv-core';
 import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
 import Input from '../Input';
-import { Command } from '../types';
+import { Command, MenuItem } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
@@ -13,7 +13,8 @@ interface InputProps {
   sendCommand: Boolean;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
-  selected: Command;
+  selectedToInput: Command;
+  selected: MenuItem;
 }
 
 const SpiderInput = (props: InputProps) => {

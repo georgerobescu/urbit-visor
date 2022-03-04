@@ -14,13 +14,15 @@ import { Spider } from './commands/Spider';
 import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
 import { Notifications } from './commands/Notifications';
-import { Command } from './types';
+import { MenuItem } from './types';
+import { Groups } from './commands/Groups';
 
-const commands: Command[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Notifications];
+const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Groups, Notifications];
 
 const Modal = () => {
   const rootRef = useRef(null);
   const [selected, setSelected] = useState(null);
+  const [contextItems, setContextItems] = useState(null);
   const [baseFocus, setBaseFocus] = useState(null);
   const [dims, setDims] = useState(null);
   const [selectedToInput, setSelectedToInput] = useState(null);
@@ -45,6 +47,7 @@ const Modal = () => {
       setSelectedToInput(null);
       setSelected('');
       setBaseFocus(true);
+      setContextItems(null);
     }
   }, [clearSelected]);
 
@@ -92,11 +95,16 @@ const Modal = () => {
 */
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key == 'Enter' && selectedToInput !== selected) {
+    if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
+      console.log('selecting to input');
       event.preventDefault();
       setSelectedToInput(selected);
       setAirlockResponse(null);
     } else if (event.key == 'Enter' && selected == selectedToInput) {
+      event.preventDefault();
+      setSendCommand(true);
+      setSpaceAllowed(false);
+    } else if (event.key == 'Enter' && contextItems) {
       event.preventDefault();
       setSendCommand(true);
       setSpaceAllowed(false);
@@ -128,19 +136,22 @@ const Modal = () => {
     >
       <Inputbox
         baseFocus={baseFocus}
-        selected={selectedToInput}
+        selectedToInput={selectedToInput}
+        selected={selected}
         clearSelected={(clear: Boolean) => setClearSelected(clear)}
         nextArg={nextArg}
         previousArg={previousArg}
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
+        contextItems={items => setContextItems(items)}
       />
       <Body
         commands={commands}
-        handleSelection={(i: Command) => setSelected(i)}
+        handleSelection={(i: MenuItem) => setSelected(i)}
         selected={selected}
         keyDown={keyDown}
         airlockResponse={airlockResponse}
+        contextItems={contextItems}
       />
     </div>
   );
