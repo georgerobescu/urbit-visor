@@ -19,7 +19,6 @@ interface InputProps {
 }
 
 const GroupsInput = (props: InputProps) => {
-  const [refs, setRefs] = useState(null);
   const [our, setOur] = useState(null);
   const [url, setUrl] = useState(null);
   const [contextItems, setContextItems] = useState([] as ContextMenuItem[]);
@@ -34,23 +33,30 @@ const GroupsInput = (props: InputProps) => {
   });
 
   useEffect(() => {
+    let isSubscribed = true;
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
-      setOur(res.active.shipName);
-      setUrl(res.airlock.url);
+      if (isSubscribed) {
+        setOur(res.active.shipName);
+        setUrl(res.airlock.url);
+      }
     });
+    return () => {
+      isSubscribed = false;
+    };
   });
 
   useEffect(() => {
     let number = 0;
-    const setData = () => {
-      urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
+    const subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
 
+    const setData = () => {
       urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
         number = res.response;
       });
     };
     urbitVisor.require(['subscribe'], setData);
     return () => {
+      urbitVisor.off(subscription);
       window.removeEventListener('message', handleResponse);
       urbitVisor.unsubscribe(number).then(res => console.log(''));
     };
@@ -92,16 +98,27 @@ const GroupsInput = (props: InputProps) => {
   };
 
   useEffect(() => {
-    props.contextItems(contextItems);
+    if (contextItems) props.contextItems(contextItems);
   }, [contextItems]);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (props.sendCommand) {
       const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-        res => console.log(res)
+        res => {
+          if (isSubscribed) {
+            console.log(res);
+          }
+        }
       );
+      props.clearSelected(true);
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [props.sendCommand]);
 
   let input;
@@ -110,12 +127,7 @@ const GroupsInput = (props: InputProps) => {
     input = <></>;
   } else {
     input = (
-      <Input
-        {...props}
-        response={false}
-        refs={(res: any) => setRefs(res)}
-        inputChange={(change: any) => handleInputChange(change)}
-      />
+      <Input {...props} response={false} inputChange={(change: any) => handleInputChange(change)} />
     );
   }
 

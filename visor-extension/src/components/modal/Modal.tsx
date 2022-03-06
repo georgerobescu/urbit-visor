@@ -40,14 +40,14 @@ const Modal = () => {
     setPreviousArg(null);
     setSendCommand(null);
     setBaseFocus(false);
-    setClearSelected(null);
-  }, [nextArg, previousArg, sendCommand, baseFocus, clearSelected]);
+  }, [nextArg, previousArg, sendCommand, baseFocus]);
   useEffect(() => {
     if (clearSelected) {
       setSelectedToInput(null);
       setSelected('');
       setBaseFocus(true);
       setContextItems(null);
+      setClearSelected(null);
     }
   }, [clearSelected]);
 
@@ -107,7 +107,6 @@ const Modal = () => {
     } else if (event.key == 'Enter' && contextItems) {
       event.preventDefault();
       setSendCommand(true);
-      setSpaceAllowed(false);
     } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
       setPreviousArg(true);
     } else if (event.key == 'Tab' && selected == selectedToInput) {
@@ -118,6 +117,7 @@ const Modal = () => {
       window.top.postMessage('close', '*');
       setSelectedToInput(null);
       setSelected(null);
+      setContextItems(null);
     } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
       event.preventDefault();
       setKeyDown(event);
