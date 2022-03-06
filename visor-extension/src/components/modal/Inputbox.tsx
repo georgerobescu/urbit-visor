@@ -18,7 +18,7 @@ import Input from './Input';
 interface InputProps {
   selectedToInput: MenuItem;
   selected: MenuItem;
-
+  metadata?: Object;
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;
@@ -34,11 +34,6 @@ const Inputbox = (props: InputProps) => {
   const selectedCommand = (selected: any): selected is Command => (selected?.title ? true : false);
   const selectedContext = (selected: any): selected is ContextMenuItem =>
     selected?.commandTitle ? true : false;
-
-  useEffect(() => {
-    console.log(selectedCommand(props.selected));
-    console.log(selectedContext(props.selected));
-  });
 
   switch (
     selectedContext(props.selected) ? props.selected?.commandTitle : props.selectedToInput?.title

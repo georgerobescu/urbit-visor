@@ -11,6 +11,7 @@ interface InputProps {
   nextArg: Boolean;
   previousArg: Boolean;
   sendCommand: Boolean;
+  metadata?: Object;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   contextItems: (items: ContextMenuItem[]) => void;
@@ -26,13 +27,6 @@ const GroupsInput = (props: InputProps) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
-    window.addEventListener('message', handleResponse);
-    return () => {
-      window.removeEventListener('message', handleResponse);
-    };
-  });
-
-  useEffect(() => {
     let isSubscribed = true;
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
       if (isSubscribed) {
@@ -46,40 +40,23 @@ const GroupsInput = (props: InputProps) => {
   });
 
   useEffect(() => {
-    let number = 0;
-    const subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
-
-    const setData = () => {
-      urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
-        number = res.response;
-      });
-    };
-    urbitVisor.require(['subscribe'], setData);
-    return () => {
-      urbitVisor.off(subscription);
-      window.removeEventListener('message', handleResponse);
-      urbitVisor.unsubscribe(number).then(res => console.log(''));
-    };
-  }, []);
-
-  const handleResponse = (response: Object) => {
-    console.log(response);
-
-    const groups = Object.values(response)
-      .filter(data => data['app-name'] == 'groups')
-      .map(
-        group =>
-          ({
-            commandTitle: 'groups',
-            title: (group.group as string).substring(6),
-            description: group.metadata.description,
-          } as ContextMenuItem)
-      );
-    setGroups(groups);
-
-    console.log(groups);
-    props.contextItems(groups);
-  };
+    if (props.metadata) {
+      if (groups.length == 0) {
+        const groups = Object.values(props.metadata)
+          .filter(data => data['app-name'] == 'groups')
+          .map(
+            group =>
+              ({
+                commandTitle: 'groups',
+                title: (group.group as string).substring(6),
+                description: group.metadata.description,
+              } as ContextMenuItem)
+          );
+        setGroups(groups);
+        setContextItems(groups);
+      }
+    }
+  });
 
   const handleInputChange = (change: any) => {
     if (change.target) {

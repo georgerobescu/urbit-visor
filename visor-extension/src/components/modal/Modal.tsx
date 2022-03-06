@@ -34,6 +34,7 @@ const Modal = () => {
   const [airlockResponse, setAirlockResponse] = useState(null);
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
+  const [metadata, setMetadata] = useState(null);
 
   useEffect(() => {
     setNextArg(null);
@@ -50,6 +51,29 @@ const Modal = () => {
       setClearSelected(null);
     }
   }, [clearSelected]);
+
+  useEffect(() => {
+    let subscription: any;
+    let number = 0;
+
+    if (!metadata) {
+      subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
+
+      const setData = () => {
+        urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+          number = res.response;
+        });
+      };
+      urbitVisor.require(['subscribe'], setData);
+    }
+    return () => {
+      if (metadata && subscription) {
+        urbitVisor.off(subscription);
+        window.removeEventListener('message', setMetadata);
+        urbitVisor.unsubscribe(number).then(res => console.log(''));
+      }
+    };
+  });
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
@@ -144,6 +168,7 @@ const Modal = () => {
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
         contextItems={items => setContextItems(items)}
+        metadata={metadata}
       />
       <Body
         commands={commands}
