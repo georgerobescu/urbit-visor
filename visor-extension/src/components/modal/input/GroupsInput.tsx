@@ -46,7 +46,7 @@ const GroupsInput = (props: InputProps) => {
       urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
 
       urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
-        console.log(res);
+        number = res.response;
       });
     };
     urbitVisor.require(['subscribe'], setData);
