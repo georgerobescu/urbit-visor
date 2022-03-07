@@ -39,7 +39,7 @@ const Input = (props: InputProps) => {
   useEffect(() => {
     if (!props.nextArg) {
       return;
-    } else {
+    } else if (inputRef.current[currentFocus + 1]) {
       inputRef.current[currentFocus + 1].focus();
       setCurrentFocus(currentFocus + 1);
     }
@@ -47,7 +47,7 @@ const Input = (props: InputProps) => {
   useEffect(() => {
     if (!props.previousArg) {
       return;
-    } else {
+    } else if (inputRef.current[currentFocus - 1]) {
       inputRef.current[currentFocus - 1].focus();
       setCurrentFocus(currentFocus - 1);
     }
@@ -106,7 +106,6 @@ const Input = (props: InputProps) => {
       {/* <div>{props.selected?.title}</div> */}
       <div className="inputs-wrapper">
         {props.selectedToInput.arguments.map((arg: string, i: number) => (
-
           <div
             key={i}
             className="arg-input"
