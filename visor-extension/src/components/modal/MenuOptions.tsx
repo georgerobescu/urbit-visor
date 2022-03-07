@@ -15,11 +15,8 @@ const MenuOptions = (props: MenuOptionProps) => {
   const [clickedIndex, setClickedIndex] = useState(-1);
 
   useEffect(() => {
-    if (props.contextItems) {
-      console.log('contextitems rerendered');
-      setClickedIndex(-1);
-    }
-  }, [props.contextItems]);
+    setClickedIndex(-1);
+  }, [props.contextItems, props.commands]);
 
   useEffect(() => {
     if (!props.keyDown) {

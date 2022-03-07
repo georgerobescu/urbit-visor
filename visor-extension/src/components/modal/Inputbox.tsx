@@ -19,6 +19,8 @@ interface InputProps {
   selectedToInput: MenuItem;
   selected: MenuItem;
   metadata?: Object;
+  commands?: MenuItem[];
+  filteredCommands?: (commands: MenuItem[]) => void;
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;

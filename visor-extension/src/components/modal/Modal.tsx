@@ -17,8 +17,6 @@ import { Notifications } from './commands/Notifications';
 import { MenuItem } from './types';
 import { Groups } from './commands/Groups';
 
-const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Groups, Notifications];
-
 const Modal = () => {
   const rootRef = useRef(null);
   const [selected, setSelected] = useState(null);
@@ -35,6 +33,16 @@ const Modal = () => {
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
   const [metadata, setMetadata] = useState(null);
+  const [commands, setCommands] = useState([
+    Poke,
+    Scry,
+    Subscribe,
+    Spider,
+    Terminal,
+    DM,
+    Groups,
+    Notifications,
+  ] as MenuItem[]);
 
   useEffect(() => {
     setNextArg(null);
@@ -49,6 +57,16 @@ const Modal = () => {
       setBaseFocus(true);
       setContextItems(null);
       setClearSelected(null);
+      setCommands([
+        Poke,
+        Scry,
+        Subscribe,
+        Spider,
+        Terminal,
+        DM,
+        Groups,
+        Notifications,
+      ] as MenuItem[]);
     }
   }, [clearSelected]);
 
@@ -82,8 +100,7 @@ const Modal = () => {
         rootRef.current.focus();
       } else setBaseFocus(true);
     } else if (e.data == 'closing') {
-      setSelectedToInput(null);
-      setSelected(null);
+      setClearSelected(true);
     } else return;
   };
 
@@ -139,9 +156,7 @@ const Modal = () => {
       console.log('sending close');
       event.preventDefault();
       window.top.postMessage('close', '*');
-      setSelectedToInput(null);
-      setSelected(null);
-      setContextItems(null);
+      setClearSelected(true);
     } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
       event.preventDefault();
       setKeyDown(event);
@@ -169,6 +184,8 @@ const Modal = () => {
         airlockResponse={(res: any) => setAirlockResponse(res)}
         contextItems={items => setContextItems(items)}
         metadata={metadata}
+        commands={commands}
+        filteredCommands={commands => setCommands(commands)}
       />
       <Body
         commands={commands}

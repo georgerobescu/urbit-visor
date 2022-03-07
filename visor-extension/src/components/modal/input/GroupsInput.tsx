@@ -41,6 +41,7 @@ const GroupsInput = (props: InputProps) => {
 
   useEffect(() => {
     if (props.metadata) {
+      console.log(props.metadata);
       if (groups.length == 0) {
         const groups = Object.values(props.metadata)
           .filter(data => data['app-name'] == 'groups')
@@ -56,7 +57,7 @@ const GroupsInput = (props: InputProps) => {
         setContextItems(groups);
       }
     }
-  });
+  }, [props.metadata]);
 
   const handleInputChange = (change: any) => {
     if (change.target) {
