@@ -11,6 +11,7 @@ interface InputProps {
   nextArg: Boolean;
   previousArg: Boolean;
   sendCommand: Boolean;
+  metadata?: Object;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   contextItems: (items: ContextMenuItem[]) => void;
@@ -19,7 +20,6 @@ interface InputProps {
 }
 
 const GroupsInput = (props: InputProps) => {
-  const [refs, setRefs] = useState(null);
   const [our, setOur] = useState(null);
   const [url, setUrl] = useState(null);
   const [contextItems, setContextItems] = useState([] as ContextMenuItem[]);
@@ -27,53 +27,36 @@ const GroupsInput = (props: InputProps) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
-    window.addEventListener('message', handleResponse);
-    return () => {
-      window.removeEventListener('message', handleResponse);
-    };
-  });
-
-  useEffect(() => {
+    let isSubscribed = true;
     Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
-      setOur(res.active.shipName);
-      setUrl(res.airlock.url);
+      if (isSubscribed) {
+        setOur(res.active.shipName);
+        setUrl(res.airlock.url);
+      }
     });
+    return () => {
+      isSubscribed = false;
+    };
   });
 
   useEffect(() => {
-    let number = 0;
-    const setData = () => {
-      urbitVisor.on('sse', ['metadata-update', 'associations'], handleResponse);
-
-      urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
-        console.log(res);
-      });
-    };
-    urbitVisor.require(['subscribe'], setData);
-    return () => {
-      window.removeEventListener('message', handleResponse);
-      urbitVisor.unsubscribe(number).then(res => console.log(''));
-    };
-  }, []);
-
-  const handleResponse = (response: Object) => {
-    console.log(response);
-
-    const groups = Object.values(response)
-      .filter(data => data['app-name'] == 'groups')
-      .map(
-        group =>
-          ({
-            commandTitle: 'groups',
-            title: (group.group as string).substring(6),
-            description: group.metadata.description,
-          } as ContextMenuItem)
-      );
-    setGroups(groups);
-
-    console.log(groups);
-    props.contextItems(groups);
-  };
+    if (props.metadata) {
+      if (groups.length == 0) {
+        const groups = Object.values(props.metadata)
+          .filter(data => data['app-name'] == 'groups')
+          .map(
+            group =>
+              ({
+                commandTitle: 'groups',
+                title: (group.group as string).substring(6),
+                description: group.metadata.description,
+              } as ContextMenuItem)
+          );
+        setGroups(groups);
+        setContextItems(groups);
+      }
+    }
+  });
 
   const handleInputChange = (change: any) => {
     if (change.target) {
@@ -92,16 +75,27 @@ const GroupsInput = (props: InputProps) => {
   };
 
   useEffect(() => {
-    props.contextItems(contextItems);
+    if (contextItems) props.contextItems(contextItems);
   }, [contextItems]);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (props.sendCommand) {
       const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-        res => console.log(res)
+        res => {
+          if (isSubscribed) {
+            console.log(res);
+          }
+        }
       );
+      props.clearSelected(true);
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [props.sendCommand]);
 
   let input;
@@ -110,12 +104,7 @@ const GroupsInput = (props: InputProps) => {
     input = <></>;
   } else {
     input = (
-      <Input
-        {...props}
-        response={false}
-        refs={(res: any) => setRefs(res)}
-        inputChange={(change: any) => handleInputChange(change)}
-      />
+      <Input {...props} response={false} inputChange={(change: any) => handleInputChange(change)} />
     );
   }
 

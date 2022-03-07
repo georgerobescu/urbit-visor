@@ -34,22 +34,46 @@ const Modal = () => {
   const [airlockResponse, setAirlockResponse] = useState(null);
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
+  const [metadata, setMetadata] = useState(null);
 
   useEffect(() => {
     setNextArg(null);
     setPreviousArg(null);
     setSendCommand(null);
     setBaseFocus(false);
-    setClearSelected(null);
-  }, [nextArg, previousArg, sendCommand, baseFocus, clearSelected]);
+  }, [nextArg, previousArg, sendCommand, baseFocus]);
   useEffect(() => {
     if (clearSelected) {
       setSelectedToInput(null);
       setSelected('');
       setBaseFocus(true);
       setContextItems(null);
+      setClearSelected(null);
     }
   }, [clearSelected]);
+
+  useEffect(() => {
+    let subscription: any;
+    let number = 0;
+
+    if (!metadata) {
+      subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
+
+      const setData = () => {
+        urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+          number = res.response;
+        });
+      };
+      urbitVisor.require(['subscribe'], setData);
+    }
+    return () => {
+      if (metadata && subscription) {
+        urbitVisor.off(subscription);
+        window.removeEventListener('message', setMetadata);
+        urbitVisor.unsubscribe(number).then(res => console.log(''));
+      }
+    };
+  });
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
@@ -107,7 +131,6 @@ const Modal = () => {
     } else if (event.key == 'Enter' && contextItems) {
       event.preventDefault();
       setSendCommand(true);
-      setSpaceAllowed(false);
     } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
       setPreviousArg(true);
     } else if (event.key == 'Tab' && selected == selectedToInput) {
@@ -118,6 +141,7 @@ const Modal = () => {
       window.top.postMessage('close', '*');
       setSelectedToInput(null);
       setSelected(null);
+      setContextItems(null);
     } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
       event.preventDefault();
       setKeyDown(event);
@@ -144,6 +168,7 @@ const Modal = () => {
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
         contextItems={items => setContextItems(items)}
+        metadata={metadata}
       />
       <Body
         commands={commands}
