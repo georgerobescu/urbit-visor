@@ -53,13 +53,12 @@ const MenuOptions = (props: MenuOptionProps) => {
     <div className="command-launcher-menu-list">
       {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
         <div
-          className="command-launcher-menu-option"
-          style={
+          className={
             !props.selected
-              ? { ...listItemStyle, border: 'none' }
+              ? 'menu-option'
               : index == clickedIndex
-              ? { ...listItemStyle, border: 'outset' }
-              : { ...listItemStyle, border: 'none' }
+              ? 'menu-option selected'
+              : 'menu-option'
           }
           key={index}
         >
@@ -71,11 +70,6 @@ const MenuOptions = (props: MenuOptionProps) => {
       ))}
     </div>
   );
-};
-
-const listItemStyle: CSS.Properties = {
-  margin: '12px',
-  fontSize: '18px',
 };
 
 export default MenuOptions;
