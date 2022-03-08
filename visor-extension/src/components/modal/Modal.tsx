@@ -17,7 +17,7 @@ import { Notifications } from './commands/Notifications';
 import { MenuItem } from './types';
 import { Groups } from './commands/Groups';
 
-const commands: MenuItem[] = [Poke, Scry, Subscribe, Spider, Terminal, DM, Groups, Notifications];
+const commands: MenuItem[] = [Terminal, Poke, Groups, Scry, Spider, Subscribe, Notifications, DM];
 
 const Modal = () => {
   const rootRef = useRef(null);

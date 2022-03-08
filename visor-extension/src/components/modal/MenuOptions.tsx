@@ -62,9 +62,7 @@ const MenuOptions = (props: MenuOptionProps) => {
           }
           key={index}
         >
-          {/* <Icon name={option.title.toLowerCase()} /> */}
-          {/* <img src={`../../icons/${option.title.toLowerCase()}.svg`} /> */}
-          {/* {option.icon} */}
+          <div className="command-icon">{option.icon}</div>
           {option.title}
         </div>
       ))}
