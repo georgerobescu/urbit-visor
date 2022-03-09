@@ -11,6 +11,7 @@ import DMInput from './input/DMInput';
 import GroupsInput from './input/GroupsInput';
 import NotificationInput from './input/NotificationInput';
 import BaseInput from './BaseInput';
+import visorSvgLogo from '../../icons/visorWhiteText.svg';
 
 import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
@@ -38,35 +39,44 @@ const Inputbox = (props: InputProps) => {
   switch (
     selectedContext(props.selected) ? props.selected?.commandTitle : props.selectedToInput?.title
   ) {
-    case 'poke':
+    case 'Poke':
       command = <PokeInput {...props} />;
       break;
-    case 'scry':
+    case 'Scry':
       command = <ScryInput {...props} />;
       break;
-    case 'subscribe':
+    case 'Subscribe':
       command = <SubscribeInput {...props} />;
       break;
-    case 'thread':
+    case 'Thread':
       command = <SpiderInput {...props} />;
       break;
-    case 'terminal':
+    case 'Terminal':
       command = <TerminalInput {...props} />;
       break;
     case 'DM':
       command = <DMInput {...props} />;
       break;
-    case 'groups':
+    case 'Groups':
       command = <GroupsInput {...props} />;
       break;
-    case 'notifications':
+    case 'Notifications':
       command = <NotificationInput {...props} />;
       break;
     default:
       command = <BaseInput {...props} />;
   }
 
-  return <div className="modal-input-box">{command}</div>;
+  return (
+    <div className="modal-input-box">
+      <div className="logo-container">
+        <div className="logo">
+          <img src={visorSvgLogo} />
+        </div>
+      </div>
+      {command}
+    </div>
+  );
 };
 
 export default Inputbox;
