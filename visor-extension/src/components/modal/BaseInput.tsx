@@ -31,8 +31,10 @@ const BaseInput = (props: InputProps) => {
   }, [baseInput]);
 
   const handleInputChange = (change: any) => {
-    console.log(change.target.value);
-    if (change.target) {
+    if (change.target.value == 0) {
+      props.clearSelected(true);
+      console.log('inp 0');
+    } else if (change.target) {
       const inp = change.target.value.toLowerCase();
 
       if (inp.length > 0) {
@@ -53,6 +55,11 @@ const BaseInput = (props: InputProps) => {
     <input
       ref={baseInput}
       onChange={(change: any) => handleInputChange(change)}
+      onKeyDown={(event: React.KeyboardEvent) => {
+        if (event.key == 'Backspace' && (event.target as any).value == 0) {
+          props.clearSelected(true);
+        }
+      }}
       contentEditable
       className="cl-base-input"
       placeholder="Type..."

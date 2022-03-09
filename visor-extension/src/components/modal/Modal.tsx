@@ -14,8 +14,21 @@ import { Spider } from './commands/Spider';
 import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
 import { Notifications } from './commands/Notifications';
-import { MenuItem } from './types';
+import { MenuItem, Command } from './types';
 import { Groups } from './commands/Groups';
+import { History } from './commands/History';
+
+const initialCommands: Command[] = [
+  History,
+  Poke,
+  Scry,
+  Subscribe,
+  Spider,
+  Terminal,
+  DM,
+  Groups,
+  Notifications,
+];
 
 const Modal = () => {
   const rootRef = useRef(null);
@@ -33,7 +46,10 @@ const Modal = () => {
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
   const [metadata, setMetadata] = useState(null);
+  const [prefilledArgs, setPrefilledArgs] = useState(null);
+  const [argPreview, setArgPreview] = useState(null);
   const [commands, setCommands] = useState([
+    History,
     Poke,
     Scry,
     Subscribe,
@@ -57,16 +73,8 @@ const Modal = () => {
       setBaseFocus(true);
       setContextItems(null);
       setClearSelected(null);
-      setCommands([
-        Poke,
-        Scry,
-        Subscribe,
-        Spider,
-        Terminal,
-        DM,
-        Groups,
-        Notifications,
-      ] as MenuItem[]);
+      setArgPreview(false);
+      setCommands(initialCommands.map(({ prefilledArguments, ...attr }) => attr));
     }
   }, [clearSelected]);
 
@@ -108,6 +116,12 @@ const Modal = () => {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   });
+
+  useEffect(() => {
+    if (argPreview) {
+      setSelectedToInput(selected);
+    }
+  }, [selected]);
 
   /*
   useEffect(() => {
@@ -184,8 +198,15 @@ const Modal = () => {
         airlockResponse={(res: any) => setAirlockResponse(res)}
         contextItems={items => setContextItems(items)}
         metadata={metadata}
-        commands={commands}
+        commands={initialCommands}
+        setCommands={command => setCommands(command)}
         filteredCommands={commands => setCommands(commands)}
+        changeSelected={selected => {
+          setSelected(selected);
+          setSelectedToInput(selected);
+        }}
+        prefilledArgs={args => setPrefilledArgs(args)}
+        argPreview={(preview: Boolean) => setArgPreview(preview)}
       />
       <Body
         commands={commands}

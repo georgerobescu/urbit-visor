@@ -64,7 +64,7 @@ const TerminalInput = (props: InputProps) => {
     props.airlockResponse(lines);
   }, [lines]);
 
-  return <Input {...props} />;
+  return <Input {...props} persistInput={true} />;
 };
 
 export default TerminalInput;
