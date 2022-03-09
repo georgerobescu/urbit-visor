@@ -85,13 +85,12 @@ const SelectionPreview = (props: DisplayProps) => {
   if (selectedCommand()) {
     selectionPreviewContent = (
       <div className="command-launcher-display-preview-container">
-        {/* temporarily comment out */}
-        {/* {selectedCommand()?.icon ? <Icon /> : <div></div>} */}
-        <div>
+        {/* {props.selected.icon ? <Icon /> : <div></div>} */}
+        <div className="command-preview-container">
           <div className="command-title">{props.selected.title}</div>
-          <div>{props.selected.description}</div>
-          <div>
-            Press <span className="tab-symbol">TAB</span> to focuse on each input variable as a
+          <div className="command-description">{props.selected.description}</div>
+          <div className="command-description">
+            Press <span className="tab-symbol">TAB</span> to focus on each input variable as a
             separate block to move forward
           </div>
         </div>

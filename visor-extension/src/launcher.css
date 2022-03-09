@@ -192,17 +192,28 @@
   font-size: 14px;
 }
 
+.command-preview-container {
+  width: 340px;
+}
+
 .command-launcher-display .command-title {
+  padding: 24px 0 16px;
   text-transform: capitalize;
   font-size: 18px;
+}
+
+.command-description {
+  line-height: 32px;
 }
 
 .command-launcher-display .tab-symbol {
   display: inline-block;
   margin: 0 3px;
-  padding: 4px 16px;
+  padding: 4px 17px;
   border-radius: 2px;
   background-color: #3a423e;
   color: #19c586;
-  font-size: 14px;
+  font-size: 12px;
+  height: 16px;
+  line-height: 16px;
 }
