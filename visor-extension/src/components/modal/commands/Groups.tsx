@@ -8,7 +8,7 @@ const Icon = () => <img src={terminalIcon} />;
 
 export const Groups: Command = {
   command: '',
-  title: 'groups',
+  title: 'Groups',
   icon: <Icon />,
   description: 'search from your joined groups and open group page',
   arguments: ['group'],
