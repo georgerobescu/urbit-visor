@@ -157,7 +157,9 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
   },
   storeCommandHistory: async command => {
     const history = await storeCommandHistory(command);
+    console.log(history);
     const rest = get().commandHistory;
-    set(state => ({ commandHistory: [...rest, history] }));
+    console.log(rest);
+    set(state => ({ commandHistory: [history, ...rest] }));
   },
 }));

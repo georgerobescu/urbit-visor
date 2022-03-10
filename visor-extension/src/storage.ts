@@ -92,7 +92,8 @@ export async function storeCommandHistory(command: {
 }): Promise<any> {
   const res = await getStorage('commandHistory');
   if (res['commandHistory']?.length) {
-    const new_commands = [...res['commandHistory'], command];
+    const new_commands = [command, ...res['commandHistory']];
+    if (res['commandHistory']?.length >= 50) new_commands.pop();
     await setStorage({ commandHistory: new_commands });
     return command;
   } else {

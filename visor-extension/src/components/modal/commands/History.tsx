@@ -5,7 +5,7 @@ import { addDmMessage } from '@urbit/api';
 
 export const History: Command = {
   command: '',
-  title: 'history',
+  title: 'History',
   description: 'select from previously executed commands',
   arguments: [],
   schema: [],

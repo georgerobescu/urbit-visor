@@ -16,8 +16,9 @@ interface InputProps {
   refs?: (refs: any) => void;
   response?: Boolean;
   inputChange?: (change: any) => void;
-  argPreview?: (preview: Boolean) => void;
+  setArgPreview?: (preview: Boolean) => void;
   persistInput?: Boolean;
+  argPreview?: Boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -25,13 +26,6 @@ const Input = (props: InputProps) => {
   const [currentFocus, setCurrentFocus] = useState(null);
 
   const selection = (window as any).getSelection();
-
-  useEffect(() => {
-    const ref = inputRef;
-    return () => {
-      ref.current = [];
-    };
-  }, [props.selectedToInput]);
 
   useEffect(() => {
     console.log('prefilling args');
@@ -50,7 +44,7 @@ const Input = (props: InputProps) => {
       lastArg.focus();
       range.detach();
     }
-  }, [inputRef]);
+  }, [props.selectedToInput]);
 
   useEffect(() => {
     if (!props.selectedToInput.prefilledArguments) {
@@ -103,13 +97,16 @@ const Input = (props: InputProps) => {
         }
       };
       f();
-      Messaging.sendToBackground({
-        action: 'store_command_history',
-        data: {
-          command: props.selectedToInput.title,
-          arguments: inputRef.current.map(arg => arg.innerHTML),
-        },
-      }).then(res => console.log(res));
+      if (props.selectedToInput.title !== 'Groups') {
+        console.log(inputRef.current.map(arg => arg.innerHTML));
+        Messaging.sendToBackground({
+          action: 'store_command_history',
+          data: {
+            command: props.selectedToInput.title,
+            arguments: inputRef.current.map(arg => arg.innerHTML),
+          },
+        }).then(res => console.log(res));
+      }
 
       props.persistInput
         ? (inputRef.current.forEach(input => {
@@ -117,7 +114,10 @@ const Input = (props: InputProps) => {
           }),
           inputRef.current[0].focus(),
           setCurrentFocus(0))
-        : props.clearSelected(true);
+        : (inputRef.current.forEach(input => {
+            input.innerHTML = '';
+          }),
+          props.clearSelected(true));
     } else {
       console.log('not sending poke');
       inputRef.current.forEach(input => {

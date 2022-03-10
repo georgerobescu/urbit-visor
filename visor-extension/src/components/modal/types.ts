@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface Command {
   command?: String;
-  icon?: React.FunctionComponent;
+  icon?: React.ReactNode;
   title: String;
   description: String;
   arguments?: string[];
@@ -16,6 +16,7 @@ export interface ContextMenuItem {
   commandTitle: string;
   title: string;
   description: string;
+  icon?: React.ReactNode;
 }
 
 export type MenuItem = Command | ContextMenuItem;

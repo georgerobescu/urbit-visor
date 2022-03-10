@@ -119,6 +119,8 @@ const Modal = () => {
 
   useEffect(() => {
     if (argPreview) {
+      console.log(selected, 'selected changed');
+
       setSelectedToInput(selected);
     }
   }, [selected]);
@@ -172,6 +174,7 @@ const Modal = () => {
       window.top.postMessage('close', '*');
       setClearSelected(true);
     } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+      console.log('arrow event');
       event.preventDefault();
       setKeyDown(event);
       return;
@@ -206,7 +209,8 @@ const Modal = () => {
           setSelectedToInput(selected);
         }}
         prefilledArgs={args => setPrefilledArgs(args)}
-        argPreview={(preview: Boolean) => setArgPreview(preview)}
+        setArgPreview={(preview: Boolean) => setArgPreview(preview)}
+        argPreview={argPreview}
       />
       <Body
         commands={commands}

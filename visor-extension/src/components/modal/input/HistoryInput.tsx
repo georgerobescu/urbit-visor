@@ -20,7 +20,7 @@ interface InputProps {
   contextItems: (items: ContextMenuItem[]) => void;
   commands?: MenuItem[];
   setCommands?: (commands: MenuItem[]) => void;
-  argPreview?: (preview: Boolean) => void;
+  setArgPreview?: (preview: Boolean) => void;
 }
 
 const HistoryInput = (props: InputProps) => {
@@ -32,19 +32,23 @@ const HistoryInput = (props: InputProps) => {
     let i = true;
     if (i) {
       Messaging.sendToBackground({ action: 'get_command_history' }).then(res => {
-        props.setCommands(
-          res.commandHistory.map((item: { command: string; arguments: string[] }) => {
-            let command = commands.filter(
-              (command: Command) => command.title == item.command
-            )[0] as Command;
+        console.log(res);
+        let commandHistory: Command[] = [];
+        res.commandHistory.forEach((item: { command: string; arguments: string[] }) => {
+          let command = commands.find(
+            (command: Command) => command.title == item.command
+          ) as Command;
 
-            command.prefilledArguments = item.arguments;
+          const new_command = new Object() as Command;
+          Object.assign(new_command, command);
+          new_command.prefilledArguments = item.arguments;
 
-            return command;
-          })
-        );
+          commandHistory.push(new_command);
+        });
+        console.log(commandHistory);
+        props.setCommands(commandHistory);
       });
-      props.argPreview(true);
+      props.setArgPreview(true);
     }
     return () => {
       i = false;

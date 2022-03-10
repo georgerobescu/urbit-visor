@@ -17,6 +17,7 @@ interface InputProps {
   contextItems: (items: ContextMenuItem[]) => void;
   selectedToInput: MenuItem;
   selected: MenuItem;
+  argPreview?: Boolean;
 }
 
 const GroupsInput = (props: InputProps) => {
@@ -48,7 +49,7 @@ const GroupsInput = (props: InputProps) => {
           .map(
             group =>
               ({
-                commandTitle: 'groups',
+                commandTitle: 'Groups',
                 title: (group.group as string).substring(6),
                 description: group.metadata.description,
               } as ContextMenuItem)
@@ -60,6 +61,7 @@ const GroupsInput = (props: InputProps) => {
   }, [props.metadata]);
 
   const handleInputChange = (change: any) => {
+    console.log('handleInputChange');
     if (change.target) {
       const inp = change.target.innerText.toLowerCase();
 
@@ -99,17 +101,9 @@ const GroupsInput = (props: InputProps) => {
     };
   }, [props.sendCommand]);
 
-  let input;
-
-  if (props.sendCommand) {
-    input = <></>;
-  } else {
-    input = (
-      <Input {...props} response={false} inputChange={(change: any) => handleInputChange(change)} />
-    );
-  }
-
-  return input;
+  return (
+    <Input {...props} response={false} inputChange={(change: any) => handleInputChange(change)} />
+  );
 };
 
 export default GroupsInput;
