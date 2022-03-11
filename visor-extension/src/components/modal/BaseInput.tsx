@@ -3,12 +3,14 @@ import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from 'react';
 import { Messaging } from '../../messaging';
 import Urbit from '@urbit/http-api';
-import { Command } from './types';
+import { Command, MenuItem } from './types';
 
 interface InputProps {
   nextArg: Boolean;
   sendCommand: Boolean;
   baseFocus?: Boolean;
+  commands?: MenuItem[];
+  filteredCommands?: (commands: MenuItem[]) => void;
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   selectedToInput: Command;
@@ -18,6 +20,7 @@ interface InputProps {
 
 const BaseInput = (props: InputProps) => {
   const baseInput = useRef(null);
+  const [commands, setCommands] = useState(props.commands);
 
   useEffect(() => {
     if (props.baseFocus) baseInput.current.focus();
@@ -27,7 +30,41 @@ const BaseInput = (props: InputProps) => {
     baseInput.current.focus();
   }, [baseInput]);
 
-  return <input ref={baseInput} contentEditable className="cl-base-input" placeholder="Type..." />;
+  const handleInputChange = (change: any) => {
+    if (change.target.value == 0) {
+      props.clearSelected(true);
+      console.log('inp 0');
+    } else if (change.target) {
+      const inp = change.target.value.toLowerCase();
+
+      if (inp.length > 0) {
+        const filtered = commands.filter(command => command.title.toLowerCase().includes(inp));
+
+        if (commands.length == filtered.length) {
+          console.log('same');
+        } else {
+          props.filteredCommands(filtered);
+        }
+      } else {
+        props.filteredCommands(commands);
+      }
+    }
+  };
+
+  return (
+    <input
+      ref={baseInput}
+      onChange={(change: any) => handleInputChange(change)}
+      onKeyDown={(event: React.KeyboardEvent) => {
+        if (event.key == 'Backspace' && (event.target as any).value == 0) {
+          props.clearSelected(true);
+        }
+      }}
+      contentEditable
+      className="cl-base-input"
+      placeholder="Type..."
+    />
+  );
 };
 
 export default BaseInput;

@@ -6,7 +6,7 @@ const Icon = () => <img src={subscriptionIcon} />;
 
 export const Subscribe: Command = {
   command: 'subscribe',
-  title: 'Subscription',
+  title: 'Subscribe',
   icon: <Icon />,
   description: 'subscribe to updates from an agent on your ship',
   arguments: ['app', 'path'],

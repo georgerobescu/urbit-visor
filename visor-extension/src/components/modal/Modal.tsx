@@ -14,10 +14,21 @@ import { Spider } from './commands/Spider';
 import { Terminal } from './commands/Terminal';
 import { DM } from './commands/DM';
 import { Notifications } from './commands/Notifications';
-import { MenuItem } from './types';
+import { MenuItem, Command } from './types';
 import { Groups } from './commands/Groups';
+import { History } from './commands/History';
 
-const commands: MenuItem[] = [Terminal, Poke, Groups, Scry, Spider, Subscribe, Notifications, DM];
+const initialCommands: Command[] = [
+  History,
+  Poke,
+  Scry,
+  Subscribe,
+  Spider,
+  Terminal,
+  DM,
+  Groups,
+  Notifications,
+];
 
 const Modal = () => {
   const rootRef = useRef(null);
@@ -35,6 +46,19 @@ const Modal = () => {
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
   const [metadata, setMetadata] = useState(null);
+  const [prefilledArgs, setPrefilledArgs] = useState(null);
+  const [argPreview, setArgPreview] = useState(null);
+  const [commands, setCommands] = useState([
+    History,
+    Poke,
+    Scry,
+    Subscribe,
+    Spider,
+    Terminal,
+    DM,
+    Groups,
+    Notifications,
+  ] as MenuItem[]);
 
   useEffect(() => {
     setNextArg(null);
@@ -49,6 +73,8 @@ const Modal = () => {
       setBaseFocus(true);
       setContextItems(null);
       setClearSelected(null);
+      setArgPreview(false);
+      setCommands(initialCommands.map(({ prefilledArguments, ...attr }) => attr));
     }
   }, [clearSelected]);
 
@@ -82,8 +108,7 @@ const Modal = () => {
         rootRef.current.focus();
       } else setBaseFocus(true);
     } else if (e.data == 'closing') {
-      setSelectedToInput(null);
-      setSelected(null);
+      setClearSelected(true);
     } else return;
   };
 
@@ -91,6 +116,14 @@ const Modal = () => {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   });
+
+  useEffect(() => {
+    if (argPreview) {
+      console.log(selected, 'selected changed');
+
+      setSelectedToInput(selected);
+    }
+  }, [selected]);
 
   /*
   useEffect(() => {
@@ -139,10 +172,9 @@ const Modal = () => {
       console.log('sending close');
       event.preventDefault();
       window.top.postMessage('close', '*');
-      setSelectedToInput(null);
-      setSelected(null);
-      setContextItems(null);
+      setClearSelected(true);
     } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+      console.log('arrow event');
       event.preventDefault();
       setKeyDown(event);
       return;
@@ -169,6 +201,16 @@ const Modal = () => {
         airlockResponse={(res: any) => setAirlockResponse(res)}
         contextItems={items => setContextItems(items)}
         metadata={metadata}
+        commands={initialCommands}
+        setCommands={command => setCommands(command)}
+        filteredCommands={commands => setCommands(commands)}
+        changeSelected={selected => {
+          setSelected(selected);
+          setSelectedToInput(selected);
+        }}
+        prefilledArgs={args => setPrefilledArgs(args)}
+        setArgPreview={(preview: Boolean) => setArgPreview(preview)}
+        argPreview={argPreview}
       />
       <Body
         commands={commands}

@@ -16,6 +16,9 @@ interface InputProps {
   refs?: (refs: any) => void;
   response?: Boolean;
   inputChange?: (change: any) => void;
+  setArgPreview?: (preview: Boolean) => void;
+  persistInput?: Boolean;
+  argPreview?: Boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -25,16 +28,30 @@ const Input = (props: InputProps) => {
   const selection = (window as any).getSelection();
 
   useEffect(() => {
-    const ref = inputRef;
-    return () => {
-      ref.current = [];
-    };
+    console.log('prefilling args');
+
+    if (props.selectedToInput.prefilledArguments) {
+      inputRef.current.forEach((input, i) => {
+        input.innerHTML = props.selectedToInput.prefilledArguments[i];
+      });
+      const lastArg = inputRef.current[inputRef.current.length - 1];
+      setCurrentFocus(inputRef.current.length - 1);
+      const range = document.createRange();
+      range.selectNodeContents(lastArg);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      lastArg.focus();
+      range.detach();
+    }
   }, [props.selectedToInput]);
 
   useEffect(() => {
-    inputRef.current[0].focus();
-    setCurrentFocus(0);
-    props.refs ? props.refs(inputRef) : null;
+    if (!props.selectedToInput.prefilledArguments) {
+      inputRef.current[0].focus();
+      setCurrentFocus(0);
+      props.refs ? props.refs(inputRef) : null;
+    }
   }, [inputRef]);
   useEffect(() => {
     if (!props.nextArg) {
@@ -80,11 +97,27 @@ const Input = (props: InputProps) => {
         }
       };
       f();
-      inputRef.current.forEach(input => {
-        input.innerHTML = '';
-      });
-      inputRef.current[0].focus();
-      setCurrentFocus(0);
+      if (props.selectedToInput.title !== 'Groups') {
+        console.log(inputRef.current.map(arg => arg.innerHTML));
+        Messaging.sendToBackground({
+          action: 'store_command_history',
+          data: {
+            command: props.selectedToInput.title,
+            arguments: inputRef.current.map(arg => arg.innerHTML),
+          },
+        }).then(res => console.log(res));
+      }
+
+      props.persistInput
+        ? (inputRef.current.forEach(input => {
+            input.innerHTML = '';
+          }),
+          inputRef.current[0].focus(),
+          setCurrentFocus(0))
+        : (inputRef.current.forEach(input => {
+            input.innerHTML = '';
+          }),
+          props.clearSelected(true));
     } else {
       console.log('not sending poke');
       inputRef.current.forEach(input => {
@@ -112,8 +145,13 @@ const Input = (props: InputProps) => {
             contentEditable="true"
             data-placeholder={arg}
             onKeyUp={(event: React.KeyboardEvent) => {
-              if ((props.inputChange && event.key.length == 1) || event.key == 'Backspace')
-                props.inputChange(event);
+              if (props.inputChange) {
+                if (
+                  ((event.target as Element).innerHTML !== '' && event.key.length == 1) ||
+                  event.key == 'Backspace'
+                )
+                  props.inputChange(event);
+              }
             }}
             onKeyDown={(event: React.KeyboardEvent) => {
               if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {

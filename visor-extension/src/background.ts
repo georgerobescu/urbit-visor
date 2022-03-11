@@ -163,6 +163,9 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
     case 'get_settings':
       sendResponse({ popupPreference: state.popupPreference });
       break;
+    case 'get_command_history':
+      sendResponse({ commandHistory: state.commandHistory });
+      break;
     case 'set_master_password':
       state.setMasterPassword(request.data.password).then(res => sendResponse('ok'));
       break;
@@ -315,6 +318,10 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
       break;
     case 'cache_form_creds':
       state.cacheCreds(request.data.creds);
+      sendResponse('ok');
+      break;
+    case 'store_command_history':
+      state.storeCommandHistory(request.data);
       sendResponse('ok');
       break;
   }

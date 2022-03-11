@@ -2,6 +2,7 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from 'react';
 import Urbit from '@urbit/http-api';
+import HistoryInput from './input/HistoryInput';
 import PokeInput from './input/PokeInput';
 import ScryInput from './input/ScryInput';
 import SubscribeInput from './input/SubscribeInput';
@@ -20,6 +21,9 @@ interface InputProps {
   selectedToInput: MenuItem;
   selected: MenuItem;
   metadata?: Object;
+  commands?: MenuItem[];
+  setCommands?: (commands: MenuItem[]) => void;
+  filteredCommands?: (commands: MenuItem[]) => void;
   baseFocus: Boolean;
   nextArg: Boolean;
   previousArg: Boolean;
@@ -27,6 +31,10 @@ interface InputProps {
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   contextItems: (items: ContextMenuItem[]) => void;
+  changeSelected: (selected: Command) => void;
+  prefilledArgs?: (args: string[]) => void;
+  setArgPreview?: (preview: Boolean) => void;
+  argPreview?: Boolean;
 }
 
 const Inputbox = (props: InputProps) => {
@@ -39,6 +47,9 @@ const Inputbox = (props: InputProps) => {
   switch (
     selectedContext(props.selected) ? props.selected?.commandTitle : props.selectedToInput?.title
   ) {
+    case 'History':
+      command = <HistoryInput {...props} />;
+      break;
     case 'Poke':
       command = <PokeInput {...props} />;
       break;
