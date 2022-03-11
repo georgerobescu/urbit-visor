@@ -16,6 +16,7 @@ import visorSvgLogo from '../../icons/visorWhiteText.svg';
 
 import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
+import HomeInput from './input/HomeInput';
 
 interface InputProps {
   selectedToInput: MenuItem;
@@ -52,6 +53,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'Poke':
       command = <PokeInput {...props} />;
+      break;
+    case 'Home':
+      command = <HomeInput {...props} />;
       break;
     case 'Scry':
       command = <ScryInput {...props} />;

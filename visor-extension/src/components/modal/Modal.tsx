@@ -17,9 +17,11 @@ import { Notifications } from './commands/Notifications';
 import { MenuItem, Command } from './types';
 import { Groups } from './commands/Groups';
 import { History } from './commands/History';
+import { Home } from './commands/Home';
 
 const initialCommands: Command[] = [
   History,
+  Home,
   Poke,
   Scry,
   Subscribe,
@@ -50,6 +52,7 @@ const Modal = () => {
   const [argPreview, setArgPreview] = useState(null);
   const [commands, setCommands] = useState([
     History,
+    Home,
     Poke,
     Scry,
     Subscribe,
