@@ -34,6 +34,7 @@ const HomeInput = (props: InputProps) => {
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );
+      props.clearSelected(true);
     }
   }, [url]);
 
