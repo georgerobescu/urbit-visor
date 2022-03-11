@@ -18,6 +18,7 @@ import { MenuItem, Command } from './types';
 import { Groups } from './commands/Groups';
 import { History } from './commands/History';
 import { Home } from './commands/Home';
+import { Bitcoin } from './commands/Bitcoin';
 
 const initialCommands: Command[] = [
   History,
@@ -30,6 +31,7 @@ const initialCommands: Command[] = [
   DM,
   Groups,
   Notifications,
+  Bitcoin,
 ];
 
 const Modal = () => {
@@ -61,6 +63,7 @@ const Modal = () => {
     DM,
     Groups,
     Notifications,
+    Bitcoin,
   ] as MenuItem[]);
 
   useEffect(() => {
