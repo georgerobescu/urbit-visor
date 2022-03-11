@@ -2,11 +2,15 @@ import { Command } from '../types';
 import React from 'react';
 import UrbitInterface from '@urbit/http-api';
 import { addDmMessage } from '@urbit/api';
+import dmIcon from '../../../icons/history.svg';
+
+const Icon = () => <img src={dmIcon} />;
 
 export const History: Command = {
   command: '',
   title: 'History',
-  description: 'select from previously executed commands',
+  icon: <Icon />,
+  description: 'Select from previously executed commands.',
   arguments: [],
   schema: [],
 };

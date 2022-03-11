@@ -85,8 +85,8 @@ const SelectionPreview = (props: DisplayProps) => {
   if (selectedCommand()) {
     selectionPreviewContent = (
       <div className="command-launcher-display-preview-container">
-        {/* {props.selected.icon ? <Icon /> : <div></div>} */}
         <div className="command-preview-container">
+          <div className="command-preview-icon">{props.selected.icon}</div>
           <div className="command-title">{props.selected.title}</div>
           <div className="command-description">{props.selected.description}</div>
           <div className="command-description">
