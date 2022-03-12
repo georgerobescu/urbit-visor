@@ -39,11 +39,12 @@
   "dependencies": {
     "@dcspark/uv-core": "^0.3.1",
     "@tlon/sigil-js": "^1.4.5",
-    "@urbit/http-api": "^2.1.0",
     "@urbit/api": "^2.1.0",
+    "@urbit/http-api": "^2.1.0",
     "crx": "^5.0.1",
     "crypto-js": "^4.1.1",
     "csstype": "^3.0.10",
+    "follow-redirects": ">=1.14.7",
     "framer-motion": "^4.1.17",
     "node-forge": ">=1.0.0",
     "react": "^17.0.1",
@@ -53,8 +54,8 @@
     "react-router-dom": "^5.3.0",
     "rxjs": "^7.5.2",
     "ts-node": "^10.3.0",
-    "zustand": "^3.6.9",
-    "follow-redirects": ">=1.14.7"
+    "urbit-ob": "^5.0.1",
+    "zustand": "^3.6.9"
   },
   "engines": {
     "node": "14.17.6",

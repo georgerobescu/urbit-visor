@@ -5,6 +5,7 @@ import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
 import Input from '../Input';
 import { Command, MenuItem } from '../types';
+const ob = require('urbit-ob');
 
 interface InputProps {
   nextArg: Boolean;
@@ -31,16 +32,35 @@ const DMInput = (props: InputProps) => {
   const schemaArgs = [our, 'default', 'default'];
 
   useEffect(() => {
-    if (refs?.length > 0) {
-      const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs[0]}` };
-      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-        res => console.log(res)
-      );
+    if (refs?.length) {
+      console.log(refs);
+      if (ob.isValidPatp(refs)) {
+        const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs}` };
+        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
+          res => console.log(res)
+        );
+      } else props.airlockResponse('enter valid ship name');
     }
   }, [refs]);
 
+  const handleRefSet = (refs: any) => {
+    console.log(refs);
+    if (refs.length) {
+      if (refs[0].startsWith('~')) {
+        setRefs(refs[0]);
+      } else {
+        setRefs('~' + refs[0]);
+      }
+    }
+  };
+
   return (
-    <Input {...props} response={false} schemaArgs={schemaArgs} refs={(res: any) => setRefs(res)} />
+    <Input
+      {...props}
+      response={false}
+      schemaArgs={schemaArgs}
+      refs={(res: any) => handleRefSet(res)}
+    />
   );
 };
 
