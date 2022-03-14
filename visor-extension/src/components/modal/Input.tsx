@@ -158,6 +158,9 @@ const Input = (props: InputProps) => {
                 props.clearSelected(true);
               } else if ((event.target as Element).classList.contains('highlight-required')) {
                 (event.target as Element).classList.remove('highlight-required');
+              } else if (event.key == 'Backspace' && event.shiftKey) {
+                event.preventDefault();
+                (event.target as Element).innerHTML = '';
               } else {
                 return;
               }

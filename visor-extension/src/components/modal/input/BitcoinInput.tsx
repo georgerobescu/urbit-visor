@@ -1,98 +1,44 @@
-// NOT USED, MAYBE DELETE
-
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState, useRef } from 'react';
-import { urbitVisor } from '@dcspark/uv-core';
 import { Messaging } from '../../../messaging';
 import Urbit from '@urbit/http-api';
+import Input from '../Input';
+import BaseInput from '../BaseInput';
+
+import { Command, MenuItem } from '../types';
 
 interface InputProps {
   nextArg: Boolean;
+  previousArg: Boolean;
   sendCommand: Boolean;
+  airlockResponse: (response: any) => void;
+  clearSelected: (clear: Boolean) => void;
+  selectedToInput: Command;
+  selected: MenuItem;
 }
 
 const BitcoinInput = (props: InputProps) => {
-  const shipInput = useRef(null);
-  const amountInput = useRef(null);
-  const [currentFocus, setCurrentFocus] = useState(null);
-
-  const selection = (window as any).getSelection();
+  const [url, setUrl] = useState(null);
+  const [focus, setFocus] = useState(null);
 
   useEffect(() => {
-    shipInput.current.focus();
-    setCurrentFocus('ship');
-  }, [shipInput]);
+    Messaging.sendToBackground({ action: 'get_ships' }).then(res => {
+      setUrl(res.airlock.url);
+    });
+  }, [props.selectedToInput]);
+
   useEffect(() => {
-    if (!props.nextArg) {
-      return;
-    } else if (currentFocus == 'ship') {
-      amountInput.current.focus();
-      setCurrentFocus('amount');
+    if (url) {
+      const data = { url: `${url}/apps/bitcoin/` };
+      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
+        res => console.log(res)
+      );
+      props.clearSelected(true);
     }
-  }, [props.nextArg]);
+  }, [url]);
 
-  return (
-    <div style={divStyle}>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: [
-            '.div-input {',
-            '  display: inline-block;',
-            '  vertical-align: top;',
-            '  min-width: 1em;',
-            '  padding: 0px 5px 0px 5px;',
-            '  cursor: text;',
-            '}',
-            '.div-input:empty:before {',
-            '  content: attr(data-placeholder);',
-            '  color: #ccc;',
-            '}',
-            '.div-input br {',
-            '  display: none;',
-            '}',
-            '.div-input * {',
-            '  display: inline;',
-            '}',
-          ].join('\n'),
-        }}
-      ></style>
-      <div>bitcoin:</div>
-      <div>
-        <div
-          className="div-input"
-          contentEditable="true"
-          style={inputStyle}
-          data-placeholder="ship"
-          ref={shipInput}
-        ></div>
-      </div>
-      <div>
-        <div
-          className="div-input"
-          contentEditable="true"
-          style={inputStyle}
-          data-placeholder="amount"
-          ref={amountInput}
-          onKeyDown={(event: React.KeyboardEvent) => {
-            if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
-              shipInput.current.focus();
-              event.preventDefault();
-              setCurrentFocus('ship');
-              selection.setPosition(selection.focusNode, selection.focusNode.length);
-            }
-          }}
-        ></div>
-      </div>
-    </div>
-  );
-};
-
-const divStyle: CSS.Properties = {
-  display: 'flex',
-};
-const inputStyle: CSS.Properties = {
-  width: 'fit-content',
+  return <BaseInput {...props} />;
 };
 
 export default BitcoinInput;

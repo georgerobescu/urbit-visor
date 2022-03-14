@@ -14,6 +14,13 @@ export const DM: Command = {
   arguments: ['ship', 'message'],
   schema: [
     (props: any[]) =>
-      addDmMessage(props[0], props[1][0].innerHTML, [{ text: props[2][1].innerHTML }]),
+      addDmMessage(props[0], checkSig(props[1][0].innerHTML), [{ text: props[2][1].innerHTML }]),
   ],
 };
+function checkSig(innerHTML: any): string {
+  if (innerHTML.startsWith('~')) {
+    return innerHTML;
+  } else {
+    return '~' + innerHTML;
+  }
+}

@@ -11,6 +11,7 @@ interface BodyProps {
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
   airlockResponse: any;
+  firstSelected: Boolean;
   commands: MenuItem[];
 }
 
@@ -23,6 +24,7 @@ const Body = (props: BodyProps) => {
         handleSelection={props.handleSelection}
         keyDown={props.keyDown}
         contextItems={props.contextItems}
+        firstSelected={props.firstSelected}
       />
       <Display selected={props.selected} airlockResponse={props.airlockResponse} />
     </div>

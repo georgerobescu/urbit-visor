@@ -17,9 +17,12 @@ import { Notifications } from './commands/Notifications';
 import { MenuItem, Command } from './types';
 import { Groups } from './commands/Groups';
 import { History } from './commands/History';
+import { Home } from './commands/Home';
+import { Bitcoin } from './commands/Bitcoin';
 
 const initialCommands: Command[] = [
   History,
+  Home,
   Poke,
   Scry,
   Subscribe,
@@ -28,10 +31,11 @@ const initialCommands: Command[] = [
   DM,
   Groups,
   Notifications,
+  Bitcoin,
 ];
 
 const Modal = () => {
-  const rootRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState(null);
   const [contextItems, setContextItems] = useState(null);
   const [baseFocus, setBaseFocus] = useState(null);
@@ -48,8 +52,11 @@ const Modal = () => {
   const [metadata, setMetadata] = useState(null);
   const [prefilledArgs, setPrefilledArgs] = useState(null);
   const [argPreview, setArgPreview] = useState(null);
+  const [firstSelected, setFirstSelected] = useState(null);
+
   const [commands, setCommands] = useState([
     History,
+    Home,
     Poke,
     Scry,
     Subscribe,
@@ -58,6 +65,7 @@ const Modal = () => {
     DM,
     Groups,
     Notifications,
+    Bitcoin,
   ] as MenuItem[]);
 
   useEffect(() => {
@@ -65,7 +73,8 @@ const Modal = () => {
     setPreviousArg(null);
     setSendCommand(null);
     setBaseFocus(false);
-  }, [nextArg, previousArg, sendCommand, baseFocus]);
+    setFirstSelected(false);
+  }, [nextArg, previousArg, sendCommand, baseFocus, firstSelected]);
   useEffect(() => {
     if (clearSelected) {
       setSelectedToInput(null);
@@ -74,6 +83,7 @@ const Modal = () => {
       setContextItems(null);
       setClearSelected(null);
       setArgPreview(false);
+      setFirstSelected(false);
       setCommands(initialCommands.map(({ prefilledArguments, ...attr }) => attr));
     }
   }, [clearSelected]);
@@ -199,11 +209,23 @@ const Modal = () => {
         previousArg={previousArg}
         sendCommand={sendCommand}
         airlockResponse={(res: any) => setAirlockResponse(res)}
-        contextItems={items => setContextItems(items)}
+        contextItems={items => {
+          setContextItems(items);
+          setSelected(items[0]);
+          setFirstSelected(true);
+        }}
         metadata={metadata}
         commands={initialCommands}
-        setCommands={command => setCommands(command)}
-        filteredCommands={commands => setCommands(commands)}
+        setCommands={command => {
+          setCommands(command);
+          setSelected(command[0]);
+          setFirstSelected(true);
+        }}
+        filteredCommands={commands => {
+          setCommands(commands);
+          setSelected(commands[0]);
+          setFirstSelected(true);
+        }}
         changeSelected={selected => {
           setSelected(selected);
           setSelectedToInput(selected);
@@ -219,6 +241,7 @@ const Modal = () => {
         keyDown={keyDown}
         airlockResponse={airlockResponse}
         contextItems={contextItems}
+        firstSelected={firstSelected}
       />
     </div>
   );

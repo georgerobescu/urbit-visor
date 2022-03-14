@@ -16,6 +16,8 @@ import visorSvgLogo from '../../icons/visorWhiteText.svg';
 
 import { Command, ContextMenuItem, MenuItem } from './types';
 import Input from './Input';
+import HomeInput from './input/HomeInput';
+import BitcoinInput from './input/BitcoinInput';
 
 interface InputProps {
   selectedToInput: MenuItem;
@@ -53,6 +55,9 @@ const Inputbox = (props: InputProps) => {
     case 'Poke':
       command = <PokeInput {...props} />;
       break;
+    case 'Home':
+      command = <HomeInput {...props} />;
+      break;
     case 'Scry':
       command = <ScryInput {...props} />;
       break;
@@ -73,6 +78,9 @@ const Inputbox = (props: InputProps) => {
       break;
     case 'Notifications':
       command = <NotificationInput {...props} />;
+      break;
+    case 'Bitcoin':
+      command = <BitcoinInput {...props} />;
       break;
     default:
       command = <BaseInput {...props} />;

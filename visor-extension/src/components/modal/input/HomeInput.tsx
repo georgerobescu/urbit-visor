@@ -18,7 +18,7 @@ interface InputProps {
   selected: MenuItem;
 }
 
-const NotificationInput = (props: InputProps) => {
+const HomeInput = (props: InputProps) => {
   const [url, setUrl] = useState(null);
   const [focus, setFocus] = useState(null);
 
@@ -30,7 +30,7 @@ const NotificationInput = (props: InputProps) => {
 
   useEffect(() => {
     if (url) {
-      const data = { url: `${url}/apps/grid/leap/notifications` };
+      const data = { url: `${url}/apps/landscape/` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );
@@ -41,4 +41,4 @@ const NotificationInput = (props: InputProps) => {
   return <BaseInput {...props} />;
 };
 
-export default NotificationInput;
+export default HomeInput;

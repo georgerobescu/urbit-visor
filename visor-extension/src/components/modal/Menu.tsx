@@ -8,6 +8,7 @@ interface MenuOptionProps {
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
+  firstSelected: Boolean;
   commands: Command[];
   contextItems?: ContextMenuItem[];
 }
@@ -21,6 +22,7 @@ const Menu = (props: MenuOptionProps) => {
         selected={props.selected}
         handleSelection={props.handleSelection}
         keyDown={props.keyDown}
+        firstSelected={props.firstSelected}
       />
     </div>
   );
