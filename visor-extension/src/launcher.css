@@ -23,8 +23,6 @@
 
 .command-launcher-display-preview-container {
   height: 100%;
-  display: flex;
-  justify-content: center;
   text-align: center;
 }
 
@@ -196,9 +194,8 @@
   font-size: 14px;
 }
 
-.command-preview-container {
-  width: 340px;
-}
+/* .command-preview-container {
+} */
 
 .command-launcher-display .command-title {
   padding: 24px 0 16px;
@@ -207,6 +204,12 @@
 }
 
 .command-description {
+  width: 340px;
+  margin: 0 auto;
+}
+
+.command-description p {
+  margin: 0;
   line-height: 32px;
 }
 
