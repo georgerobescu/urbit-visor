@@ -35,17 +35,21 @@ const Display = (props: DisplayProps) => {
     // If the response is an object
     else if (typeof props.airlockResponse == 'object') {
       displayContent = (
-        <ReactJson
-          style={{ padding: '15px' }}
-          src={props.airlockResponse}
-          enableClipboard={false}
-        />
+        <ReactJson style={{ padding: '15px' }} src={props.airlockResponse} enableClipboard={true} />
       );
     }
     // Otherwise
     else {
       displayContent = (
-        <div style={{ textAlign: 'center' }}>{JSON.stringify(props.airlockResponse)}</div>
+        <div style={{ textAlign: 'center' }}>
+          {JSON.stringify(props.airlockResponse)}
+
+          <button
+            onClick={event => navigator.clipboard.writeText(JSON.stringify(props.airlockResponse))}
+          >
+            copy
+          </button>
+        </div>
       );
     }
   }
@@ -67,7 +71,11 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
   return (
     <div className="airlock-subscription-display">
       {props.airlockResponse.map((line: any, index: number) => (
-        <div key={index} className="airlock-subscription-display-line">
+        <div
+          key={index}
+          className="airlock-subscription-display-line"
+          onClick={event => navigator.clipboard.writeText(JSON.stringify(line))}
+        >
           {JSON.stringify(line)}
         </div>
       ))}

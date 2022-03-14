@@ -32,6 +32,7 @@ function appendLauncher() {
   modal.style.borderColor = 'transparent';
   const frame = document.createElement('iframe');
   frame.src = 'chrome-extension://oadimaacghcacmfipakhadejgalcaepg/launcher.html';
+  frame.allow = 'clipboard-read; clipboard-write';
   frame.id = 'frame';
   frame.style.height = '640px';
   frame.style.width = '760px';
