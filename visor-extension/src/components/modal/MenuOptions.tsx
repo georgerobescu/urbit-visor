@@ -7,6 +7,7 @@ interface MenuOptionProps {
   handleSelection: (menuItem: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
+  firstSelected: Boolean;
   commands: MenuItem[];
   contextItems: ContextMenuItem[];
 }
@@ -19,6 +20,14 @@ const MenuOptions = (props: MenuOptionProps) => {
   }, [props.contextItems, props.commands]);
 
   useEffect(() => {
+    if (props.firstSelected) {
+      setClickedIndex(0);
+      props.handleSelection(props.contextItems ? props.contextItems[0] : props.commands[0]);
+    }
+  }, [props.firstSelected]);
+
+  useEffect(() => {
+    console.log('got keydown');
     if (!props.keyDown) {
       return;
     } else if (
