@@ -37,6 +37,7 @@ interface InputProps {
   prefilledArgs?: (args: string[]) => void;
   setArgPreview?: (preview: Boolean) => void;
   argPreview?: Boolean;
+  placeholder?: string;
 }
 
 const Inputbox = (props: InputProps) => {

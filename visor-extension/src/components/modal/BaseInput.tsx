@@ -16,6 +16,7 @@ interface InputProps {
   selectedToInput: Command;
   schemaArgs?: any[];
   refs?: (refs: any) => void;
+  placeholder?: string;
 }
 
 const BaseInput = (props: InputProps) => {
@@ -23,11 +24,15 @@ const BaseInput = (props: InputProps) => {
   const [commands, setCommands] = useState(props.commands);
 
   useEffect(() => {
-    if (props.baseFocus) baseInput.current.focus();
+    if (!props.placeholder) {
+      if (props.baseFocus) baseInput.current.focus();
+    }
   }, [props.baseFocus]);
 
   useEffect(() => {
-    baseInput.current.focus();
+    if (!props.placeholder) {
+      baseInput.current.focus();
+    }
   }, [baseInput]);
 
   const handleInputChange = (change: any) => {
@@ -51,20 +56,28 @@ const BaseInput = (props: InputProps) => {
     }
   };
 
-  return (
-    <input
-      ref={baseInput}
-      onChange={(change: any) => handleInputChange(change)}
-      onKeyDown={(event: React.KeyboardEvent) => {
-        if (event.key == 'Backspace' && (event.target as any).value == 0) {
-          props.clearSelected(true);
-        }
-      }}
-      contentEditable
-      className="cl-base-input"
-      placeholder="Type..."
-    />
-  );
+  let input;
+
+  if (props.placeholder) {
+    input = <span>{props.placeholder}</span>;
+  } else {
+    input = (
+      <input
+        ref={baseInput}
+        onChange={(change: any) => handleInputChange(change)}
+        onKeyDown={(event: React.KeyboardEvent) => {
+          if (event.key == 'Backspace' && (event.target as any).value == 0) {
+            props.clearSelected(true);
+          }
+        }}
+        contentEditable
+        className="cl-base-input"
+        placeholder="Type..."
+      />
+    );
+  }
+
+  return input;
 };
 
 export default BaseInput;

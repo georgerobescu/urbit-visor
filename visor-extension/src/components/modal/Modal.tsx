@@ -53,6 +53,9 @@ const Modal = () => {
   const [prefilledArgs, setPrefilledArgs] = useState(null);
   const [argPreview, setArgPreview] = useState(null);
   const [firstSelected, setFirstSelected] = useState(null);
+  const [connectShip, setConnectShip] = useState(
+    'Please connect to a ship to use the Visor Command Launcher'
+  );
 
   const [commands, setCommands] = useState([
     History,
@@ -135,61 +138,58 @@ const Modal = () => {
     }
   }, [selected]);
 
-  /*
   useEffect(() => {
-    const sub = urbitVisor.on("connected", [], () => {
-      handleConnection()
+    const sub = urbitVisor.on('connected', [], () => {
+      handleConnection();
     });
     handleConnection();
-    return () => urbitVisor.off(sub)
-  })
+    return () => urbitVisor.off(sub);
+  });
 
   const handleConnection = () => {
     if (isConnected) {
-      return
-    }
-    else {
+      return;
+    } else {
       urbitVisor.isConnected().then(connected => {
         if (connected.response) {
           setIsConnected(true);
-        }
-        else {
-          urbitVisor.promptConnection();
+          setConnectShip(null);
         }
       });
     }
-  }
-*/
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
-      console.log('selecting to input');
-      event.preventDefault();
-      setSelectedToInput(selected);
-      setAirlockResponse(null);
-    } else if (event.key == 'Enter' && selected == selectedToInput) {
-      event.preventDefault();
-      setSendCommand(true);
-      setSpaceAllowed(false);
-    } else if (event.key == 'Enter' && contextItems) {
-      event.preventDefault();
-      setSendCommand(true);
-    } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
-      setPreviousArg(true);
-    } else if (event.key == 'Tab' && selected == selectedToInput) {
-      setNextArg(true);
-    } else if (event.key == 'Escape') {
-      console.log('sending close');
-      event.preventDefault();
-      window.top.postMessage('close', '*');
-      setClearSelected(true);
-    } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
-      console.log('arrow event');
-      event.preventDefault();
-      setKeyDown(event);
-      return;
-    } else {
-      return;
+    if (isConnected) {
+      if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
+        console.log('selecting to input');
+        event.preventDefault();
+        setSelectedToInput(selected);
+        setAirlockResponse(null);
+      } else if (event.key == 'Enter' && selected == selectedToInput) {
+        event.preventDefault();
+        setSendCommand(true);
+        setSpaceAllowed(false);
+      } else if (event.key == 'Enter' && contextItems) {
+        event.preventDefault();
+        setSendCommand(true);
+      } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
+        setPreviousArg(true);
+      } else if (event.key == 'Tab' && selected == selectedToInput) {
+        setNextArg(true);
+      } else if (event.key == 'Escape') {
+        console.log('sending close');
+        event.preventDefault();
+        window.top.postMessage('close', '*');
+        setClearSelected(true);
+      } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+        console.log('arrow event');
+        event.preventDefault();
+        setKeyDown(event);
+        return;
+      } else {
+        return;
+      }
     }
   };
   return (
@@ -233,6 +233,7 @@ const Modal = () => {
         prefilledArgs={args => setPrefilledArgs(args)}
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}
+        placeholder={connectShip}
       />
       <Body
         commands={commands}

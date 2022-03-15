@@ -92,15 +92,10 @@ function hotkeyListener() {
   };
   chrome.commands.onCommand.addListener((command, tab) => {
     const state = useStore.getState();
-    if (!state.activeShip) {
-      chrome.tabs.executeScript(tab.id, {
-        code: `(${showPopup})()`,
-      });
-    } else {
-      chrome.tabs.executeScript(tab.id, {
-        code: `(${showLauncher})()`,
-      });
-    }
+
+    chrome.tabs.executeScript(tab.id, {
+      code: `(${showLauncher})()`,
+    });
   });
 }
 
