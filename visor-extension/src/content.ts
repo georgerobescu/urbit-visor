@@ -70,7 +70,9 @@ function appendLauncher() {
     }
   });
 }
-appendLauncher();
+const isMobileDevice = /Mobi/i.test(window.navigator.userAgent);
+
+!isMobileDevice ? appendLauncher() : null;
 
 if (shouldInject()) {
   embed(proofOfVisor);
