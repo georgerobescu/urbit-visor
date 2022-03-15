@@ -95,15 +95,17 @@ const Modal = () => {
     let subscription: any;
     let number = 0;
 
-    if (!metadata) {
-      subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
+    if (isConnected) {
+      if (!metadata) {
+        subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
 
-      const setData = () => {
-        urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
-          number = res.response;
-        });
-      };
-      urbitVisor.require(['subscribe'], setData);
+        const setData = () => {
+          urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+            number = res.response;
+          });
+        };
+        urbitVisor.require(['subscribe'], setData);
+      }
     }
     return () => {
       if (metadata && subscription) {
