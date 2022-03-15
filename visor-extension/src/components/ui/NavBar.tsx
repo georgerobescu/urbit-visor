@@ -26,6 +26,7 @@ export default function NavBar({ interacting, active }: NavbarProps) {
     "/ship_list",
     "/settings/menu",
     "/about",
+    "/ask_perms"
   ].includes(location.pathname);
   const wrapperClass = active
     ? "navbar-sigil-wrapper active-navbar-sigil"

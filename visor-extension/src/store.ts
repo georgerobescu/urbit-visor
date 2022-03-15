@@ -69,7 +69,6 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
     const airlock = await connectToShip(url, ship);
     const perms = await fetchAllPerms(airlock.url);
     // TODO some handling here...?
-    console.log(perms, 'perms fetched');
     set(state => ({ activeShip: ship, airlock: airlock, permissions: perms.bucket }));
   },
   disconnectShip: async () => {

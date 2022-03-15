@@ -39,11 +39,12 @@ Existing apps already exist using React and Svelte, but any other framework, or 
 
 To improve the developer experience, Urbit Visor exposes a few TypeScript types for type safety. In this guide we will be using TypeScript, but if you're not, feel free to ignore the type annotations.
 
-As mentioned earlier, we will be creating a simple note-taking Urbit web app which will be called `urbit-notes`. Let's create the base boilerplate for your project using `create-react-app`:
+As mentioned earlier, we will be creating a simple note-taking Urbit web app which will be called `urbit-notes`. Let's create the base boilerplate for your project using [vite](https://vitejs.dev), a great build tool for JavaScript applications:
 
 ```bash
-npx create-react-app urbit-notes --template typescript
+npm create vite@latest
 ```
+Then choose a name, and `react-ts` as our template.
 
 To enable Urbit Visor functionality in your app you need to install the library `@dcspark/uv-core`. If you use npm, go to your app folder, and run
 
@@ -208,7 +209,7 @@ useEffect(() => {
 }, []);
 ```
 
-Now we have added all of the permissions we are going to need to enable the full functionality of the app. If you run your app again (via `npm start`) you will see that Urbit Visor will prompt you to grant the permissions which you newly added. Authorize the permissions on your end.
+Now we have added all of the permissions we are going to need to enable the full functionality of the app. If you run your app again (via `npm run dev`) you will see that Urbit Visor will prompt you to grant the permissions which you newly added. Authorize the permissions on your end.
 
 Let's now edit the `setData()` function to set up the notebook in which we will write/save our notes on the Urbit ship.
 
@@ -567,15 +568,16 @@ function buildPost(index: string, contents: Content[] = []) {
   };
 }
 function addNotebookPost() {
-  // Every graph-store node needs a unique index. Landscape has its own logic to generate them but you don't need to follow that
-  // they just need to be numeric and be in order, so you need to autoincrement. These variables will make more sense later when we
+  // Every graph-store node needs a unique index, so we need to autoincrement. 
+  // Graph-store indexes are very long, however, so we will parse them as JavaScript BigInt.
+  // These variables will make more sense later when we
   // show how to translate graph-store data structures for use in our app
-  const indexes: number[] = graphToList(posts).map((p) => p.index);
-  const last: number = indexes.reduce(
-    (acc: number, cur: number) => (acc > cur ? acc : cur),
-    0
+  const indexes: bigint[] = graphToList(posts).map((p) => p.index);
+  const last: bigint = indexes.reduce(
+    (acc: bigint, cur: bigint) => (acc > cur ? acc : cur),
+    0n
   );
-  const index = `/${last + 1}`;
+  const index = `/${last + 1n}`.replace("n", "");
   const contents = [{ text: title }, { text: text }];
   const children = {
     "1": {
@@ -766,27 +768,27 @@ Let's now add some rendering logic to display our Notebook posts.
 The data structures we are getting from `graph-store` are graphs, ordered objects with numerical keys. We will need to convert that data structure into a JavaScript array so React can render the posts. We'll create a `graphToList` function to translate the data structure sent by Urbit `graph-store` into something more ergonomic for the frontend, and a subcomponent, `PostPreview` to display that data.
 
 ```tsx
-function graphToList(graph: Graph): Post[] {
-  const nodes = Object.keys(graph).map((index) => graph[index]);
-  const notDeleted = nodes.filter((node) => typeof node.post !== "string"); // filter out deleted posts
-  return notDeleted
-    .map((node) => {
-      const revisions = node.children["1"].children; // look at the post revisions and choose the latest version to display
-      const last = Object.keys(revisions).reduce(
-        (acc, cur) => (parseInt(acc) > parseInt(cur) ? acc : cur),
-        "0"
-      );
-      const indexString = revisions[last].post.index.split("/")[1];
-      return {
-        index: parseInt(indexString),
-        contents: revisions[last].post.contents,
-        author: revisions[last].post.author,
-        date: revisions[last].post["time-sent"],
-        revisions: revisions,
-      };
-    })
-    .reverse(); // graphs are already ordered descending by index, reverse it so new notes show up first
-}
+  function graphToList(graph: Graph): Post[] {
+    const nodes = Object.keys(graph).map((index) => graph[index]);
+    const notDeleted = nodes.filter((node) => typeof node.post !== "string"); // filter out deleted posts
+    return notDeleted
+      .map((node) => {
+        const revisions = node.children["1"].children; // look at the post revisions and choose the latest version to display
+        const last = Object.keys(revisions).reduce(
+          (acc, cur) => (parseInt(acc) > parseInt(cur) ? acc : cur),
+          "0"
+        );
+        const indexString = revisions[last].post.index.split("/")[1];
+        return {
+          index: BigInt(indexString),
+          contents: revisions[last].post.contents,
+          author: revisions[last].post.author,
+          date: revisions[last].post["time-sent"],
+          revisions: revisions,
+        };
+      })
+      .reverse(); // graphs are already ordered descending by index, reverse it so new notes show up first
+  }
 const [selected, setSelected] = useState<Post>(null);
 function select(post: Post) {
   // make the new-post composer become an edit box when clicked on a post; restore when clicking again on the same post
@@ -957,7 +959,7 @@ function handleRemovePosts(data: any) {
 
 Moving forward, we also need to set the actual function that edits posts which are called from the markup.
 
-To continue in the spirit of minimalism, we will encode the logic suchthat if you empty the title and text of a post and click on "Edit Post", the post is deleted. If there's any content in the composer, the post is edited. You don't want to delete a precious note just by having fat fingers and clicking on the wrong button.
+To continue in the spirit of minimalism, we will encode the logic such that if you empty the title and text of a post and click on "Edit Post", the post is deleted. If there's any content in the composer, the post is edited. You don't want to delete a precious note just by having fat fingers and clicking on the wrong button.
 
 ```ts
 function editPost() {
