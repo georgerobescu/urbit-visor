@@ -3,6 +3,7 @@ import * as CSS from 'csstype';
 import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
 import { MenuItem, Command, ContextMenuItem } from './types';
+import { Welcome } from './commands/Welcome';
 
 interface DisplayProps {
   selected: MenuItem;
@@ -57,7 +58,7 @@ const Display = (props: DisplayProps) => {
   // Return the html to be rendered for Display with the content inside
   return (
     <div ref={scrollable} className="command-launcher-display">
-      {displayContent}
+      {displayContent ? displayContent : 'hello'}
     </div>
   );
 };
@@ -75,29 +76,22 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
   );
 };
 
-const SelectionPreview = (props: DisplayProps) => {
-  const selectedCommand = () => props.selected as Command;
-  const selectedContext = () => props.selected as ContextMenuItem;
+const SelectionPreview = ({ selected = Welcome }: DisplayProps) => {
+  const selectedItem = selected ? selected : Welcome;
 
-  let selectionPreviewContent;
-  const Icon = selectedCommand()?.icon;
-
-  if (selectedCommand()) {
-    selectionPreviewContent = (
-      <div className="command-launcher-display-preview-container">
-        {/* temporarily comment out */}
-        {/* {selectedCommand()?.icon ? <Icon /> : <div></div>} */}
-        <div>
-          <div>{props.selected.title}</div>
-          <div>{props.selected.description}</div>
-        </div>
+  let selectionPreviewContent = selectedItem ? (
+    <div className="command-launcher-display-preview-container">
+      <div className="command-preview-icon">{selectedItem.icon}</div>
+      <div className="command-title">{selectedItem.title}</div>
+      <div className="command-description">
+        <p>{selectedItem.description}</p>
+        <p>
+          Press <span className="tab-symbol">TAB</span> to focus on each input variable as a
+          separate block to move forward
+        </p>
       </div>
-    );
-  } else if (selectedContext()) {
-    selectionPreviewContent = (
-      <div className="command-launcher-display-preview-container">context selected</div>
-    );
-  }
+    </div>
+  ) : null;
   return <div className="command-launcher-display-preview">{selectionPreviewContent}</div>;
 };
 

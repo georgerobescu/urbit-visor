@@ -8,7 +8,7 @@ export const Poke: Command = {
   command: 'poke',
   title: 'Poke',
   icon: <Icon />,
-  description: 'poke an agent on your ship',
+  description: 'Send data to your Urbit ship.',
   arguments: ['app', 'mark', 'json'],
   schema: [
     (props: any[]) => ({

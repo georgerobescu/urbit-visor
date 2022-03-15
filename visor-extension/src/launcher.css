@@ -15,14 +15,15 @@
 .command-launcher-display {
   width: calc(100% - 184px);
   height: 100%;
-  background: lightgray;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+  background-color: #1b231f;
+  color: #ffffff;
 }
 
 .command-launcher-display-preview-container {
   height: 100%;
-  display: flex;
+  text-align: center;
 }
 
 .modal-input-box {
@@ -39,6 +40,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.modal-container:focus {
+  outline: none;
 }
 
 .cl-base-input {
@@ -179,5 +184,58 @@
 }
 
 .menu-option.selected .command-icon img {
+  filter: brightness(0) invert(1);
+}
+
+.command-launcher-display {
+  background-color: #1b231f;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+/* .command-preview-container {
+} */
+
+.command-launcher-display .command-title {
+  padding: 24px 0 16px;
+  text-transform: capitalize;
+  font-size: 18px;
+}
+
+.command-description {
+  width: 340px;
+  margin: 0 auto;
+}
+
+.command-description p {
+  margin: 0;
+  line-height: 32px;
+}
+
+.command-launcher-display .tab-symbol {
+  display: inline-block;
+  margin: 0 3px;
+  padding: 4px 17px;
+  border-radius: 2px;
+  background-color: #3a423e;
+  color: #19c586;
+  font-size: 12px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.command-preview-icon {
+  display: flex;
+  width: 64px;
+  height: 64px;
+  margin: 48px auto 0;
+  justify-content: center;
+  background-color: #3a423e;
+  border-radius: 12px;
+}
+
+.command-preview-icon img {
+  width: 36px;
   filter: brightness(0) invert(1);
 }
