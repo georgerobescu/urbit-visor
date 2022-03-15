@@ -1,6 +1,6 @@
 {
   "name": "urbit-visor",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -43,8 +43,7 @@
     "@urbit/http-api": "^2.1.0",
     "crx": "^5.0.1",
     "crypto-js": "^4.1.1",
-    "csstype": "^3.0.10",
-    "follow-redirects": ">=1.14.7",
+    "follow-redirects": ">=1.14.8",
     "framer-motion": "^4.1.17",
     "node-forge": ">=1.0.0",
     "react": "^17.0.1",

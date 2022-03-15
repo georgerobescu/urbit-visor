@@ -5,7 +5,7 @@ import threadIcon from '../../../icons/thread.svg';
 const Icon = () => <img src={threadIcon} />;
 
 export const Spider: Command = {
-  command: 'Thread',
+  command: 'thread',
   title: 'Thread',
   icon: <Icon />,
   description: 'Issues spider threads in your Urbit ship.',
