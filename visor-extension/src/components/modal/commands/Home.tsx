@@ -7,5 +7,5 @@ const Icon = () => <img src={notificationsIcon} />;
 export const Home: Command = {
   title: 'Home',
   /*   icon: <Icon />,
-   */ description: 'open Landscape',
+   */ description: 'Visit your Urbit Home (aka Grid).',
 };

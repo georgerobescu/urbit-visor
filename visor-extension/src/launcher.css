@@ -213,6 +213,10 @@
   line-height: 32px;
 }
 
+p.tab-description {
+    margin-top: 30px;
+}
+
 .command-launcher-display .tab-symbol {
   display: inline-block;
   margin: 0 3px;

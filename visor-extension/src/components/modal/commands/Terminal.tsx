@@ -8,7 +8,7 @@ export const Terminal: Command = {
   command: 'poke',
   title: 'Terminal',
   icon: <Icon />,
-  description: 'Lorem ipsum dolor etos.',
+  description: 'Issue commands to the terminal on your Urbit ship.',
   arguments: ['command'],
   schema: [
     (props: any[]) => ({ app: 'herm', mark: 'belt', json: { txt: [props[0].innerHTML] } }),

@@ -7,5 +7,6 @@ const Icon = () => <img src={urbitTilde} />;
 export const Welcome: Command = {
   title: 'Welcome To Urbit Visor Command Launcher',
   icon: <Icon />,
-  description: 'Lorem ipsum dolor etos.',
+  description:
+    'Use the up/down keys, or type the name, to select a command to run on your Urbit ship.',
 };

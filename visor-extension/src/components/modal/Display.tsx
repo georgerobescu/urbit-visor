@@ -92,8 +92,8 @@ const SelectionPreview = ({ selected = Welcome }: DisplayProps) => {
       <div className="command-preview-icon">{selectedItem.icon}</div>
       <div className="command-title">{selectedItem.title}</div>
       <div className="command-description">
-        <p>{selectedItem.description}</p>
-        <p>
+        <p className="command-description-text">{selectedItem.description}</p>
+        <p className='tab-description'>
           Press <span className="tab-symbol">TAB</span> to focus on each input variable as a
           separate block to move forward
         </p>
