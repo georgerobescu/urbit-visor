@@ -114,7 +114,7 @@ const Modal = () => {
         urbitVisor.unsubscribe(number).then(res => console.log(''));
       }
     };
-  });
+  }, [isConnected]);
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
