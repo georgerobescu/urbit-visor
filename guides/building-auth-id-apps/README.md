@@ -267,7 +267,7 @@ async function callServer() {
   const r = await fetch(serverURL + "/init", opts);
   const j = await r.json();
   if (j.status === "ok") {
-    const res = await urbitVisor.authorizeShip("havbex");
+    const res = await urbitVisor.authorizeShip("dister-dozzod-havbex");
     check(res.response);
   }
   else error("b");
