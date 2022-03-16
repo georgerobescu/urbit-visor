@@ -58,7 +58,7 @@ import { urbitVisor } from "@dcspark/uv-core";
 import "./App.css";
 function App() {
   useEffect(() => {
-    urbitVisor.require(["shipName", "subscribe", "poke"], setData);
+    urbitVisor.require(["shipName", "auth"], setData);
   }, []);
   function setData() {
     urbitVisor.getShip().then((res) => {
@@ -266,7 +266,10 @@ async function callServer() {
   };
   const r = await fetch(serverURL + "/init", opts);
   const j = await r.json();
-  if (j.status === "ok") visorAuth("havbex", check);
+  if (j.status === "ok") {
+    const res = await urbitVisor.authorizeShip("havbex");
+    check(res.response);
+  }
   else error("b");
 }
 function success(count: number) {
@@ -291,40 +294,10 @@ In lieu of a loading spinner we will modify and disable the Login button once we
 
 So what do we do now? One way of doing this is just displaying an input box and have the user input manually the authentication code they received. Again, this is similar to how email or SMS authentication works in most websites. If you are building a mobile, or CLI, or any other sort of application, you could very well implement an authentication flow like this, and it would work just fine.
 
-Thankfully, however, in a web environment we can use Urbit Visor to automate the process, so the user has to do exactly nothing. We'll have the user's Urbit Visor subscribe to `graph-store` and automatically read the authentication code sent by our backend Urbit ship running `auth-id`. Let's import the `visorAuth()` function that we called above in `callServer()`,
+Thankfully, however, in a web environment we can use Urbit Visor to automate the process, so the user has to do exactly nothing. We can use Urbit Visor's new endpoint, `authorizeShip()` to automate the authentication process. The function takes one argument, the name of the Urbit ship running `auth-id`, which will send a DM to the user with the auth code. Urbit Visor will automatically accept the DM and scry its contents in behalf of the user, and return the token it scried.
 
-```tsx
-import { visorAuth } from "./api";
-```
+Now all we have to do is make sure that token is the same as the one sent by the `auth-id` agent to the website's backend. Let's call the `check()` function to do that.
 
-and see what's inside:
-
-```tsx
-type Ship = string;
-export async function visorAuth(backendShip: Ship, callback: Function) {
-  await urbitVisor.poke({app: "dm-hook", mark: "dm-hook-action", json: {
-    accept: "~" + backendShip
-  }});
-  let on;
-  on = urbitVisor.on("sse", ["graph-update", "add-nodes"], (data: any) => {
-    const node = data.nodes[Object.keys(data.nodes)[0]];
-    const isDM = data.resource.name === "dm-inbox";
-    const isMine = node.post.author === backendShip;
-    if (isDM && isMine) {
-      const token = node.post.contents[0].text.split("\n ")[1];
-      callback(token);
-      urbitVisor.unsubscribe(sub);
-      urbitVisor.off(on);
-    }
-  });
-  const sub = await urbitVisor.subscribe({
-    app: "graph-store",
-    path: "/updates",
-  });
-}
-```
-
-The code above has the user's Urbit Visor preemptively accept a DM from our backend ship, then subscribes to `graph-store`, and finally sets a listener to parse incoming messages waiting for the DM sent by our backend ship. Once it detects the token has been received, it runs the callback function that has been passed to `visorAuth()` function. Let's go back to `App.tsx` and look at what we passed.
 
 ```tsx
 function check(token: string) {
@@ -351,11 +324,7 @@ async function backendCheck(token: string) {
 }
 ```
 
-it queries our backend Express server via the `backendCheck()` function, and resets the subscriptions and listeners.
-
-One criteria for telling whether the `graph-store` message sent was our authentication token is that the message was sent by our backend ship, see the `isMine` variable. In this example we have `havbex`, the public dcSpark star, but make sure that in your app you write in the ship that you will be using.
-
-The `backendCheck()` function will call our Express backend server API, sending a JSON payload with the ship name and the token extracted by Urbit Visor. The function is calling the `/check` function, which we haven't written yet at the server, so let's go back to `server.js` and do just that.
+The `backendCheck()` function will call our Express backend server API, sending a JSON payload with the ship name and the token extracted by Urbit Visor. The function is calling the `/check` endpoint, which we haven't written yet at the server, so let's go back to `server.js` and do just that.
 
 ```js
 app.post("/check", check);

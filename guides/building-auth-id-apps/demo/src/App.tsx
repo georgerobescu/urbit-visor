@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { urbitVisor } from "@dcspark/uv-core";
-import { visorAuth } from "./api";
 import "./App.css";
 
 function App() {
   useEffect(() => {
-    urbitVisor.require(["shipName", "subscribe", "poke"], setData);
+    urbitVisor.require(["shipName", "auth"], setData);
   }, []);
   function setData() {
     urbitVisor.getShip().then((res) => {
@@ -33,7 +32,10 @@ function App() {
     };
     const r = await fetch("http://localhost:3333/init", opts);
     const j = await r.json();
-    if (j.status === "ok") visorAuth("bus", check);
+    if (j.status === "ok") {
+      const res = await urbitVisor.authorizeShip("bus");
+      check(res.response);
+    }
     else error("b");
   }
   function check(token: string) {
