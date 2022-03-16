@@ -8,6 +8,7 @@
 
 .command-launcher-menu {
   width: 184px;
+  overflow-y: auto;
   background-color: #252d29;
   color: #a5b0ab;
 }
