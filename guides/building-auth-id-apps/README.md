@@ -36,7 +36,17 @@ After a short period, you will have the agent installed on your ship. The follow
 
 ![pic of sigpams](assets/sigpams.png)
 
-Write down the API key, you will need it to secure your requests to the agent. You can change it or print it later at any time.
+Write down the API key, you will need it to secure your requests to the agent. You can change it or print it later at any time. To do so, go to the ship's dojo (or web terminal), and run one of these commands:
+
+```hoon
+:auth-id %cycle-key
+```
+to change the api key (the new one will be printed at the terminal)
+
+```hoon
+:auth-id %print-key
+```
+to print the api key in the terminal.
 
 ### Test app
 
