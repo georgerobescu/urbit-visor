@@ -1,26 +1,28 @@
 # Introducing Urbit auth-id
 
-## Web2 and its paperwork
+## Web2 And It's Paperwork
 
 Everyone these days uses many different software services for our daily needs. Email, social media, note-taking, schedule management, project management, food delivery, online shopping. Odds are the average person reading this piece uses dozens of SaaS (Software as a Service) platforms in a weekly basis. And for good reason, good software makes our lives better.
 
-They all start the same way. You visit their website, and you _register_. You must fill in a form with your personal information. Some services demand more than others. Almost all of them will ask for an email address and a name. Increasingly they also demand your phone number too. Then all those passwords to remember, which should be unique, and have letters, numbers, symbols, and be long, but not too long. Besides the privacy issues with giving your private information to so many different companies, which odds are will eventually leak some or all your information; aren't we all just tired of filling so many forms? The internet wasn't supposed to become this Kafkian world where we are constantly filling in forms, again and again, to access new services. How much time do we waste every day just logging in to websites? Doesn't my computer already know it's me?
+They all start the same way. You visit their website, and you _register_. You must fill in a form with your personal information. Some services demand more than others. Almost all of them will ask for an email address and a name. Increasingly they also demand your phone number too. On top of that you also have all those passwords to remember, each which should be unique, and have a variety of letters, numbers, symbols, and be long, but not too long. Besides the privacy issues with giving your private information to so many different companies (with high odds an eventual leak will occur), aren't we all just tired of filling so many forms?
 
-The need for a unified, common standard of identity for the internet was identified long ago, and some approaches have come close to it, such as oAuth. Some of you may use "login with Google" or "login with Facebook". Which is certainly convenient compared to registration form hell. But surely depending on Facebook to identify yourself to your schedule management software is not how authentication should work. It's your identity, you should have complete control over it.
+The internet wasn't supposed to become this Kafkian world where we are constantly filling in forms, again and again, to access new services. How much time do we waste every day just logging in to websites? Doesn't my computer already know it's me?
+
+The need for a unified, common standard of identity for the internet was identified long ago, and some approaches have come close to it, such as oAuth. Some of you may already use "login with Google" or "login with Facebook", which are certainly convenient compared to registration form hell. But surely depending on Facebook to identify yourself to your schedule management software is not how authentication should work. It's your identity, you should have complete control over it.
 
 ## Urbit ID
 
-Finally there is a solution, with Urbit ID. Urbit IDs are your cryptographic property. They are non-fungible tokens, as of present (March 2022) deployed on the Ethereum blockchain, using the ERC-721 standard. In fact they are one of the oldest NFTs ever deployed, years before the concept entered the mainstream. [You can read more details here](https://urbit.org/docs/azimuth/azimuth) on the Urbit ID system and how it relates to Urbit OS, but in short, you must own an Urbit ID in order to access the Urbit network. Urbit IDs are finite in number (2^32 sovereign IDs), so spam protection (aka Sybil resistance) is built-in to the system.
+Luckily we have an existing solution to take advantage of, with Urbit ID. Urbit IDs are your cryptographic property. They are non-fungible tokens deployed on the Ethereum blockchain using the ERC-721 standard. In fact they are one of the oldest NFTs ever deployed. [You can read more details here](https://urbit.org/docs/azimuth/azimuth) on the Urbit ID system and how it relates to Urbit OS, but in short, you must own an Urbit ID in order to access the Urbit network. Urbit IDs are finite in number (2^32 sovereign IDs), so spam protection (aka Sybil resistance) is built-in to the system.
 
-If you have an Urbit ID, most likely you already run an Urbit server. You enjoy private messaging, publishing, and an increasingly rich ecosystem of decentralized apps, all run by yourself. Thanks to Urbit Visor you can now interact with traditional websites using data from your Urbit ship, disclosed by you exactly how you want it thanks to it's built-in permission system. There is only one missing piece: login. Why can't I just login to external services with my Urbit ID?
+If you have an Urbit ID, most likely you already run an Urbit server. You enjoy private messaging, publishing, and an increasingly rich ecosystem of decentralized apps, all run by yourself. Thanks to Urbit Visor you can now interact with traditional websites using data from your Urbit ship, disclosed by you exactly how you want it thanks to it's built-in permission system. There is only one missing piece: logging in.
 
 ## auth-id
 
-Now you can. Introducing `auth-id`, an Urbit backend application (i.e. a Gall agent) to enable secure and easy login to external websites with a single click. No more filling in forms, no more forgetting your password. All users will need is to run Urbit Visor in their browsers, and they can prove their identity with a click of a button. For environments where Urbit Visor is not available, `auth-id` will also work, but users will need to manually validate their login, in a similar way as receiving an OTP through SMS for smartphone apps.
+With the introduction of `auth-id`, an Urbit backend application (i.e. a Gall agent), you can securely and easily login to external websites with a single click. No more filling in forms, no more forgetting your password. All users will need to do is install Urbit Visor in their browsers, and they can prove their identity at the single click of a button. For environments where Urbit Visor is not available, `auth-id` will also work, but users will need to manually validate their login in a similar way as receiving an OTP through SMS for smartphone apps.
 
-If you're excited by the possibilities, and you very well should be, below is a tutorial for developers to learn how to make use of `auth-id` to authenticate users of their service. Read on.
+If you're excited by the possibilities, and you very well should be, in the following sections we will be diving deep into how developers can use `auth-id` to authenticate users in their services.
 
-## Guide
+## How To Authenticate Users With Urbit ID
 
 `auth-id` is an Urbit Gall agent, a piece of software running on your Urbit ship. Developers will need to run an Urbit server which will be in charge of authenticating users to their application. Think of it as an authenticating microservice, just much, much easier to set up.
 
@@ -30,15 +32,15 @@ First of all go to your Urbit terminal, either `dojo` or the web terminal interf
 
 `|install ~dister-dozzod-havbex %auth-id`
 
-In short notice you should have the agent installed. If so you should see the following message printed at the terminal:
+After a short period, you will have the agent installed on your ship. The following message will be printed at the terminal:
 
 ![pic of sigpams](assets/sigpams.png)
 
-Write down the API key, you will need it to secure your requests to the agent. You can change it or print it later at any time, read on for more details.
+Write down the API key, you will need it to secure your requests to the agent. You can change it or print it later at any time.
 
 ### Test app
 
-And that's all you need to do Urbit-side. We will now make a very simple web application to show how to use the agent to authenticate users. We will be doing a simple static website, which will prompt users to login, then save and display a count of how many times the user has logged in. We'll make a simple React application with an express server to interact with a simple JSON database.
+That is all you need to do on the Urbit side of things. We will now make a very simple web application to show how to use the agent to authenticate users. We will be doing a simple static website, which will prompt users to login, then save and display a count of how many times the user has logged in. We'll make a simple React application with an express server to interact with a simple JSON database.
 
 This is all of course just for demonstration purposes. You can use `auth-id` with any framework or platform of your choice, both frontend and backend. All you need to be able to do is send HTTP requests to your Urbit ship. Everything else is up to the developer.
 
@@ -122,7 +124,7 @@ The app does nothing yet, besides read the name of the ship connected to Urbit V
 
 There's two ways of doing that. We could have the frontend directly poke the `auth-id` agent, receive an authentication token and run the whole logic in the frontend. There's a few problems with that. One is that HTTP requests from a web browser are subject to [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) restrictions. Urbit servers are equipped to deal with CORS requests, but you must whitelist them beforehand (see more details [at the official documentation](https://urbit.org/docs/arvo/eyre/guide#managing-cors-origins)).
 
-The other, most important problem, is that the frontend is not a very secure environment. Authentication on the web is a hard problem, and login credentials should always be handled by a properly secured server, with a proper database, in order to provide better security. While handling Urbit authentication on the frontend might be sufficient for very simple apps which don't expose sensitive data, in this guide we will explain the best practices for authentication and run a backend server to handle the authentication process.
+The other, more important problem, is that the frontend is not a very secure environment. Authentication on the web is a hard problem, and login credentials should always be handled by a properly secured server, with a proper database, in order to provide better security. While handling Urbit authentication on the frontend might be sufficient for very simple apps which don't expose sensitive data, in this guide we will explain the best practices for authentication and run a backend server to handle the authentication process.
 
 While you can run any backend server of any language of your choice, we will stick to the JavaScript ecosystem here and run a very simple Express server. In the same root folder of your React app, add the following npm packages:
 
@@ -160,15 +162,15 @@ node server.js
 
 You should see a simple message at your terminal, showing that your server is running at `http://localhost:3333`.
 
-Now let's go flesh it out a bit.
+Now let's flesh it out a bit.
 
-First we'll need a simple database to keep track of login counts. It will be a simple json file.
+First we'll need a simple database to keep track of login counts. It will be a basic json file.
 
 ```bash
 touch db.json
 ```
 
-Then write an empty object inside it:
+Add an empty object inside the file:
 
 ```json
 {}
@@ -229,7 +231,7 @@ Our server will be doing the request to our Urbit ship's 'auth-id' agent, so fir
 Then we set a server endpoint at `/init`, which will listen to POST requests from the frontend, thus `app.post("init", runAuth)` in Express syntax.
 POST requests to `http://localhost:3333/init` will trigger the `runAuth()` function in our server. That function takes a request `req`, a response `res`, and a `next` argument that we won't be using.
 
-Our `runAuth` function expects POST requests with a json body with shape:
+Our `runAuth` function expects POST requests with a json body with the following field:
 
 ```json
 {
@@ -237,7 +239,7 @@ Our `runAuth` function expects POST requests with a json body with shape:
 }
 ```
 
-the function will then take that body, the Urbit ship name to authorize, and will do a POST request of its own to the Urbit ship, passing it that Urbit ship name.
+The function will then take that body and will do a POST request of its own to the Urbit ship, passing it the provided Urbit ship name.
 
 That request will cause two actions by the Urbit ship running the `auth-id` agent.
 First, the agent will generate an authentication token. The Urbit ship running `auth-id` will send a DM to the Urbit ship requesting authentication, i.e. your application user. Then the agent will return that same code to the HTTP request, so that your app's backend server can store it in your database and wait for the user to input that token to confirm his identity. Think of a typical email recovery flow, or an OTP sent by email or SMS.
@@ -269,8 +271,7 @@ async function callServer() {
   if (j.status === "ok") {
     const res = await urbitVisor.authorizeShip("dister-dozzod-havbex");
     check(res.response);
-  }
-  else error("b");
+  } else error("b");
 }
 function success(count: number) {
   setMessage(
@@ -292,12 +293,13 @@ function error(m: string) {
 
 In lieu of a loading spinner we will modify and disable the Login button once we click on it. Then we send the request to our server's `/init` POST endpoint. If there was an issue, we'll call the `error()` function, which will display an error message. If everything went well, it means we already generated an authentication token, and our Urbit authentication ship sent a DM to the user trying to login.
 
-So what do we do now? One way of doing this is just displaying an input box and have the user input manually the authentication code they received. Again, this is similar to how email or SMS authentication works in most websites. If you are building a mobile, or CLI, or any other sort of application, you could very well implement an authentication flow like this, and it would work just fine.
+So what do we do now? One way of doing this is just displaying an input box and have the user manually input the authentication code they received. Again, this is similar to how email or SMS authentication works in most websites. If you are building a mobile, CLI, or any other application on a unique release target, you could very well implement an authentication flow like this, and it would work just fine.
 
-Thankfully, however, in a web environment we can use Urbit Visor to automate the process, so the user has to do exactly nothing. We can use Urbit Visor's new endpoint, `authorizeShip()` to automate the authentication process. The function takes one argument, the name of the Urbit ship running `auth-id`, which will send a DM to the user with the auth code. Urbit Visor will automatically accept the DM and scry its contents in behalf of the user, and return the token it scried.
+Thankfully however, in a web environment we have the opportunity to use Urbit Visor to automate the process, so the user gets a nearly hands-free experience. 
+
+We can use Urbit Visor's new endpoint, `authorizeShip()` to automate the authentication process. The function takes one argument, the name of the Urbit ship running `auth-id`, which will send a DM to the user with the auth code. Urbit Visor will automatically accept the DM and scry its contents in behalf of the user, and return the token it scried.
 
 Now all we have to do is make sure that token is the same as the one sent by the `auth-id` agent to the website's backend. Let's call the `check()` function to do that.
-
 
 ```tsx
 function check(token: string) {
@@ -324,7 +326,7 @@ async function backendCheck(token: string) {
 }
 ```
 
-The `backendCheck()` function will call our Express backend server API, sending a JSON payload with the ship name and the token extracted by Urbit Visor. The function is calling the `/check` endpoint, which we haven't written yet at the server, so let's go back to `server.js` and do just that.
+The `backendCheck()` function will call our Express backend server API, sending a JSON payload with the ship name and the token extracted by Urbit Visor. The function is calling the `/check` endpoint, which we haven't written yet in the server, so let's go back to `server.js` and do just that.
 
 ```js
 app.post("/check", check);
@@ -367,3 +369,9 @@ Back in the frontend, we'll handle the responses from the `check` endpoint of ou
 And that's it! Try it out, and you have a fully functional Urbit authentication server running. No more relying on external services to secure your application. While our code got more complicated than usual, juggling three elements: an Urbit server, a web frontend and a Node backend, the code for each is very simple and straightforward, which is what Urbit is all about: owning our code and infrastructure, and being able to understand it fully.
 
 The full code for this `auth-id` as well as this demo application is public at [our Github repo](https://github.com/dcspark/urbit-visor), so please go check it out and try it by yourself. You can also reach us at our Urbit group, `havbex/dcspark` and [Discord](https://discord.gg/dcspark) for any doubts or suggestions.
+
+
+#### Credits
+**Author:** ~mirtyl-wacdec
+
+**Editor:** ~mocrux-nomdep
