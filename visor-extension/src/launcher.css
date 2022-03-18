@@ -163,9 +163,8 @@
 .menu-option {
   display: flex;
   align-items: center;
-  height: 40px;
   margin: 4px 8px;
-  padding-left: 14px;
+  padding: 6px 14px;
   border-radius: 12px;
   font-size: 16px;
 }
@@ -180,12 +179,16 @@
   font-family: 'Inter', sans-serif;
 }
 
-.command-icon {
+.command-icon img {
   padding-right: 14px;
 }
 
 .menu-option.selected .command-icon img {
   filter: brightness(0) invert(1);
+}
+
+.command-text {
+  word-break: break-all;
 }
 
 .command-launcher-display {
@@ -195,12 +198,8 @@
   font-size: 14px;
 }
 
-/* .command-preview-container {
-} */
-
 .command-launcher-display .command-title {
   padding: 24px 0 16px;
-  text-transform: capitalize;
   font-size: 18px;
 }
 

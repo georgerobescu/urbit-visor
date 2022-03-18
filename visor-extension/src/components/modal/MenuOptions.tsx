@@ -2,6 +2,7 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import { MenuItem, ContextMenuItem } from './types';
+import classNames from 'classnames/bind';
 
 interface MenuOptionProps {
   handleSelection: (menuItem: MenuItem) => void;
@@ -55,6 +56,15 @@ const MenuOptions = (props: MenuOptionProps) => {
     }
   }, [props.keyDown]);
 
+  const shortenText = (str: String) => {
+    if (str.length > 30) {
+      const firstHalf = str.substring(0, 18);
+      const secondHalf = str.substring(str.length - 12, str.length);
+      return `${firstHalf}…${secondHalf}`;
+    }
+    return str;
+  };
+
   return (
     <div className="command-launcher-menu-list">
       {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
@@ -69,7 +79,7 @@ const MenuOptions = (props: MenuOptionProps) => {
           key={index}
         >
           <div className="command-icon">{option.icon}</div>
-          {option.title}
+          <div className="command-text">{shortenText(option.title)}</div>
         </div>
       ))}
     </div>
