@@ -220,7 +220,6 @@ async function runAuth(req, res, next) {
   };
   const r = await fetch(url, opts);
   const j = await r.json();
-  console.log(j, "response form urbit ship");
   if (j.token) {
     const filename = `${req.body.ship}.json`;
     fs.writeFile(filename, j.token, "utf8", (err) => {
