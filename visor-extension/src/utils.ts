@@ -27,7 +27,8 @@ export const permDescriptions = {
     scry: "Reads data from your Urbit ship.",
     poke: "Sends data to your Urbit ship.",
     thread: "Issues spider threads in your Urbit ship.",
-    subscribe: "Reads a continuous stream of data from your Urbit ship."
+    subscribe: "Reads a continuous stream of data from your Urbit ship.",
+    auth: "Authenticates your Urbit ship to requesting websites"
 }
 
 export function getIcon(patp: string){
