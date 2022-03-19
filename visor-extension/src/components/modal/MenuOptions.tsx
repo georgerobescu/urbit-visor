@@ -1,8 +1,9 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { MenuItem, ContextMenuItem } from './types';
+import { MenuItem, ContextMenuItem, Command } from './types';
 import classNames from 'classnames/bind';
+import { cite } from '../../utils';
 
 interface MenuOptionProps {
   handleSelection: (menuItem: MenuItem) => void;
@@ -56,13 +57,24 @@ const MenuOptions = (props: MenuOptionProps) => {
     }
   }, [props.keyDown]);
 
-  const shortenText = (str: String) => {
-    if (str.length > 30) {
-      const firstHalf = str.substring(0, 18);
-      const secondHalf = str.substring(str.length - 12, str.length);
-      return `${firstHalf}…${secondHalf}`;
+  const parseGroupName = (menuOption: ContextMenuItem | Command) => {
+    if ('commandTitle' in menuOption && menuOption?.commandTitle === 'Groups') {
+      if (menuOption.creatorId) {
+        const parsedGroup = menuOption.title.split('/')[1];
+        const displayText = cite(menuOption.creatorId) + '/' + parsedGroup;
+        if (displayText.length > 32) {
+          return displayText.substring(0, 32) + '…';
+        }
+        return displayText;
+      } else if (menuOption.title) {
+        const parsedCreator = menuOption.title.split('/')[0];
+        const parsedGroup = menuOption.title.split('/')[1];
+        return cite(parsedCreator) + '/' + parsedGroup;
+      } else {
+        return menuOption.title;
+      }
     }
-    return str;
+    return menuOption.title;
   };
 
   return (
@@ -79,7 +91,7 @@ const MenuOptions = (props: MenuOptionProps) => {
           key={index}
         >
           <div className="command-icon">{option.icon}</div>
-          <div className="command-text">{shortenText(option.title)}</div>
+          <div className="command-text">{parseGroupName(option)}</div>
         </div>
       ))}
     </div>
