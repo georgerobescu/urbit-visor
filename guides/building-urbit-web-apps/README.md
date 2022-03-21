@@ -141,7 +141,7 @@ function setData() {
 
 This makes it so your app declares a variable `ship`, which is first an empty string. Once the app is launched, Urbit Visor will be queried for the ship name, using the `getShip()` function of the `urbitVisor` object. If permissions don't exist, the request will fail, and Urbit Visor will show you a popup asking you to grant permissions. If permissions do exist, the ship name will be fetched and populate the `ship` variable.
 
-Let's edit the initial boilerplate that `create-react-app` provides to see how this works in practice.
+Let's edit the initial boilerplate that `vite` provided to see how this works in practice.
 
 ```tsx
 import "./App.css";
