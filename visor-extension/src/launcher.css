@@ -239,3 +239,13 @@
   width: 36px;
   filter: brightness(0) invert(1);
 }
+
+.input-placeholder {
+  color: #a5b0ab;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 14px;
+  margin: 0 auto;
+  font-style: italic;
+}
