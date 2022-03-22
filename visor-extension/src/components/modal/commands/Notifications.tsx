@@ -7,5 +7,5 @@ const Icon = () => <img src={notificationsIcon} />;
 export const Notifications: Command = {
   title: 'Notifications',
   icon: <Icon />,
-  description: 'Lorem ipsum dolor etos.',
+  description: 'Check your latest Urbit notifications.',
 };

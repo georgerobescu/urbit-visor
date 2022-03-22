@@ -30,7 +30,7 @@ const HomeInput = (props: InputProps) => {
 
   useEffect(() => {
     if (url) {
-      const data = { url: `${url}/apps/landscape/` };
+      const data = { url: `${url}/` };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );

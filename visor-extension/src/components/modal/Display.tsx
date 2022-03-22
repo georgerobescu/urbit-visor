@@ -92,10 +92,14 @@ const SelectionPreview = ({ selected = Welcome }: DisplayProps) => {
       <div className="command-preview-icon">{selectedItem.icon}</div>
       <div className="command-title">{selectedItem.title}</div>
       <div className="command-description">
-        <p>{selectedItem.description}</p>
-        <p>
-          Press <span className="tab-symbol">TAB</span> to focus on each input variable as a
-          separate block to move forward
+        <p className="command-description-text">{selectedItem.description}</p>
+        <p className="tab-description">
+          Press <span className="tab-symbol">TAB</span> to rotate through on each input argument
+          once you have selected a command.
+        </p>
+        <p className="tab-description">
+          Press <span className="tab-symbol">Ctrl + .</span> hotkey to open the Visor Command
+          Launcher from anywhere.
         </p>
       </div>
     </div>

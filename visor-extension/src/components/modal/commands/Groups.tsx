@@ -10,7 +10,7 @@ export const Groups: Command = {
   command: '',
   title: 'Groups',
   icon: <Icon />,
-  description: 'Search from your joined groups Lorem Ipsum',
+  description: 'Easily jump into any group on your Urbit ship.',
   arguments: ['group'],
   schema: [],
 };
