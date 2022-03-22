@@ -58,6 +58,7 @@ Below you will find the API which the current version of Urbit Visor supports. I
 | `on`                    | Adds an event listener for a subscription to Urbit Visor Events.             | No                  | `(eventType: string, keys: Array<string>, callback: Function)`             | `Subscription`        |
 | `off`                   | Removes an event listener set up by `on()`.                                  | No                  | `Subscription` (returned by `.on()`)                                       | undefined             |
 | `require`               | Sets the required permissions for your app and ensures their presence.       | No                  | `(perms: Array<Permission>, callback: Function)`                           | undefined             |
+|  `authorizeShip`   |  Sets a listener to receive authentication tokens from a ship running the [auth-id](https://github.com/dcspark/auth-id) agent  |  Yes  |  `(backendShip: string)`  |  `string` (the authentication token received by DM) |
 
 ### .on()
 
