@@ -199,6 +199,8 @@
 }
 
 .command-launcher-display .command-title {
+  width: 400px;
+  margin: 0 auto;
   padding: 24px 0 16px;
   font-size: 18px;
 }
