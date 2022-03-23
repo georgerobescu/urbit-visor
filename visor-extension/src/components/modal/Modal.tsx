@@ -56,6 +56,7 @@ const Modal = () => {
   const [connectShip, setConnectShip] = useState(
     'Please connect to a ship to use the Visor Command Launcher'
   );
+  const [landscapeFork, setLandscapeFork] = useState(null);
 
   const [commands, setCommands] = useState([
     History,
@@ -105,6 +106,15 @@ const Modal = () => {
           });
         };
         urbitVisor.require(['subscribe'], setData);
+
+        const landscapeFork = () => {
+          urbitVisor.scry({ app: 'hood', path: '/kiln/vats' }).then(res => {
+            if (res['escape']) {
+              setLandscapeFork('escape');
+            } else setLandscapeFork('landscape');
+          });
+        };
+        urbitVisor.require(['scry'], landscapeFork);
       }
     }
     return () => {
@@ -236,6 +246,7 @@ const Modal = () => {
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}
         placeholder={connectShip}
+        landscapeFork={landscapeFork}
       />
       <Body
         commands={commands}
