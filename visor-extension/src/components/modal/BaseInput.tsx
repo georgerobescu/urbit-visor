@@ -59,7 +59,7 @@ const BaseInput = (props: InputProps) => {
   let input;
 
   if (props.placeholder) {
-    input = <span>{props.placeholder}</span>;
+    input = <div className="input-placeholder">{props.placeholder}</div>;
   } else {
     input = (
       <input

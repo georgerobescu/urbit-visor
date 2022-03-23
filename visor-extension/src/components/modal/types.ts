@@ -17,6 +17,7 @@ export interface ContextMenuItem {
   title: string;
   description: string;
   icon?: React.ReactNode;
+  creatorId?: string;
 }
 
 export type MenuItem = Command | ContextMenuItem;

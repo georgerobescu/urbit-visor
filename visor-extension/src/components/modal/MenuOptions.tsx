@@ -1,7 +1,9 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
-import { MenuItem, ContextMenuItem } from './types';
+import { MenuItem, ContextMenuItem, Command } from './types';
+import classNames from 'classnames/bind';
+import { cite } from '../../utils';
 
 interface MenuOptionProps {
   handleSelection: (menuItem: MenuItem) => void;
@@ -55,6 +57,26 @@ const MenuOptions = (props: MenuOptionProps) => {
     }
   }, [props.keyDown]);
 
+  const parseGroupName = (menuOption: ContextMenuItem | Command) => {
+    if ('commandTitle' in menuOption && menuOption?.commandTitle === 'Groups') {
+      if (menuOption.creatorId) {
+        const parsedGroup = menuOption.title.split('/')[1];
+        const displayText = cite(menuOption.creatorId) + '/' + parsedGroup;
+        if (displayText.length > 32) {
+          return displayText.substring(0, 32) + '…';
+        }
+        return displayText;
+      } else if (menuOption.title) {
+        const parsedCreator = menuOption.title.split('/')[0];
+        const parsedGroup = menuOption.title.split('/')[1];
+        return cite(parsedCreator) + '/' + parsedGroup;
+      } else {
+        return menuOption.title;
+      }
+    }
+    return menuOption.title;
+  };
+
   return (
     <div className="command-launcher-menu-list">
       {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
@@ -69,7 +91,7 @@ const MenuOptions = (props: MenuOptionProps) => {
           key={index}
         >
           <div className="command-icon">{option.icon}</div>
-          {option.title}
+          <div className="command-text">{parseGroupName(option)}</div>
         </div>
       ))}
     </div>
