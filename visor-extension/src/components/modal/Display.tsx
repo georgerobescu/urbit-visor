@@ -37,7 +37,7 @@ const Display = (props: DisplayProps) => {
     else if (typeof props.airlockResponse == 'object') {
       displayContent = (
         <ReactJson
-          style={{ padding: '15px' }}
+          style={{ padding: '16px', fontSize: '12px', fontFamily: 'Monaco' }}
           src={props.airlockResponse}
           enableClipboard={true}
           displayDataTypes={false}
