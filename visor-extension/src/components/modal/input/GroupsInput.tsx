@@ -53,6 +53,7 @@ const GroupsInput = (props: InputProps) => {
                 commandTitle: 'Groups',
                 title: (group.group as string).substring(6),
                 description: group.metadata.description,
+                creatorId: group.metadata?.creator,
               } as ContextMenuItem)
           );
         setGroups(groups);

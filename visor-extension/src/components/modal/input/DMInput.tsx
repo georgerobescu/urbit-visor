@@ -45,7 +45,7 @@ const DMInput = (props: InputProps) => {
         Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
           res => console.log(res)
         );
-      } else props.airlockResponse('enter valid ship name');
+      } else props.airlockResponse('Please enter a valid ship name.');
     }
   }, [refs]);
 

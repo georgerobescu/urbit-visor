@@ -1,11 +1,11 @@
 import { Command } from '../types';
 import React from 'react';
-/* import notificationsIcon from '../../../icons/notifications.svg';
+import homeIcon from '../../../icons/home.svg';
 
-const Icon = () => <img src={notificationsIcon} />;
- */
+const Icon = () => <img src={homeIcon} />;
+
 export const Home: Command = {
   title: 'Home',
-  /*   icon: <Icon />,
-   */ description: 'open Landscape',
+  icon: <Icon />,
+  description: 'Visit your Urbit Home (aka Grid).',
 };

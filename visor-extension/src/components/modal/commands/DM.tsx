@@ -10,7 +10,7 @@ export const DM: Command = {
   command: 'poke',
   title: 'DM',
   icon: <Icon />,
-  description: 'send a direct message to a ship',
+  description: 'Send direct messages to other Urbit ships.',
   arguments: ['ship', 'message'],
   schema: [
     (props: any[]) =>

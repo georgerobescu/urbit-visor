@@ -1,11 +1,11 @@
 import { Command } from '../types';
 import React from 'react';
-/* import notificationsIcon from '../../../icons/notifications.svg';
+import bitcoinIcon from '../../../icons/bitcoin.svg';
 
-const Icon = () => <img src={notificationsIcon} />;
- */
+const Icon = () => <img src={bitcoinIcon} />;
+
 export const Bitcoin: Command = {
   title: 'Bitcoin',
-  /*   icon: <Icon />,
-   */ description: 'open Bitcoin wallet',
+  icon: <Icon />,
+  description: 'Open the Bitcoin wallet app on your Urbit ship.',
 };
