@@ -2,7 +2,6 @@ import React from 'react';
 import * as CSS from 'csstype';
 import { useEffect, useState } from 'react';
 import { MenuItem, ContextMenuItem, Command } from './types';
-import classNames from 'classnames/bind';
 import { cite } from '../../utils';
 
 interface MenuOptionProps {
