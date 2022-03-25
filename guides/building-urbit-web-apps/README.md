@@ -219,7 +219,7 @@ To do that we are going to perform a `scry`.
 
 ## Scries
 
-Fro mehre we'll declare a function, `checkChannelExists`, to check whether our notebook channel exists already. First of all we'll `scry` the list of all channels our ship is subscribed to, and log them to the console.
+From here we'll declare a function, `checkChannelExists`, to check whether our notebook channel exists already. First of all we'll `scry` the list of all channels our ship is subscribed to, and log them to the console.
 
 ```ts
 function setData() {
