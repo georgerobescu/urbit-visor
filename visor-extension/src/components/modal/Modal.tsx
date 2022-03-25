@@ -102,6 +102,7 @@ const Modal = () => {
 
         const setData = () => {
           urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+            console.log(res);
             number = res.response;
           });
         };
@@ -109,7 +110,7 @@ const Modal = () => {
 
         const landscapeFork = () => {
           urbitVisor.scry({ app: 'hood', path: '/kiln/vats' }).then(res => {
-            if (res['escape']) {
+            if (res.response['escape']) {
               setLandscapeFork('escape');
             } else setLandscapeFork('landscape');
           });
@@ -160,10 +161,11 @@ const Modal = () => {
 
   const handleConnection = () => {
     if (isConnected) {
-      return;
+      console.log('connected');
     } else {
       urbitVisor.isConnected().then(connected => {
         if (connected.response) {
+          console.log('setting connected');
           setIsConnected(true);
           setConnectShip(null);
         }
