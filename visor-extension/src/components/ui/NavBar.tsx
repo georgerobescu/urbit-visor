@@ -9,6 +9,7 @@ import MenuIcon from '../../icons/menu-icon.svg';
 import CloseIcon from '../../icons/close-icon.svg';
 import BackIcon from '../../icons/back-icon.svg';
 import AboutIcon from '../../icons/info';
+import LauncherIcon from '../../icons/icon-launcher-menu';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Messaging } from '../../messaging';
 import { EncryptedShipCredentials } from '../../types';
@@ -96,6 +97,7 @@ function Modal({ parent, hide }: ModalProps) {
   }
   function gotoLauncher() {
     hide();
+    window.close();
     Messaging.relayToBackground({ app: 'command-launcher', action: 'open' }).then(res =>
       console.log(res)
     );
@@ -111,13 +113,13 @@ function Modal({ parent, hide }: ModalProps) {
         <RocketIcon />
         <p>My Ships</p>
       </div>
+      <div onClick={gotoLauncher} className="modal-link">
+        <LauncherIcon />
+        <p>Launcher</p>
+      </div>
       <div onClick={gotoSettings} className="modal-link">
         <SettingsIcon />
         <p> Settings</p>
-      </div>
-      <div onClick={gotoLauncher} className="modal-link">
-        <SettingsIcon />
-        <p>Launcher</p>
       </div>
       <div onClick={gotoAbout} className="modal-link">
         <AboutIcon />
