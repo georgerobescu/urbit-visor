@@ -34,7 +34,7 @@ const Display = (props: DisplayProps) => {
       );
     }
     // If the response is an object
-    else if (typeof props.airlockResponse == 'object') {
+    else if (typeof props.airlockResponse == 'object' && !props.airlockResponse.type) {
       displayContent = (
         <ReactJson
           style={{ padding: '16px', fontSize: '12px', fontFamily: 'Monaco' }}
@@ -62,16 +62,19 @@ const Display = (props: DisplayProps) => {
           }}
         />
       );
+    } else if (
+      typeof props.airlockResponse == 'object' &&
+      props.airlockResponse.type == 'internal'
+    ) {
+      displayContent = <div style={{ textAlign: 'center' }}>{props.airlockResponse.message}</div>;
     }
     // Otherwise
     else {
       displayContent = (
         <div style={{ textAlign: 'center' }}>
-          {JSON.stringify(props.airlockResponse)}
+          {props.airlockResponse}
 
-          <button
-            onClick={event => navigator.clipboard.writeText(JSON.stringify(props.airlockResponse))}
-          >
+          <button onClick={event => navigator.clipboard.writeText(props.airlockResponse)}>
             copy
           </button>
         </div>
