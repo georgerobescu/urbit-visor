@@ -178,6 +178,7 @@ const Modal = () => {
       } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
         setPreviousArg(true);
       } else if (event.key == 'Tab' && selected == selectedToInput) {
+        event.preventDefault();
         setNextArg(true);
       } else if (event.key == 'Escape') {
         console.log('sending close');

@@ -56,6 +56,9 @@ const Input = (props: InputProps) => {
   useEffect(() => {
     if (!props.nextArg) {
       return;
+    } else if (currentFocus == inputRef.current.length - 1) {
+      inputRef.current[0].focus();
+      setCurrentFocus(0);
     } else if (inputRef.current[currentFocus + 1]) {
       inputRef.current[currentFocus + 1].focus();
       setCurrentFocus(currentFocus + 1);
