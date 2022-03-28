@@ -13,10 +13,10 @@ interface DisplayProps {
 const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
 
-  useLayoutEffect(() => {
+  /*   useLayoutEffect(() => {
     if (scrollable.current.scrollTop > -1)
       scrollable.current.scrollTop = scrollable.current.scrollHeight;
-  }, [props.airlockResponse]);
+  }, [props.airlockResponse]); */
 
   // Define variable for content which will be held in the display area
   let displayContent;
