@@ -157,8 +157,22 @@ const Input = (props: InputProps) => {
               }
             }}
             onKeyDown={(event: React.KeyboardEvent) => {
-              if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
+              if (
+                event.key == 'Backspace' &&
+                (event.target as Element).innerHTML == '' &&
+                currentFocus == 0
+              ) {
                 props.clearSelected(true);
+              } else if (event.key == 'Backspace' && (event.target as Element).innerHTML == '') {
+                event.preventDefault();
+                inputRef.current[currentFocus - 1].focus();
+                const range = document.createRange();
+                range.selectNodeContents(inputRef.current[currentFocus - 1]);
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                range.detach();
+                setCurrentFocus(currentFocus - 1);
               } else if ((event.target as Element).classList.contains('highlight-required')) {
                 (event.target as Element).classList.remove('highlight-required');
               } else if (event.key == 'Backspace' && event.shiftKey) {
