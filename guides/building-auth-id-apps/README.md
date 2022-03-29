@@ -1,7 +1,5 @@
 # Introducing Urbit auth-id
 
-## Web2 And It's Paperwork
-
 Everyone these days uses many different software services for our daily needs. Email, social media, note-taking, schedule management, project management, food delivery, online shopping. Odds are the average person reading this piece uses dozens of SaaS (Software as a Service) platforms in a weekly basis. And for good reason, good software makes our lives better.
 
 They all start the same way. You visit their website, and you _register_. You must fill in a form with your personal information. Some services demand more than others. Almost all of them will ask for an email address and a name. Increasingly they also demand your phone number too. On top of that you also have all those passwords to remember, each which should be unique, and have a variety of letters, numbers, symbols, and be long, but not too long. Besides the privacy issues with giving your private information to so many different companies (with high odds an eventual leak will occur), aren't we all just tired of filling so many forms?
