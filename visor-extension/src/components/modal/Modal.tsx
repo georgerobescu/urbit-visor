@@ -97,23 +97,22 @@ const Modal = () => {
 
     if (isConnected) {
       if (!metadata) {
-        subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
+        console.log('setting metadata');
+        subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], (data: any) => {
+          setMetadata(data);
+          urbitVisor.off(subscription);
+          urbitVisor.unsubscribe(number).then(res => console.log(''));
+        });
 
         const setData = () => {
           urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+            console.log(res);
             number = res.response;
           });
         };
         urbitVisor.require(['subscribe'], setData);
       }
     }
-    return () => {
-      if (metadata && subscription) {
-        urbitVisor.off(subscription);
-        window.removeEventListener('message', setMetadata);
-        urbitVisor.unsubscribe(number).then(res => console.log(''));
-      }
-    };
   }, [isConnected]);
 
   const handleMessage = (e: any) => {
