@@ -1,4 +1,4 @@
-# Introducing Urbit auth-id
+# Integrating Login With Urbit ID - Developer Guide
 
 Everyone these days uses many different software services for our daily needs. Email, social media, note-taking, schedule management, project management, food delivery, online shopping. Odds are the average person reading this piece uses dozens of SaaS (Software as a Service) platforms in a weekly basis. And for good reason, good software makes our lives better.
 
