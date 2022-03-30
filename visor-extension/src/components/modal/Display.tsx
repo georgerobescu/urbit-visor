@@ -4,11 +4,15 @@ import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
 import { MenuItem, Command, ContextMenuItem } from './types';
 import { Welcome } from './commands/Welcome';
+import pokeIcon from '../../icons/poke.svg';
+import threadIcon from '../../icons/thread.svg';
 
 interface DisplayProps {
   selected: MenuItem;
   airlockResponse: any;
 }
+const PokeIcon = () => <img src={pokeIcon} />;
+const ThreadIcon = () => <img src={threadIcon} />;
 
 const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
@@ -41,15 +45,19 @@ const Display = (props: DisplayProps) => {
     }
     // Otherwise
     else {
+      const response = JSON.stringify(props.airlockResponse);
+
       displayContent = (
         <div style={{ textAlign: 'center' }}>
-          {JSON.stringify(props.airlockResponse)}
-
-          <button
-            onClick={event => navigator.clipboard.writeText(JSON.stringify(props.airlockResponse))}
-          >
-            copy
-          </button>
+          <div className="command-launcher-display-preview-container">
+            <div className="command-preview-icon">
+              {response === '"poke successful"' ? <PokeIcon /> : <ThreadIcon />}
+            </div>
+            <div className="command-title">
+              {' '}
+              {response === '"poke successful"' ? 'Poke Successful' : response}
+            </div>
+          </div>
         </div>
       );
     }
