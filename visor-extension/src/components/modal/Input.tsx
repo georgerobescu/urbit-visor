@@ -129,8 +129,8 @@ const Input = (props: InputProps) => {
   const handleAirlockResponse = (res: any) => {
     if (props.selectedToInput.command == 'poke') {
       res.status !== 'error'
-        ? props.airlockResponse('poke successful')
-        : props.airlockResponse('poke error');
+        ? props.airlockResponse('Poke Successful')
+        : props.airlockResponse('Poke Failed');
     } else props.airlockResponse(res);
   };
 

@@ -51,12 +51,13 @@ const Display = (props: DisplayProps) => {
         <div style={{ textAlign: 'center' }}>
           <div className="command-launcher-display-preview-container">
             <div className="command-preview-icon">
-              {response === '"poke successful"' ? <PokeIcon /> : <ThreadIcon />}
+              {response === '"Poke Successful"' || response === '"Poke Failed"' ? (
+                <PokeIcon />
+              ) : (
+                <ThreadIcon />
+              )}
             </div>
-            <div className="command-title">
-              {' '}
-              {response === '"poke successful"' ? 'Poke Successful' : response}
-            </div>
+            <div className="command-title">{response}</div>
           </div>
         </div>
       );
