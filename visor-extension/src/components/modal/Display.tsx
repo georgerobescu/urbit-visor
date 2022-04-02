@@ -66,7 +66,9 @@ const Display = (props: DisplayProps) => {
       typeof props.airlockResponse == 'object' &&
       props.airlockResponse.type == 'internal'
     ) {
-      displayContent = <div style={{ textAlign: 'center' }}>{props.airlockResponse.message}</div>;
+      displayContent = (
+        <div style={{ textAlign: 'center', paddingTop: 48 }}>{props.airlockResponse.message}</div>
+      );
     }
     // Otherwise
     else {
