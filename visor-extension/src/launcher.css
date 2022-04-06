@@ -166,12 +166,18 @@
 }
 
 .menu-option {
+  cursor: pointer;
+  user-select: none;
   display: flex;
   align-items: center;
   margin: 4px 8px;
   padding: 6px 14px;
   border-radius: 12px;
   font-size: 16px;
+}
+
+.menu-option:hover {
+  background-color: #3a423e;
 }
 
 .menu-option.selected {
