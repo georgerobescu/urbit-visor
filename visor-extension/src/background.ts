@@ -114,6 +114,21 @@ function handleCommandLauncherCall(request: any, sender: any, sendResponse: any)
       );
       sendResponse('ok');
       break;
+    case 'open':
+      const showLauncher = () => {
+        const modal: any = <any>(
+          document
+            .querySelector('html > div')
+            .shadowRoot.querySelector('#command-launcher-container')
+        );
+        modal.showModal();
+        modal.firstElementChild.contentWindow.postMessage('focus', '*');
+      };
+      chrome.tabs.executeScript({
+        code: `(${showLauncher})()`,
+      });
+      sendResponse('ok');
+      break;
   }
 }
 
