@@ -99,9 +99,14 @@
   width: 100px;
 }
 
+.airlock-subscription-display {
+  padding: 12px;
+}
+
 .airlock-subscription-display-line {
-  color: black;
+  color: white;
   text-align: left;
+  overflow-wrap: break-word;
 }
 
 .arg-input {
