@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
 import { MenuItem, Command, ContextMenuItem } from './types';
 import { Welcome } from './commands/Welcome';
+import { getPositionOfLineAndCharacter } from 'typescript';
 
 interface DisplayProps {
   selected: MenuItem;
@@ -73,10 +74,12 @@ const Display = (props: DisplayProps) => {
     // Otherwise
     else {
       displayContent = (
-        <div style={{ textAlign: 'center' }}>
-          {props.airlockResponse}
-
-          <button onClick={event => navigator.clipboard.writeText(props.airlockResponse)}>
+        <div>
+          <div style={{ textAlign: 'center' }}>{props.airlockResponse}</div>
+          <button
+            style={{ position: 'fixed', right: '20px', bottom: '20px' }}
+            onClick={event => navigator.clipboard.writeText(props.airlockResponse)}
+          >
             copy
           </button>
         </div>
