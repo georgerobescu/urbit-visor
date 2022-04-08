@@ -1,6 +1,6 @@
 import React from 'react';
 import * as CSS from 'csstype';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { MenuItem, ContextMenuItem, Command } from './types';
 import { cite } from '../../utils';
 
@@ -15,6 +15,11 @@ interface MenuOptionProps {
 
 const MenuOptions = (props: MenuOptionProps) => {
   const [clickedIndex, setClickedIndex] = useState(-1);
+  const scrollable = useRef([]);
+
+  useLayoutEffect(() => {
+    if (clickedIndex > 0) scrollable.current[clickedIndex].scrollIntoView({ block: 'center' });
+  }, [props.keyDown]);
 
   useEffect(() => {
     setClickedIndex(-1);
@@ -80,6 +85,7 @@ const MenuOptions = (props: MenuOptionProps) => {
     <div className="command-launcher-menu-list">
       {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
         <div
+          ref={el => (scrollable.current[index] = el)}
           className={
             !props.selected
               ? 'menu-option'
