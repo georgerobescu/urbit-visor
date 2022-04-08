@@ -99,9 +99,14 @@
   width: 100px;
 }
 
+.airlock-subscription-display {
+  padding: 12px;
+}
+
 .airlock-subscription-display-line {
-  color: black;
+  color: white;
   text-align: left;
+  overflow-wrap: break-word;
 }
 
 .arg-input {
@@ -216,7 +221,7 @@
 }
 
 p.tab-description {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 .command-launcher-display .tab-symbol {
@@ -254,4 +259,17 @@ p.tab-description {
   font-size: 14px;
   margin: 0 auto;
   font-style: italic;
+}
+
+.data-type-label {
+  font-size: 14px !important;
+}
+
+.object-size {
+  font-style: normal !important;
+}
+
+.variable-row {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
 }

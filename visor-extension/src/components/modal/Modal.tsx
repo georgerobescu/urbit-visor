@@ -56,6 +56,7 @@ const Modal = () => {
   const [connectShip, setConnectShip] = useState(
     'Please connect to a ship to use the Visor Command Launcher'
   );
+  const [landscapeFork, setLandscapeFork] = useState(null);
 
   const [commands, setCommands] = useState([
     History,
@@ -97,23 +98,31 @@ const Modal = () => {
 
     if (isConnected) {
       if (!metadata) {
-        subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], setMetadata);
+        console.log('setting metadata');
+        subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], (data: any) => {
+          setMetadata(data);
+          urbitVisor.off(subscription);
+          urbitVisor.unsubscribe(number).then(res => console.log(''));
+        });
 
         const setData = () => {
           urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+            console.log(res);
             number = res.response;
           });
         };
         urbitVisor.require(['subscribe'], setData);
+
+        const landscapeFork = () => {
+          urbitVisor.scry({ app: 'hood', path: '/kiln/vats' }).then(res => {
+            if (res.response['escape']) {
+              setLandscapeFork('escape');
+            } else setLandscapeFork('landscape');
+          });
+        };
+        urbitVisor.require(['scry'], landscapeFork);
       }
     }
-    return () => {
-      if (metadata && subscription) {
-        urbitVisor.off(subscription);
-        window.removeEventListener('message', setMetadata);
-        urbitVisor.unsubscribe(number).then(res => console.log(''));
-      }
-    };
   }, [isConnected]);
 
   const handleMessage = (e: any) => {
@@ -150,10 +159,11 @@ const Modal = () => {
 
   const handleConnection = () => {
     if (isConnected) {
-      return;
+      console.log('connected');
     } else {
       urbitVisor.isConnected().then(connected => {
         if (connected.response) {
+          console.log('setting connected');
           setIsConnected(true);
           setConnectShip(null);
         }
@@ -178,6 +188,7 @@ const Modal = () => {
       } else if (event.shiftKey && event.key == 'Tab' && selected == selectedToInput) {
         setPreviousArg(true);
       } else if (event.key == 'Tab' && selected == selectedToInput) {
+        event.preventDefault();
         setNextArg(true);
       } else if (event.key == 'Escape') {
         console.log('sending close');
@@ -236,6 +247,7 @@ const Modal = () => {
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}
         placeholder={connectShip}
+        landscapeFork={landscapeFork}
       />
       <Body
         commands={commands}

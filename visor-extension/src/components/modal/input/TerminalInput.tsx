@@ -24,24 +24,25 @@ const TerminalInput = (props: InputProps) => {
   const selection = (window as any).getSelection();
 
   useEffect(() => {
-    window.addEventListener('message', handleHerm);
-    return () => {
-      window.removeEventListener('message', handleHerm);
-    };
-  });
-  useEffect(() => {
+    let toSub = true;
     let number = 0;
-    const setData = () => {
-      urbitVisor
-        .subscribe({ app: 'herm', path: '/session//view' })
-        .then(res => (number = res.response));
-    };
-    urbitVisor.require(['subscribe'], setData);
+    if (toSub) {
+      window.addEventListener('message', handleHerm);
+
+      const setData = () => {
+        urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
+          number = res.response;
+          setSubscribed(true);
+        });
+      };
+      urbitVisor.require(['subscribe'], setData);
+    }
     return () => {
+      toSub = false;
       window.removeEventListener('message', handleHerm);
-      urbitVisor.unsubscribe(number).then(res => console.log(''));
+      urbitVisor.unsubscribe(number).then(res => console.log('unsubscribed terminal'));
     };
-  }, []);
+  }, [props.selectedToInput]);
 
   const handleHerm = useCallback(
     (message: any) => {

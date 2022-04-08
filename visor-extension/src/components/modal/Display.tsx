@@ -6,6 +6,7 @@ import { MenuItem, Command, ContextMenuItem } from './types';
 import { Welcome } from './commands/Welcome';
 import pokeIcon from '../../icons/poke.svg';
 import threadIcon from '../../icons/thread.svg';
+import { getPositionOfLineAndCharacter } from 'typescript';
 
 interface DisplayProps {
   selected: MenuItem;
@@ -17,10 +18,10 @@ const ThreadIcon = () => <img src={threadIcon} />;
 const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
 
-  useLayoutEffect(() => {
+  /*   useLayoutEffect(() => {
     if (scrollable.current.scrollTop > -1)
       scrollable.current.scrollTop = scrollable.current.scrollHeight;
-  }, [props.airlockResponse]);
+  }, [props.airlockResponse]); */
 
   // Define variable for content which will be held in the display area
   let displayContent;
@@ -38,25 +39,64 @@ const Display = (props: DisplayProps) => {
       );
     }
     // If the response is an object
-    else if (typeof props.airlockResponse == 'object') {
+    else if (typeof props.airlockResponse == 'object' && !props.airlockResponse.type) {
       displayContent = (
-        <ReactJson style={{ padding: '15px' }} src={props.airlockResponse} enableClipboard={true} />
+        <ReactJson
+          style={{ padding: '16px', fontSize: '12px', fontFamily: 'Monaco' }}
+          src={props.airlockResponse}
+          enableClipboard={true}
+          displayDataTypes={false}
+          displayObjectSize={false}
+          theme={{
+            base00: '#1B231F',
+            base01: 'aqua',
+            base02: '#3D4641',
+            base03: 'white',
+            base04: '#A5B0AB',
+            base05: 'white',
+            base06: 'white',
+            base07: 'white',
+            base08: 'white',
+            base09: '#EEAA8E',
+            base0A: '#EEAA8E',
+            base0B: '#EEAA8E',
+            base0C: '#73A2EA',
+            base0D: 'A5B0AB',
+            base0E: 'yellow',
+            base0F: 'yellow',
+          }}
+        />
       );
-    }
-    // Otherwise
-    else {
-      const response = JSON.stringify(props.airlockResponse);
+    } else if (
+      typeof props.airlockResponse == 'object' &&
+      props.airlockResponse.type == 'internal'
+    ) {
+      const response = props.airlockResponse.message;
 
       displayContent = (
         <div style={{ textAlign: 'center' }}>
           <div className="command-launcher-display-preview-container">
-            {response === '"Poke Successful"' || response === '"Poke Failed"' ? (
+            {response === 'Poke Successful' || response === 'Poke Failed' ? (
               <div className="command-preview-icon">
                 <PokeIcon />
               </div>
             ) : null}
             <div className="command-title">{response}</div>
           </div>
+        </div>
+      );
+    }
+    // Otherwise
+    else {
+      displayContent = (
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', paddingTop: 48 }}>{props.airlockResponse}</div>
+          <button
+            style={{ position: 'fixed', right: '20px', bottom: '20px' }}
+            onClick={event => navigator.clipboard.writeText(props.airlockResponse)}
+          >
+            copy
+          </button>
         </div>
       );
     }

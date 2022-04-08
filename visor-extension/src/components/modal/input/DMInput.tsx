@@ -15,6 +15,7 @@ interface InputProps {
   clearSelected: (clear: Boolean) => void;
   selectedToInput: Command;
   selected: MenuItem;
+  landscapeFork: string;
 }
 
 const DMInput = (props: InputProps) => {
@@ -35,11 +36,17 @@ const DMInput = (props: InputProps) => {
     if (refs?.length) {
       console.log(refs);
       if (ob.isValidPatp(refs)) {
-        const data = { url: `${url}/apps/landscape/~landscape/messages/dm/${refs}` };
+        const data = {
+          url:
+            props.landscapeFork == 'escape'
+              ? `${url}/apps/escape/~escape/messages/dm/${refs}`
+              : `${url}/apps/landscape/~landscape/messages/dm/${refs}`,
+        };
         Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
           res => console.log(res)
         );
-      } else props.airlockResponse('Please enter a valid ship name.');
+      } else
+        props.airlockResponse({ type: 'internal', message: 'Please enter a valid ship name.' });
     }
   }, [refs]);
 
