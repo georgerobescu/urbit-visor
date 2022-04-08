@@ -13,7 +13,7 @@ import {
 import { fetchAllPerms } from './urbit';
 import { useStore } from './store';
 import { EventEmitter } from 'events';
-const ob = require("urbit-ob");
+const ob = require('urbit-ob');
 
 export const Pusher = new EventEmitter();
 
@@ -293,12 +293,25 @@ async function runAuth(state: UrbitVisorState, backendShip: string, sendResponse
       accept: '~' + backendShip,
     },
   });
-  const decp = ob.patp2dec("~" + backendShip);
-  const scry = await airlock.scry({app: "graph-store", path: `/graph/${"~"+airlock.ship}/dm-inbox/node/siblings/newest/lone/1/${decp}`})
-  const nodes = scry["graph-update"]["add-nodes"]["nodes"]
-  const node = nodes[Object.keys(nodes)[0]]
-  const code = node.post.contents[0].text.split("\n ")[1];
-  sendResponse({status: "ok", response: code})
+  const decp = ob
+    .patp2dec('~' + backendShip)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  try {
+    const scry = await airlock.scry({
+      app: 'graph-store',
+      path: `/graph/${'~' + airlock.ship}/dm-inbox/node/siblings/newest/lone/1/${decp}`,
+    });
+    const nodes = scry['graph-update']['add-nodes']['nodes'];
+    const node = nodes[Object.keys(nodes)[0]];
+    const code = node.post.contents[0].text.split('\n ')[1];
+    sendResponse({ status: 'ok', response: code });
+  } catch {
+    sendResponse({
+      status: 'ng',
+      response: 'Failed to scry the auth code. Make sure you passed the right ship name.',
+    });
+  }
 }
 
 function openWindow() {
