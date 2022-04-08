@@ -56,6 +56,7 @@ const Modal = () => {
   const [connectShip, setConnectShip] = useState(
     'Please connect to a ship to use the Visor Command Launcher'
   );
+  const [landscapeFork, setLandscapeFork] = useState(null);
 
   const [commands, setCommands] = useState([
     History,
@@ -101,10 +102,20 @@ const Modal = () => {
 
         const setData = () => {
           urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
+            console.log(res);
             number = res.response;
           });
         };
         urbitVisor.require(['subscribe'], setData);
+
+        const landscapeFork = () => {
+          urbitVisor.scry({ app: 'hood', path: '/kiln/vats' }).then(res => {
+            if (res.response['escape']) {
+              setLandscapeFork('escape');
+            } else setLandscapeFork('landscape');
+          });
+        };
+        urbitVisor.require(['scry'], landscapeFork);
       }
     }
     return () => {
@@ -150,10 +161,11 @@ const Modal = () => {
 
   const handleConnection = () => {
     if (isConnected) {
-      return;
+      console.log('connected');
     } else {
       urbitVisor.isConnected().then(connected => {
         if (connected.response) {
+          console.log('setting connected');
           setIsConnected(true);
           setConnectShip(null);
         }
@@ -236,6 +248,7 @@ const Modal = () => {
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}
         placeholder={connectShip}
+        landscapeFork={landscapeFork}
       />
       <Body
         commands={commands}
