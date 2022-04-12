@@ -74,7 +74,7 @@ const TerminalInput = (props: InputProps) => {
       ) {
         const dojoLine = message.data.event.data.lin.join('');
         if (!(dojoLine.includes('dojo>') || dojoLine[0] === ';' || dojoLine[0] === '>')) {
-          setLines(previousState => [dojoLine, ...previousState]);
+          setLines(previousState => [...previousState, dojoLine]);
         } else return;
       }
     },
