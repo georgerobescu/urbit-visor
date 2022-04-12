@@ -77,10 +77,10 @@ const Display = (props: DisplayProps) => {
         <div>
           <div style={{ textAlign: 'center' }}>{props.airlockResponse}</div>
           <button
-            style={{ position: 'fixed', right: '20px', bottom: '20px' }}
+            className="copy-button"
             onClick={event => navigator.clipboard.writeText(props.airlockResponse)}
           >
-            copy
+            COPY
           </button>
         </div>
       );
