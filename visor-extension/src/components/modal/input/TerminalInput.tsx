@@ -24,23 +24,43 @@ const TerminalInput = (props: InputProps) => {
   const selection = (window as any).getSelection();
 
   useEffect(() => {
-    let toSub = true;
+    let subId: number;
     let number = 0;
-    if (toSub) {
-      window.addEventListener('message', handleHerm);
+    let activeSubs: [any] = [0];
 
-      const setData = () => {
-        urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
-          number = res.response;
+    window.addEventListener('message', handleHerm);
+
+    const setData = () => {
+      urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
+        console.log(res);
+        if (res.response == 'piggyback') {
           setSubscribed(true);
-        });
-      };
-      urbitVisor.require(['subscribe'], setData);
-    }
+          number = res.subscriber;
+        } else {
+          number = res.subscriber;
+          setSubscribed(true);
+        }
+      });
+    };
+    urbitVisor.require(['subscribe'], setData);
+
     return () => {
-      toSub = false;
-      window.removeEventListener('message', handleHerm);
-      urbitVisor.unsubscribe(number).then(res => console.log('unsubscribed terminal'));
+      Messaging.sendToBackground({ action: 'active_subscriptions' }).then(res => {
+        activeSubs = res.filter((sub: any) => sub.subscription.app == 'herm');
+        console.log(activeSubs);
+        if (activeSubs.length > 1) {
+          console.log(number);
+          window.removeEventListener('message', handleHerm);
+          Messaging.sendToBackground({ action: 'remove_subscription', data: number }).then(res =>
+            console.log(res)
+          );
+        } else {
+          window.removeEventListener('message', handleHerm);
+          urbitVisor
+            .unsubscribe(activeSubs[0].airlockID)
+            .then(res => console.log('unsubscribed terminal'));
+        }
+      });
     };
   }, [props.selectedToInput]);
 
