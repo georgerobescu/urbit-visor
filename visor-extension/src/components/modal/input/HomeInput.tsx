@@ -32,7 +32,7 @@ const HomeInput = (props: InputProps) => {
   useEffect(() => {
     if (url) {
       const data = {
-        url: props.landscapeFork == 'escape' ? `${url}/apps/escape/` : `${url}/apps/landscape/`,
+        url: props.landscapeFork == 'escape' ? `${url}` : `${url}`,
       };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
