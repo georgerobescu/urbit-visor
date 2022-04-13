@@ -147,6 +147,7 @@ const Modal = () => {
 
       setSelectedToInput(selected);
     }
+    console.log('selected', selected);
   }, [selected]);
 
   useEffect(() => {
@@ -171,13 +172,23 @@ const Modal = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('selected', selected);
+    console.log('selectedToInput', selectedToInput);
+  }, [selected, selectedToInput]);
+
+  const handleSelectCurrentItem = (selected: MenuItem) => {
+    console.log('selecting to input');
+    setSelectedToInput(selected);
+    setAirlockResponse(null);
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (isConnected) {
       if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
         console.log('selecting to input');
         event.preventDefault();
-        setSelectedToInput(selected);
-        setAirlockResponse(null);
+        handleSelectCurrentItem(selected);
       } else if (event.key == 'Enter' && selected == selectedToInput) {
         event.preventDefault();
         setSendCommand(true);
@@ -239,10 +250,10 @@ const Modal = () => {
           setSelected(commands[0]);
           setFirstSelected(true);
         }}
-        changeSelected={selected => {
-          setSelected(selected);
-          setSelectedToInput(selected);
-        }}
+        // changeSelected={selected => {
+        //   setSelected(selected);
+        //   setSelectedToInput(selected);
+        // }}
         prefilledArgs={args => setPrefilledArgs(args)}
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}
@@ -257,6 +268,7 @@ const Modal = () => {
         airlockResponse={airlockResponse}
         contextItems={contextItems}
         firstSelected={firstSelected}
+        handleSelectCurrentItem={handleSelectCurrentItem}
       />
     </div>
   );

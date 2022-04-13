@@ -11,6 +11,7 @@ interface MenuOptionProps {
   firstSelected: Boolean;
   commands: Command[];
   contextItems?: ContextMenuItem[];
+  handleSelectCurrentItem: (menuItem: MenuItem) => void;
 }
 
 const Menu = (props: MenuOptionProps) => {
@@ -23,6 +24,7 @@ const Menu = (props: MenuOptionProps) => {
         handleSelection={props.handleSelection}
         keyDown={props.keyDown}
         firstSelected={props.firstSelected}
+        handleSelectCurrentItem={props.handleSelectCurrentItem}
       />
     </div>
   );

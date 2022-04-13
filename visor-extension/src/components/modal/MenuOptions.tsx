@@ -11,6 +11,7 @@ interface MenuOptionProps {
   firstSelected: Boolean;
   commands: MenuItem[];
   contextItems: ContextMenuItem[];
+  handleSelectCurrentItem: (menuItem: MenuItem) => void;
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
@@ -83,6 +84,9 @@ const MenuOptions = (props: MenuOptionProps) => {
 
   const selectClickedOption = (index: number) => {
     setClickedIndex(index);
+    props.handleSelectCurrentItem(
+      props.contextItems ? props.contextItems[index] : props.commands[index]
+    );
     props.handleSelection(props.contextItems ? props.contextItems[index] : props.commands[index]);
   };
 
