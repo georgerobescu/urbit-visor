@@ -23,6 +23,7 @@ interface InputProps {
   selectedToInput: MenuItem;
   selected: MenuItem;
   metadata?: Object;
+  termLines?: string[];
   commands?: MenuItem[];
   setCommands?: (commands: MenuItem[]) => void;
   filteredCommands?: (commands: MenuItem[]) => void;

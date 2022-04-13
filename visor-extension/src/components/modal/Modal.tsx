@@ -50,6 +50,8 @@ const Modal = () => {
   const [clearSelected, setClearSelected] = useState(null);
   const [spaceAllowed, setSpaceAllowed] = useState(null);
   const [metadata, setMetadata] = useState(null);
+  const [termSubscribed, setTermSubscribed] = useState(null);
+  const [termLines, setTermLines] = useState([] as string[]);
   const [prefilledArgs, setPrefilledArgs] = useState(null);
   const [argPreview, setArgPreview] = useState(null);
   const [firstSelected, setFirstSelected] = useState(null);
@@ -124,6 +126,68 @@ const Modal = () => {
       }
     }
   }, [isConnected]);
+
+  useEffect(() => {
+    let subId: number;
+    let number = 0;
+    let activeSubs: [any] = [0];
+
+    window.addEventListener('message', handleHerm);
+
+    if (isConnected) {
+      const setData = () => {
+        urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
+          console.log(res);
+          if (res.response == 'piggyback') {
+            setTermSubscribed(true);
+            number = res.subscriber;
+          } else {
+            number = res.subscriber;
+            setTermSubscribed(true);
+          }
+        });
+      };
+      urbitVisor.require(['subscribe'], setData);
+    }
+
+    return () => {
+      if (isConnected) {
+        Messaging.sendToBackground({ action: 'active_subscriptions' }).then(res => {
+          activeSubs = res.filter((sub: any) => sub.subscription.app == 'herm');
+          console.log(activeSubs);
+          if (activeSubs.length > 1) {
+            console.log(number);
+            window.removeEventListener('message', handleHerm);
+            Messaging.sendToBackground({ action: 'remove_subscription', data: number }).then(res =>
+              console.log(res)
+            );
+          } else {
+            window.removeEventListener('message', handleHerm);
+            urbitVisor
+              .unsubscribe(activeSubs[0].airlockID)
+              .then(res => console.log('unsubscribed terminal'));
+          }
+        });
+      }
+    };
+  }, [isConnected]);
+
+  const handleHerm = useCallback(
+    (message: any) => {
+      console.log(message);
+      if (
+        message.data.app == 'urbitVisorEvent' &&
+        message.data.event.data &&
+        message.data.event.data.lin
+      ) {
+        const dojoLine = message.data.event.data.lin.join('');
+        if (!(dojoLine.includes('dojo>') || dojoLine[0] === ';' || dojoLine[0] === '>')) {
+          setTermLines(previousState => [...previousState, dojoLine]);
+        } else return;
+      }
+    },
+    [termLines]
+  );
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
@@ -228,6 +292,7 @@ const Modal = () => {
           setFirstSelected(true);
         }}
         metadata={metadata}
+        termLines={termLines}
         commands={initialCommands}
         setCommands={command => {
           setCommands(command);

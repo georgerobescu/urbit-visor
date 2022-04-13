@@ -334,6 +334,19 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
       state.storeCommandHistory(request.data);
       sendResponse('ok');
       break;
+    case 'active_subscriptions':
+      sendResponse(state.activeSubscriptions);
+      break;
+    case 'current_tab':
+      chrome.tabs.getCurrent(tab => sendResponse(tab.id));
+      break;
+    case 'remove_subscription':
+      const sub = state.activeSubscriptions.find(
+        sub => sub.subscriber === request.data && sub.subscription.app === 'herm'
+      );
+      state.removeSubscription(sub);
+      sendResponse(sub);
+      break;
   }
 }
 type visorCallType = 'website' | 'extension';
@@ -513,7 +526,7 @@ function pubsub(
               airlockID: res,
               requestID: request.id,
             });
-            sendResponse({ status: 'ok', response: res });
+            sendResponse({ status: 'ok', response: res, subscriber: eventRecipient });
           })
           .catch(err => sendResponse({ status: 'error', response: err }));
       } else if (existing.subscriber !== eventRecipient) {
@@ -523,7 +536,7 @@ function pubsub(
           airlockID: existing.airlockID,
           requestID: request.id,
         });
-        sendResponse({ status: 'ok', response: 'piggyback' });
+        sendResponse({ status: 'ok', response: 'piggyback', subscriber: eventRecipient });
       } else sendResponse({ status: 'ok', response: 'noop' });
       break;
   }

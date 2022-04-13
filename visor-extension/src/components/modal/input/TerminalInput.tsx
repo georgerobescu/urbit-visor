@@ -15,55 +15,16 @@ interface InputProps {
   clearSelected: (clear: Boolean) => void;
   selectedToInput: Command;
   selected: MenuItem;
+  termLines?: string[];
 }
 
 const TerminalInput = (props: InputProps) => {
-  const [subscribed, setSubscribed] = useState(null);
-  const [lines, setLines] = useState([]);
-
-  const selection = (window as any).getSelection();
+  const [termSubscribed, setTermSubscribed] = useState(null);
+  const [termLines, setTermLines] = useState([]);
 
   useEffect(() => {
-    let toSub = true;
-    let number = 0;
-    if (toSub) {
-      window.addEventListener('message', handleHerm);
-
-      const setData = () => {
-        urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
-          number = res.response;
-          setSubscribed(true);
-        });
-      };
-      urbitVisor.require(['subscribe'], setData);
-    }
-    return () => {
-      toSub = false;
-      window.removeEventListener('message', handleHerm);
-      urbitVisor.unsubscribe(number).then(res => console.log('unsubscribed terminal'));
-    };
-  }, [props.selectedToInput]);
-
-  const handleHerm = useCallback(
-    (message: any) => {
-      console.log(message);
-      if (
-        message.data.app == 'urbitVisorEvent' &&
-        message.data.event.data &&
-        message.data.event.data.lin
-      ) {
-        const dojoLine = message.data.event.data.lin.join('');
-        if (!(dojoLine.includes('dojo>') || dojoLine[0] === ';' || dojoLine[0] === '>')) {
-          setLines(previousState => [dojoLine, ...previousState]);
-        } else return;
-      }
-    },
-    [lines]
-  );
-
-  useEffect(() => {
-    props.airlockResponse(lines);
-  }, [lines]);
+    props.airlockResponse(props.termLines);
+  }, [props.termLines]);
 
   return <Input {...props} persistInput={true} response={false} />;
 };
