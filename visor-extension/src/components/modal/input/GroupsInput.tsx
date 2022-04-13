@@ -90,7 +90,7 @@ const GroupsInput = (props: InputProps) => {
       const data = {
         url:
           props.landscapeFork == 'escape'
-            ? `${url}/apps/escape/~escape/ship/${props.selected.title}`
+            ? `${url}/apps/escape/~landscape/ship/${props.selected.title}`
             : `${url}/apps/landscape/~landscape/ship/${props.selected.title}`,
       };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(

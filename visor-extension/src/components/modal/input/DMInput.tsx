@@ -39,7 +39,7 @@ const DMInput = (props: InputProps) => {
         const data = {
           url:
             props.landscapeFork == 'escape'
-              ? `${url}/apps/escape/~escape/messages/dm/${refs}`
+              ? `${url}/apps/escape/~landscape/messages/dm/${refs}`
               : `${url}/apps/landscape/~landscape/messages/dm/${refs}`,
         };
         Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
