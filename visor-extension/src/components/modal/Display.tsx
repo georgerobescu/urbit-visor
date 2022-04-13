@@ -4,12 +4,16 @@ import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import ReactJson from 'react-json-view';
 import { MenuItem, Command, ContextMenuItem } from './types';
 import { Welcome } from './commands/Welcome';
+import pokeIcon from '../../icons/poke.svg';
+import threadIcon from '../../icons/thread.svg';
 import { getPositionOfLineAndCharacter } from 'typescript';
 
 interface DisplayProps {
   selected: MenuItem;
   airlockResponse: any;
 }
+const PokeIcon = () => <img src={pokeIcon} />;
+const ThreadIcon = () => <img src={threadIcon} />;
 
 const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
@@ -67,15 +71,26 @@ const Display = (props: DisplayProps) => {
       typeof props.airlockResponse == 'object' &&
       props.airlockResponse.type == 'internal'
     ) {
+      const response = props.airlockResponse.message;
+
       displayContent = (
-        <div style={{ textAlign: 'center', paddingTop: 48 }}>{props.airlockResponse.message}</div>
+        <div style={{ textAlign: 'center' }}>
+          <div className="command-launcher-display-preview-container">
+            {response === 'Poke Successful' || response === 'Poke Failed' ? (
+              <div className="command-preview-icon">
+                <PokeIcon />
+              </div>
+            ) : null}
+            <div className="command-title">{response}</div>
+          </div>
+        </div>
       );
     }
     // Otherwise
     else {
       displayContent = (
-        <div>
-          <div style={{ textAlign: 'center' }}>{props.airlockResponse}</div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', paddingTop: 48 }}>{props.airlockResponse}</div>
           <button
             style={{ position: 'fixed', right: '20px', bottom: '20px' }}
             onClick={event => navigator.clipboard.writeText(props.airlockResponse)}
