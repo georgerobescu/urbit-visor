@@ -256,6 +256,7 @@ const Modal = () => {
           setTermLines([]);
         }
         event.preventDefault();
+        setAirlockResponse(null);
         setKeyDown(event);
         return;
       } else {
