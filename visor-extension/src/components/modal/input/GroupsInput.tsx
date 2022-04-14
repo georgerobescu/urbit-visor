@@ -86,15 +86,19 @@ const GroupsInput = (props: InputProps) => {
     let isSubscribed = true;
 
     if (props.sendCommand) {
-      const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
-      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-        res => {
-          if (isSubscribed) {
-            console.log(res);
+      if (!props.selected?.title) {
+        props.airlockResponse({ type: 'internal', message: 'Please select a group' });
+      } else {
+        const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
+        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
+          res => {
+            if (isSubscribed) {
+              console.log(res);
+            }
           }
-        }
-      );
-      props.clearSelected(true);
+        );
+        props.clearSelected(true);
+      }
     }
 
     return () => {
