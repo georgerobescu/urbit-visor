@@ -23,7 +23,10 @@ const TerminalInput = (props: InputProps) => {
   const [termLines, setTermLines] = useState([]);
 
   useEffect(() => {
-    props.airlockResponse(props.termLines);
+    if (props.termLines.length) props.airlockResponse(props.termLines);
+    return () => {
+      props.airlockResponse(null);
+    };
   }, [props.termLines]);
 
   return <Input {...props} persistInput={true} response={false} />;

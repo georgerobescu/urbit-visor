@@ -250,7 +250,11 @@ const Modal = () => {
         window.top.postMessage('close', '*');
         setClearSelected(true);
       } else if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
-        console.log('arrow event');
+        if (selectedToInput?.title == 'Terminal') {
+          setAirlockResponse(null);
+          setSelectedToInput(null);
+          setTermLines([]);
+        }
         event.preventDefault();
         setKeyDown(event);
         return;
