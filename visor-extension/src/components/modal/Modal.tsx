@@ -147,7 +147,6 @@ const Modal = () => {
 
       setSelectedToInput(selected);
     }
-    console.log('selected', selected);
   }, [selected]);
 
   useEffect(() => {
@@ -171,11 +170,6 @@ const Modal = () => {
       });
     }
   };
-
-  useEffect(() => {
-    console.log('selected', selected);
-    console.log('selectedToInput', selectedToInput);
-  }, [selected, selectedToInput]);
 
   const handleSelectCurrentItem = (selected: MenuItem) => {
     console.log('selecting to input');
@@ -250,10 +244,6 @@ const Modal = () => {
           setSelected(commands[0]);
           setFirstSelected(true);
         }}
-        // changeSelected={selected => {
-        //   setSelected(selected);
-        //   setSelectedToInput(selected);
-        // }}
         prefilledArgs={args => setPrefilledArgs(args)}
         setArgPreview={(preview: Boolean) => setArgPreview(preview)}
         argPreview={argPreview}

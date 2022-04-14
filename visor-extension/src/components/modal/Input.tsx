@@ -47,10 +47,6 @@ const Input = (props: InputProps) => {
   }, [props.selectedToInput]);
 
   useEffect(() => {
-    console.log('poops', props.selectedToInput);
-  }, [props.selectedToInput]);
-
-  useEffect(() => {
     if (!props.selectedToInput.prefilledArguments) {
       inputRef.current[0].focus();
       setCurrentFocus(0);
