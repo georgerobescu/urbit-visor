@@ -19,8 +19,10 @@ const Display = (props: DisplayProps) => {
   const scrollable = useRef(null);
 
   useLayoutEffect(() => {
-    if (scrollable.current.scrollTop > -1)
-      scrollable.current.scrollTop = scrollable.current.scrollHeight;
+    if (Array.isArray(props.airlockResponse)) {
+      if (scrollable.current.scrollTop > -1)
+        scrollable.current.scrollTop = scrollable.current.scrollHeight;
+    }
   }, [props.airlockResponse]);
 
   // Define variable for content which will be held in the display area
