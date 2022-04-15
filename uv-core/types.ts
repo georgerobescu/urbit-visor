@@ -4,8 +4,8 @@ import { Scry, Thread, Poke, SubscriptionRequestInterface } from "@urbit/http-ap
 export { Scry, Thread, Poke, SubscriptionRequestInterface };
 export const VISOR_ID = "oadimaacghcacmfipakhadejgalcaepg";
 
-export type Permission = "shipName" | "shipURL" | "scry" | "thread" | "poke" | "subscribe";
-export type UrbitVisorAction = "on" | "check_connection" | "check_perms" | "shipURL" | "perms" | "shipName" | "scry" | "poke" | "subscribe" | "subscribeOnce" | "unsubscribe" | "thread";
+export type Permission = "shipName" | "shipURL" | "scry" | "thread" | "poke" | "subscribe" | "auth";
+export type UrbitVisorAction = "on" | "check_connection" | "check_perms" | "run_auth" | "shipURL" | "perms" | "shipName" | "scry" | "poke" | "subscribe" | "subscribeOnce" | "unsubscribe" | "thread";
 type UrbitVisorRequestType = Scry | Thread<any> | Poke<any> | SubscriptionRequestInterface | UrbitVisorAction[];
 
 export interface UrbitVisorRequest {

@@ -22,7 +22,8 @@ export const urbitVisor = {
     unsubscribe: (payload: number) => requestData("unsubscribe", payload),
     on: (eventType: UrbitVisorEventType, keys: string[], callback: Function) => addListener(eventType, keys, callback),
     off: (subscription: Subscription) => subscription.unsubscribe(),
-    require: (perms: Permission[], callback: Function) => initialize(perms, callback)
+    require: (perms: Permission[], callback: Function) => initialize(perms, callback),
+    authorizeShip: (backendShip: string) => requestData("run_auth", backendShip)
 };
 
 async function initialize(perms: Permission[], callback: Function): Promise<void>{
@@ -56,6 +57,7 @@ function addListener(eventType: UrbitVisorEventType, keys: string[], callback: F
         }
     });
 }
+
 
 function callVisor(action, data: any): Promise<any> {
     return new Promise((resolve, reject) => {
