@@ -242,9 +242,13 @@ const Modal = () => {
   };
 
   const handleSelectCurrentItem = (selected: MenuItem) => {
-    console.log('selecting to input');
-    setSelectedToInput(selected);
-    setAirlockResponse(null);
+    if (contextItems) {
+      setSendCommand(true);
+    } else {
+      console.log('selecting to input');
+      setSelectedToInput(selected);
+      setAirlockResponse(null);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {

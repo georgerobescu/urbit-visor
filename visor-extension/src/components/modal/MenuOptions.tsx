@@ -84,10 +84,10 @@ const MenuOptions = (props: MenuOptionProps) => {
 
   const selectClickedOption = (index: number) => {
     setClickedIndex(index);
+    props.handleSelection(props.contextItems ? props.contextItems[index] : props.commands[index]);
     props.handleSelectCurrentItem(
       props.contextItems ? props.contextItems[index] : props.commands[index]
     );
-    props.handleSelection(props.contextItems ? props.contextItems[index] : props.commands[index]);
   };
 
   return (
