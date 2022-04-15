@@ -39,6 +39,7 @@ interface InputProps {
   setArgPreview?: (preview: Boolean) => void;
   argPreview?: Boolean;
   placeholder?: string;
+  landscapeFork: string;
 }
 
 const Inputbox = (props: InputProps) => {

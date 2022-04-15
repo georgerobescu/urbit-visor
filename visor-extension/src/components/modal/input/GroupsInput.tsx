@@ -18,6 +18,7 @@ interface InputProps {
   selectedToInput: MenuItem;
   selected: MenuItem;
   argPreview?: Boolean;
+  landscapeFork: string;
 }
 
 const GroupsInput = (props: InputProps) => {
@@ -89,7 +90,12 @@ const GroupsInput = (props: InputProps) => {
       if (!props.selected?.title) {
         props.airlockResponse({ type: 'internal', message: 'Please select a group' });
       } else {
-        const data = { url: `${url}/apps/landscape/~landscape/ship/${props.selected.title}` };
+        const data = {
+          url:
+            props.landscapeFork == 'escape'
+              ? `${url}/apps/escape/~landscape/ship/${props.selected.title}`
+              : `${url}/apps/landscape/~landscape/ship/${props.selected.title}`,
+        };
         Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
           res => {
             if (isSubscribed) {

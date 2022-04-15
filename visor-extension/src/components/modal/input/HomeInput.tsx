@@ -16,6 +16,7 @@ interface InputProps {
   clearSelected: (clear: Boolean) => void;
   selectedToInput: Command;
   selected: MenuItem;
+  landscapeFork: string;
 }
 
 const HomeInput = (props: InputProps) => {
@@ -30,7 +31,9 @@ const HomeInput = (props: InputProps) => {
 
   useEffect(() => {
     if (url) {
-      const data = { url: `${url}/` };
+      const data = {
+        url: props.landscapeFork == 'escape' ? `${url}` : `${url}`,
+      };
       Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
         res => console.log(res)
       );
