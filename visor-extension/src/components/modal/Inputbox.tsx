@@ -34,7 +34,6 @@ interface InputProps {
   airlockResponse: (response: any) => void;
   clearSelected: (clear: Boolean) => void;
   contextItems: (items: ContextMenuItem[]) => void;
-  changeSelected: (selected: Command) => void;
   prefilledArgs?: (args: string[]) => void;
   setArgPreview?: (preview: Boolean) => void;
   argPreview?: Boolean;

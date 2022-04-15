@@ -16,7 +16,6 @@ interface InputProps {
   clearSelected: (clear: Boolean) => void;
   selectedToInput: Command;
   selected: MenuItem;
-  changeSelected: (selected: Command) => void;
   contextItems: (items: ContextMenuItem[]) => void;
   commands?: MenuItem[];
   setCommands?: (commands: MenuItem[]) => void;

@@ -13,6 +13,7 @@ interface BodyProps {
   airlockResponse: any;
   firstSelected: Boolean;
   commands: MenuItem[];
+  handleSelectCurrentItem: (menuItem: MenuItem) => void;
 }
 
 const Body = (props: BodyProps) => {
@@ -25,6 +26,7 @@ const Body = (props: BodyProps) => {
         keyDown={props.keyDown}
         contextItems={props.contextItems}
         firstSelected={props.firstSelected}
+        handleSelectCurrentItem={props.handleSelectCurrentItem}
       />
       <Display selected={props.selected} airlockResponse={props.airlockResponse} />
     </div>

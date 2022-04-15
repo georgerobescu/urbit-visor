@@ -11,6 +11,7 @@ interface MenuOptionProps {
   firstSelected: Boolean;
   commands: MenuItem[];
   contextItems: ContextMenuItem[];
+  handleSelectCurrentItem: (menuItem: MenuItem) => void;
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
@@ -81,6 +82,14 @@ const MenuOptions = (props: MenuOptionProps) => {
     return menuOption.title;
   };
 
+  const selectClickedOption = (index: number) => {
+    setClickedIndex(index);
+    props.handleSelectCurrentItem(
+      props.contextItems ? props.contextItems[index] : props.commands[index]
+    );
+    props.handleSelection(props.contextItems ? props.contextItems[index] : props.commands[index]);
+  };
+
   return (
     <div className="command-launcher-menu-list">
       {(props.contextItems ? props.contextItems : props.commands).map((option, index) => (
@@ -94,6 +103,7 @@ const MenuOptions = (props: MenuOptionProps) => {
               : 'menu-option'
           }
           key={index}
+          onClick={() => selectClickedOption(index)}
         >
           <div className="command-icon">{option.icon}</div>
           <div className="command-text">{parseGroupName(option)}</div>
