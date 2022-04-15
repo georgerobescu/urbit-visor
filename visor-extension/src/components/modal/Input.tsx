@@ -51,6 +51,8 @@ const Input = (props: InputProps) => {
       inputRef.current[0].focus();
       setCurrentFocus(0);
       props.refs ? props.refs(inputRef) : null;
+    } else {
+      props.refs ? props.refs(inputRef) : null;
     }
   }, [inputRef]);
   useEffect(() => {
@@ -99,7 +101,9 @@ const Input = (props: InputProps) => {
           //console.log(message(props.selected.schemaArgs ? args[i] : args))
         }
       };
-      f();
+      if (props.selectedToInput.title !== 'Subscribe') {
+        f();
+      }
       if (props.selectedToInput.title !== 'Groups') {
         console.log(inputRef.current.map(arg => arg.innerHTML));
         Messaging.sendToBackground({
