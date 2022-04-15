@@ -1,4 +1,4 @@
-import { EncryptedShipCredentials } from "@dcspark/uv-core";
+import { EncryptedShipCredentials } from "./types";
 
 export class Urbit{
     constructor(

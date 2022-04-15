@@ -1,4 +1,4 @@
-import { UrbitVisorRequest, UrbitVisorEvent, UrbitVisorResponse, UrbitVisorState, UrbitVisorInternalComms } from "./types";
+import { UrbitVisorRequest, CommandLauncherRequest, UrbitVisorEvent, UrbitVisorResponse, UrbitVisorState, UrbitVisorInternalComms } from "./types";
 
 const Messaging = {
     sendToPopup: async function (message: { state: UrbitVisorState }): Promise<void> {
@@ -13,7 +13,7 @@ const Messaging = {
             }, (response) => res(response))
         );
     },
-    relayToBackground: async function (request: UrbitVisorRequest): Promise<UrbitVisorResponse> {
+    relayToBackground: async function (request: UrbitVisorRequest | CommandLauncherRequest): Promise<UrbitVisorResponse> {
         return new Promise((res, rej) =>
             chrome.runtime.sendMessage(request, (response) => res(response))
         );

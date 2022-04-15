@@ -8,6 +8,7 @@ import {
   reEncryptAll,
   savePassword,
   resetApp,
+  storeCommandHistory,
 } from './storage';
 import { connectToShip, grantPerms, deleteDomain, revokePerms, fetchAllPerms } from './urbit';
 import create from 'zustand';
@@ -26,13 +27,15 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
   consumer_tabs: [],
   consumer_extensions: [],
   activeSubscriptions: [],
+  commandHistory: [],
   init: async () => {
-    const res = await getStorage(['popup', 'ships', 'password', 'permissions']);
+    const res = await getStorage(['popup', 'ships', 'password', 'permissions', 'commandHistory']);
     set(state => ({
       first: !('password' in res),
       popupPreference: res.popup || 'modal',
       ships: res.ships || [],
       permissions: res.permissions || {},
+      commandHistory: res.commandHistory || [],
     }));
   },
   setMasterPassword: async password => {
@@ -150,5 +153,12 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
       );
     });
     set(state => ({ activeSubscriptions: filtered }));
+  },
+  storeCommandHistory: async command => {
+    const history = await storeCommandHistory(command);
+    console.log(history);
+    const rest = get().commandHistory;
+    console.log(rest);
+    set(state => ({ commandHistory: [history, ...rest] }));
   },
 }));

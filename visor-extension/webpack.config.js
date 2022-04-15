@@ -7,6 +7,7 @@ const config = {
   devtool: 'cheap-module-source-map',
   entry: {
     popup: path.join(__dirname, "src/popup.tsx"),
+    launcher: path.join(__dirname, "src/launcher.tsx"),
     content: path.join(__dirname, "src/content.ts"),
     background: path.join(__dirname, "src/background.ts"),
   },

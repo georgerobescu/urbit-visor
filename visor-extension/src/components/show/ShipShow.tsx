@@ -4,7 +4,8 @@ import { useHistory, useParams } from "react-router";
 import Sigil from "../ui/svg/Sigil";
 import Spinner from "../ui/svg/Spinner";
 
-import { EncryptedShipCredentials, Messaging } from "@dcspark/uv-core";
+import { EncryptedShipCredentials } from "../../types";
+import { Messaging } from "../../messaging";
 import { loginToShip } from "../../urbit";
 import { decrypt } from "../../storage";
 import { whatShip, getIcon, processName } from "../../utils";

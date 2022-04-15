@@ -2,6 +2,7 @@
 
 *.pem
 *.zip
+*.swp
 
 # dependencies
 /node_modules

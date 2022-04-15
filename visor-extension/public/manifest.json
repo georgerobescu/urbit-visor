@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "update_url": "https://clients2.google.com/service/update2/crx",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm5XZIjmISeYdECai228Nz5DKO7nA3MN5FWwsg5kImRjAZcWbNBG4ywJhwo7UjUErljng5wrerJATFhcxlXYfkSGR6gfV3sk4j+twm0PxlQXge8w0e24S55j6lk2vNHA3AwfnI8/wl3kI1CqWK6YqtSL7lDWw5inVvz3JH9w4fvXPlQpBkU52BDEE6dQQ3npscdh05/aBmOiHGev+Q1D5NCbh7TJQaXDE30ApS4u6bwr1rQrSXjc2Hcy/8yiLvAmzLNOG6fAGMUIUdrMweqgmgKxKF1+v4i+fkNy4jZF2rLMZRqKzLrDF7Ov60TYt+hFC+IriOUVzemg7h4QQR+51ZQIDAQAB",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -34,7 +34,8 @@
     }
   ],
   "web_accessible_resources": [
-    "popup.html"
+    "popup.html",
+    "launcher.html"
   ],
   "commands": {
     "_execute_browser_action": {
@@ -44,9 +45,21 @@
         "chromeos": "Ctrl+Shift+U",
         "linux": "Ctrl+Shift+U"
       }
+    },
+    "command-launcher": {
+      "suggested_key" : {
+        "windows": "Ctrl+Period",
+        "mac": "Ctrl+Period",
+        "chromeos": "Ctrl+Period",
+        "linux": "Ctrl+Period"
+      },
+      "description" : "UV command launcher"
     }
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs",
+    "activeTab",
+    "*://*/_generated_background_page.html"
  ]
 }

@@ -1,5 +1,5 @@
 import { Messaging } from '@dcspark/uv-core';
-import { SubscriptionRequestInterface } from '@urbit/http-api/src/types';
+import { SubscriptionRequestInterface } from '@urbit/http-api/dist/types';
 import {
   EncryptedShipCredentials,
   UrbitVisorAction,
@@ -24,6 +24,7 @@ async function init() {
   storageListener();
   messageListener();
   extensionListener();
+  hotkeyListener();
 }
 init();
 
@@ -62,6 +63,8 @@ function messageListener() {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.app == 'urbit-visor-internal') handleInternalMessage(request, sender, sendResponse);
     else if (request.app == 'urbitVisor') handleVisorCall(request, sender, sendResponse, 'website');
+    else if (request.app == 'command-launcher')
+      handleCommandLauncherCall(request, sender, sendResponse);
     else sendResponse('ng');
     return true;
   });
@@ -71,6 +74,65 @@ function extensionListener() {
     /* check whitelist here against sender.id */
     handleVisorCall(request, sender, sendResponse, 'extension');
   });
+}
+function hotkeyListener() {
+  const showPopup = () => {
+    const background = document.getElementById('urbit-visor-modal-bg');
+    if (background) {
+      background.style.display = 'block';
+      background.style.opacity = '0.9';
+      const modalText = document.getElementById('urbit-visor-modal-text');
+      if (modalText) modalText.innerText = 'Connect to a ship with your Urbit Visor';
+      setTimeout(() => (background.style.display = 'none'), 3000);
+    }
+  };
+  const showLauncher = () => {
+    const modal: any = <any>(
+      document.querySelector('html > div').shadowRoot.querySelector('#command-launcher-container')
+    );
+    modal.showModal();
+    modal.firstElementChild.contentWindow.postMessage('focus', '*');
+  };
+  chrome.commands.onCommand.addListener((command, tab) => {
+    const state = useStore.getState();
+
+    chrome.tabs.executeScript(tab.id, {
+      code: `(${showLauncher})()`,
+    });
+  });
+}
+
+function handleCommandLauncherCall(request: any, sender: any, sendResponse: any) {
+  switch (request.action) {
+    case 'route':
+      let tabIdd: number;
+      chrome.tabs.create(
+        {
+          url: request.data.url,
+        },
+        tab => {
+          tabIdd = tab.id;
+          console.log(tabIdd);
+        }
+      );
+      sendResponse('ok');
+      break;
+    case 'open':
+      const showLauncher = () => {
+        const modal: any = <any>(
+          document
+            .querySelector('html > div')
+            .shadowRoot.querySelector('#command-launcher-container')
+        );
+        modal.showModal();
+        modal.firstElementChild.contentWindow.postMessage('focus', '*');
+      };
+      chrome.tabs.executeScript({
+        code: `(${showLauncher})()`,
+      });
+      sendResponse('ok');
+      break;
+  }
 }
 
 function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, sendResponse: any) {
@@ -95,6 +157,13 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
     case 'get_ships':
       sendResponse({ airlock: state.airlock, ships: state.ships, active: state.activeShip });
       break;
+    case 'call_airlock':
+      if (state.airlock)
+        (state.airlock as any)
+          [request.data.action](request.data.argument)
+          .then((res: any) => sendResponse(res))
+          .catch((err: any) => sendResponse({ status: 'error', response: err }));
+      break;
     case 'get_selected':
       sendResponse({ selected: state.selectedShip, active: state.activeShip });
       break;
@@ -106,6 +175,9 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
       break;
     case 'get_settings':
       sendResponse({ popupPreference: state.popupPreference });
+      break;
+    case 'get_command_history':
+      sendResponse({ commandHistory: state.commandHistory });
       break;
     case 'set_master_password':
       state.setMasterPassword(request.data.password).then(res => sendResponse('ok'));
@@ -260,6 +332,23 @@ function handleInternalMessage(request: UrbitVisorInternalComms, sender: any, se
     case 'cache_form_creds':
       state.cacheCreds(request.data.creds);
       sendResponse('ok');
+      break;
+    case 'store_command_history':
+      state.storeCommandHistory(request.data);
+      sendResponse('ok');
+      break;
+    case 'active_subscriptions':
+      sendResponse(state.activeSubscriptions);
+      break;
+    case 'current_tab':
+      chrome.tabs.getCurrent(tab => sendResponse(tab.id));
+      break;
+    case 'remove_subscription':
+      const sub = state.activeSubscriptions.find(
+        sub => sub.subscriber === request.data && sub.subscription.app === 'herm'
+      );
+      state.removeSubscription(sub);
+      sendResponse(sub);
       break;
   }
 }
@@ -471,7 +560,7 @@ function pubsub(
               airlockID: res,
               requestID: request.id,
             });
-            sendResponse({ status: 'ok', response: res });
+            sendResponse({ status: 'ok', response: res, subscriber: eventRecipient });
           })
           .catch(err => sendResponse({ status: 'error', response: err }));
       } else if (existing.subscriber !== eventRecipient) {
@@ -481,7 +570,7 @@ function pubsub(
           airlockID: existing.airlockID,
           requestID: request.id,
         });
-        sendResponse({ status: 'ok', response: 'piggyback' });
+        sendResponse({ status: 'ok', response: 'piggyback', subscriber: eventRecipient });
       } else sendResponse({ status: 'ok', response: 'noop' });
       break;
   }

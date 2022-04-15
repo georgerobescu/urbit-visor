@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Ship from "./Ship";
 import { EncryptedShipCredentials } from "../../types";
 import { useHistory } from "react-router-dom";
-import { Messaging } from "@dcspark/uv-core";
+import { Messaging } from "../../messaging";
 import { motion } from "framer-motion";
 import "./list.css";
 
