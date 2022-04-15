@@ -124,7 +124,7 @@ const AirlockSubscriptionResponse = (props: DisplayProps) => {
           className="airlock-subscription-display-line"
           onClick={event => navigator.clipboard.writeText(JSON.stringify(line))}
         >
-          {JSON.stringify(line)}
+          {line}
         </div>
       ))}
     </div>
