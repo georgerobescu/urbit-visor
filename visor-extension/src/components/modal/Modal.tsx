@@ -172,6 +172,12 @@ const Modal = () => {
     };
   }, [isConnected]);
 
+  useEffect(() => {
+    if (isConnected) {
+      setBaseFocus(true);
+    }
+  }, [isConnected]);
+
   const handleHerm = useCallback(
     (message: any) => {
       console.log(message);
