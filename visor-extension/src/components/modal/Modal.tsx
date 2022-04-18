@@ -198,6 +198,7 @@ const Modal = () => {
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
       console.log('focusing');
+      rootRef.current.focus();
       if (selectedToInput) {
         rootRef.current.focus();
       } else setBaseFocus(true);
@@ -252,6 +253,11 @@ const Modal = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key == 'Escape') {
+      console.log('sending close');
+      event.preventDefault();
+      window.top.postMessage('close', '*');
+    }
     if (isConnected) {
       if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
         console.log('selecting to input');
