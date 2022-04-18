@@ -300,3 +300,19 @@ p.tab-description {
   background: #3a423e;
   color: #ffffff;
 }
+
+.back-button {
+  cursor: pointer;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  padding: 10px;
+  background: rgba(58, 66, 62, 0.6);
+  border-left-color: rgba(58, 66, 62, 0.6);
+  border-top-color: rgba(58, 66, 62, 0.6);
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #a5b0ab;
+}

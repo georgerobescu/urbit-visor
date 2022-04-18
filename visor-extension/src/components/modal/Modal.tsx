@@ -339,6 +339,7 @@ const Modal = () => {
       <Body
         commands={commands}
         handleSelection={(i: MenuItem) => setSelected(i)}
+        clearSelected={(clear: Boolean) => setClearSelected(clear)}
         selected={selected}
         keyDown={keyDown}
         airlockResponse={airlockResponse}
