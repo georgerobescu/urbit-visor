@@ -8,6 +8,7 @@ interface MenuOptionProps {
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
+  argPreview?: Boolean;
   clearSelected: (clear: Boolean) => void;
   firstSelected: Boolean;
   commands: Command[];
@@ -27,9 +28,11 @@ const Menu = (props: MenuOptionProps) => {
         firstSelected={props.firstSelected}
         handleSelectCurrentItem={props.handleSelectCurrentItem}
       />
-      <button className="back-button" onClick={event => props.clearSelected(true)}>
-        BACK
-      </button>
+      {props.contextItems || props.argPreview ? (
+        <button className="back-button" onClick={event => props.clearSelected(true)}>
+          BACK
+        </button>
+      ) : null}
     </div>
   );
 };

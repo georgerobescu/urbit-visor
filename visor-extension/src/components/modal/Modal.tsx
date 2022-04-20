@@ -341,6 +341,7 @@ const Modal = () => {
         handleSelection={(i: MenuItem) => setSelected(i)}
         clearSelected={(clear: Boolean) => setClearSelected(clear)}
         selected={selected}
+        argPreview={argPreview}
         keyDown={keyDown}
         airlockResponse={airlockResponse}
         contextItems={contextItems}
