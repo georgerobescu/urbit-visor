@@ -27,6 +27,8 @@ const Menu = (props: MenuOptionProps) => {
         keyDown={props.keyDown}
         firstSelected={props.firstSelected}
         handleSelectCurrentItem={props.handleSelectCurrentItem}
+        argPreview={props.argPreview}
+        clearSelected={props.clearSelected}
       />
       {props.contextItems || props.argPreview ? (
         <button className="back-button" onClick={event => props.clearSelected(true)}>
