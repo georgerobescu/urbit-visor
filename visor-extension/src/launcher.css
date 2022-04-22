@@ -20,6 +20,8 @@
   overflow-x: hidden;
   background-color: #1b231f;
   color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
 }
 
 .command-launcher-display-preview-container {
@@ -37,18 +39,23 @@
   font-size: 16px;
 }
 
+.modal-input-box input {
+  font-family: 'Inter', sans-serif;
+}
+.modal-input-box input::placeholder {
+  color: #a5b0ab;
+}
+
 .modal-container {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
 .modal-container:focus {
   outline: none;
 }
 
 .cl-base-input {
-  /* height: 64px; */
   padding: 0;
   padding-left: 16px;
   outline: none;
@@ -64,6 +71,9 @@
   min-width: 1em;
   cursor: text;
 }
+.cl-input * {
+  display: inline;
+}
 .cl-input:empty:before {
   content: attr(data-placeholder);
   color: #a5b0ab;
@@ -71,9 +81,7 @@
 .cl-input br {
   display: none;
 }
-.cl-input * {
-  display: inline;
-}
+
 .highlight-required {
   border: red;
   border-style: solid;
@@ -81,18 +89,23 @@
 }
 
 .arg-input {
+  cursor: text;
   display: inline-block;
   vertical-align: top;
   min-width: 1em;
   width: fit-content;
-  padding: 0px 5px 0px 5px;
-  cursor: text;
+  padding: 5px 8px;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
 }
-
-.highlight-required {
-  border: red;
-  border-style: solid;
-  border-width: thin;
+.arg-input:empty:before {
+  content: attr(data-placeholder);
+  color: #a5b0ab;
+}
+.arg-input:focus-visible {
+  border: 1px solid #f1f5f3;
+  border-radius: 8px;
+  outline: none;
 }
 
 .icon {
@@ -102,39 +115,19 @@
 .airlock-subscription-display {
   padding: 12px;
 }
-
 .airlock-subscription-display-line {
   color: white;
   text-align: left;
   overflow-wrap: break-word;
 }
 
-.arg-input {
-  padding: 5px 8px;
-  font-family: 'Inter', sans-serif;
-  color: #fff;
-}
-
-.arg-input:empty:before {
-  content: attr(data-placeholder);
-  color: #a5b0ab;
-}
-
-.arg-input:focus-visible {
-  border: 1px solid #f1f5f3;
-  border-radius: 8px;
-  outline: none;
-}
-
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #3e3e3e;
   border-radius: 20px;
 }
-
 ::-webkit-scrollbar-track {
   background: #969494;
   border-radius: 20px;
@@ -145,14 +138,6 @@
   align-items: center;
   height: 64px;
   padding-left: 8px;
-}
-
-.modal-input-box input {
-  font-family: 'Inter', sans-serif;
-}
-
-.modal-input-box input::placeholder {
-  color: #a5b0ab;
 }
 
 .logo-container {
@@ -175,25 +160,17 @@
   border-radius: 12px;
   font-size: 16px;
 }
-
 .menu-option:hover {
   background-color: #3a423e;
 }
-
 .menu-option.selected {
   background-color: #019d64;
   color: white;
 }
 
-.command-launcher-menu-option:focus-visible {
-  background-color: aquamarine;
-  font-family: 'Inter', sans-serif;
-}
-
 .command-icon img {
   padding-right: 14px;
 }
-
 .menu-option.selected .command-icon img {
   filter: brightness(0) invert(1);
 }
@@ -202,34 +179,12 @@
   word-break: break-all;
 }
 
-.command-launcher-display {
-  background-color: #1b231f;
-  color: #ffffff;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-}
-
 .command-launcher-display .command-title {
   width: 400px;
   margin: 0 auto;
   padding: 24px 0 16px;
   font-size: 18px;
 }
-
-.command-description {
-  width: 340px;
-  margin: 0 auto;
-}
-
-.command-description p {
-  margin: 0;
-  line-height: 32px;
-}
-
-p.tab-description {
-  margin-top: 30px;
-}
-
 .command-launcher-display .tab-symbol {
   display: inline-block;
   margin: 0 3px;
@@ -242,6 +197,19 @@ p.tab-description {
   line-height: 16px;
 }
 
+.command-description {
+  width: 340px;
+  margin: 0 auto;
+}
+.command-description p {
+  margin: 0;
+  line-height: 32px;
+}
+
+p.tab-description {
+  margin-top: 30px;
+}
+
 .command-preview-icon {
   display: flex;
   width: 64px;
@@ -251,7 +219,6 @@ p.tab-description {
   background-color: #3a423e;
   border-radius: 12px;
 }
-
 .command-preview-icon img {
   width: 36px;
   filter: brightness(0) invert(1);
@@ -295,7 +262,6 @@ p.tab-description {
   font-size: 12px;
   color: #a5b0ab;
 }
-
 .copy-button:hover {
   background: #3a423e;
   color: #ffffff;
@@ -314,7 +280,6 @@ p.tab-description {
   border: none;
   border-top: 1px solid #353a38;
 }
-
 .back-button:hover {
   color: #fff;
 }
@@ -323,7 +288,7 @@ p.tab-description {
   height: calc(100% - 50px);
 }
 
-.gg-arrow-left {
+.back-arrow {
   box-sizing: border-box;
   position: absolute;
   top: 13px;
@@ -333,15 +298,15 @@ p.tab-description {
   width: 22px;
   height: 22px;
 }
-.gg-arrow-left::after,
-.gg-arrow-left::before {
+.back-arrow::after,
+.back-arrow::before {
   content: '';
   display: block;
   box-sizing: border-box;
   position: absolute;
   left: 3px;
 }
-.gg-arrow-left::after {
+.back-arrow::after {
   width: 8px;
   height: 8px;
   border-bottom: 2px solid;
@@ -349,7 +314,7 @@ p.tab-description {
   transform: rotate(45deg);
   bottom: 7px;
 }
-.gg-arrow-left::before {
+.back-arrow::before {
   width: 16px;
   height: 2px;
   bottom: 10px;
