@@ -12,11 +12,11 @@ export const Spider: Command = {
   arguments: ['thread name', 'desk', 'input mark', 'output mark', 'body'],
   schema: [
     (props: any[]) => ({
-      threadName: props[0].innerHTML,
-      desk: props[1].innerHTML,
-      inputMark: props[2].innerHTML,
-      outputMark: props[3].innerHTML,
-      body: JSON.parse(props[4].innerHTML),
+      threadName: props[0].innerText,
+      desk: props[1].innerText,
+      inputMark: props[2].innerText,
+      outputMark: props[3].innerText,
+      body: JSON.parse(props[4].innerText),
     }),
   ],
 };

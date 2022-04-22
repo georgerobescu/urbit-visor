@@ -10,5 +10,5 @@ export const Scry: Command = {
   icon: <Icon />,
   description: 'Read data from your Urbit ship.',
   arguments: ['app', 'path'],
-  schema: [(props: any[]) => ({ app: props[0].innerHTML, path: props[1].innerHTML })],
+  schema: [(props: any[]) => ({ app: props[0].innerText, path: props[1].innerText })],
 };

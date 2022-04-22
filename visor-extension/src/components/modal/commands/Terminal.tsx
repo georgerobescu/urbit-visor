@@ -11,7 +11,7 @@ export const Terminal: Command = {
   description: 'Issue commands to the terminal on your Urbit ship.',
   arguments: ['command'],
   schema: [
-    (props: any[]) => ({ app: 'herm', mark: 'belt', json: { txt: [props[0].innerHTML] } }),
+    (props: any[]) => ({ app: 'herm', mark: 'belt', json: { txt: [props[0].innerText] } }),
     (props: any[]) => ({ app: 'herm', mark: 'belt', json: { ret: null } }),
   ],
 };

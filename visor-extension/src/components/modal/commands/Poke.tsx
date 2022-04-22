@@ -12,9 +12,9 @@ export const Poke: Command = {
   arguments: ['app', 'mark', 'json'],
   schema: [
     (props: any[]) => ({
-      app: props[0].innerHTML,
-      mark: props[1].innerHTML,
-      json: props[2].innerHTML,
+      app: props[0].innerText,
+      mark: props[1].innerText,
+      json: props[2].innerText,
     }),
   ],
 };
