@@ -38,7 +38,7 @@ const Menu = (props: MenuOptionProps) => {
       />
       {props.contextItems || props.argPreview ? (
         <button className="back-button" onClick={event => props.clearSelected(true)}>
-          <span className="gg-arrow-left"></span>BACK
+          <span className="back-arrow"></span>BACK
         </button>
       ) : null}
     </div>
