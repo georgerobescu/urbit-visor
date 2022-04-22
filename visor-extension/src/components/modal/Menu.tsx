@@ -18,7 +18,13 @@ interface MenuOptionProps {
 
 const Menu = (props: MenuOptionProps) => {
   return (
-    <div className="command-launcher-menu">
+    <div
+      className={
+        props.contextItems || props.argPreview
+          ? 'command-launcher-menu sub-menu'
+          : 'command-launcher-menu'
+      }
+    >
       <MenuOptions
         commands={props.commands}
         contextItems={props.contextItems}
@@ -32,7 +38,7 @@ const Menu = (props: MenuOptionProps) => {
       />
       {props.contextItems || props.argPreview ? (
         <button className="back-button" onClick={event => props.clearSelected(true)}>
-          BACK
+          <span className="gg-arrow-left"></span>BACK
         </button>
       ) : null}
     </div>

@@ -111,17 +111,6 @@ const MenuOptions = (props: MenuOptionProps) => {
           <div className="command-text">{parseGroupName(option)}</div>
         </div>
       ))}
-      {props.contextItems || props.argPreview ? (
-        <>
-          <div className="empty"></div>
-          <div className="testing">
-            {' '}
-            <button className="back-button" onClick={event => props.clearSelected(true)}>
-              BACK
-            </button>
-          </div>
-        </>
-      ) : null}
     </div>
   );
 };
