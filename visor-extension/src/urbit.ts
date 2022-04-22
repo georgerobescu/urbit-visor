@@ -67,14 +67,16 @@ export async function initPerms(shipName: string, url: string) {
   try {
     const res = await fetchAllPerms(url);
     return grantPerms(airlock, {
-      key: "chrome-extension://oadimaacghcacmfipakhadejgalcaepg", 
-      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"]
+      key: "oadimaacghcacmfipakhadejgalcaepg", 
+      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"],
+      name: "Urbit Visor Command Launcher"
     })
   } catch {
     await setPerms(airlock);
     return grantPerms(airlock, {
-      key: "chrome-extension://oadimaacghcacmfipakhadejgalcaepg", 
-      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"]
+      key: "oadimaacghcacmfipakhadejgalcaepg", 
+      permissions: ["scry", "poke", "thread", "subscribe", "shipName", "shipURL"],
+      name: "Urbit Visor Command Launcher"
     })
   }
 }
