@@ -38,7 +38,6 @@ const BaseInput = (props: InputProps) => {
   const handleInputChange = (change: any) => {
     if (change.target.value == 0) {
       props.clearSelected(true);
-      console.log('inp 0');
     } else if (change.target) {
       const inp = change.target.value.toLowerCase();
 
@@ -46,7 +45,7 @@ const BaseInput = (props: InputProps) => {
         const filtered = commands.filter(command => command.title.toLowerCase().includes(inp));
 
         if (commands.length == filtered.length) {
-          console.log('same');
+          return;
         } else {
           props.filteredCommands(filtered);
         }

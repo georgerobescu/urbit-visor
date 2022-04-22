@@ -36,7 +36,6 @@ const MenuOptions = (props: MenuOptionProps) => {
   }, [props.firstSelected]);
 
   useEffect(() => {
-    console.log('got keydown');
     if (!props.keyDown) {
       return;
     } else if (

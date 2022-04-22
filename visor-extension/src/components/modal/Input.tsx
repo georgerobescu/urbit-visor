@@ -28,8 +28,6 @@ const Input = (props: InputProps) => {
   const selection = (window as any).getSelection();
 
   useEffect(() => {
-    console.log('prefilling args');
-
     if (props.selectedToInput.prefilledArguments) {
       inputRef.current.forEach((input, i) => {
         input.innerText = props.selectedToInput.prefilledArguments[i];
@@ -76,7 +74,6 @@ const Input = (props: InputProps) => {
   }, [props.previousArg]);
 
   useEffect(() => {
-    console.log(inputRef.current);
     if (!props.sendCommand) return;
     else if (inputRef.current.every(el => (el?.innerHTML ? true : false))) {
       if (props.refs) {
@@ -88,30 +85,24 @@ const Input = (props: InputProps) => {
       } else {
         args = props.schemaArgs.map(arg => (arg == 'default' ? inputRef.current : arg));
       }
-      console.log(args);
       const f = async () => {
         for (const [i, message] of props.selectedToInput.schema.entries()) {
-          console.log(message);
           const data = { action: props.selectedToInput.command, argument: message(args) };
-          console.log(data);
           const res = await Messaging.sendToBackground({ action: 'call_airlock', data: data });
-          props.response == true || props.response == undefined
-            ? handleAirlockResponse(res)
-            : void console.log(res);
+          props.response == true || props.response == undefined ? handleAirlockResponse(res) : null;
         }
       };
       if (props.selectedToInput.title !== 'Subscribe') {
         f();
       }
       if (props.selectedToInput.title !== 'Groups') {
-        console.log(inputRef.current.map(arg => arg.innerText));
         Messaging.sendToBackground({
           action: 'store_command_history',
           data: {
             command: props.selectedToInput.title,
             arguments: inputRef.current.map(arg => arg.innerText),
           },
-        }).then(res => console.log(res));
+        });
       }
 
       props.persistInput
@@ -125,7 +116,6 @@ const Input = (props: InputProps) => {
           }),
           props.clearSelected(true));
     } else {
-      console.log('not sending poke');
       inputRef.current.forEach(input => {
         if (input?.innerHTML == '') input.classList.add('highlight-required');
       });

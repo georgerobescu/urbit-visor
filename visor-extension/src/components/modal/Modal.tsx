@@ -100,7 +100,6 @@ const Modal = () => {
 
     if (isConnected) {
       if (!metadata) {
-        console.log('setting metadata');
         subscription = urbitVisor.on('sse', ['metadata-update', 'associations'], (data: any) => {
           setMetadata(data);
           urbitVisor.off(subscription);
@@ -109,7 +108,6 @@ const Modal = () => {
 
         const setData = () => {
           urbitVisor.subscribe({ app: 'metadata-store', path: '/all' }).then(res => {
-            console.log(res);
             number = res.response;
           });
         };
@@ -137,7 +135,6 @@ const Modal = () => {
     if (isConnected) {
       const setData = () => {
         urbitVisor.subscribe({ app: 'herm', path: '/session//view' }).then(res => {
-          console.log(res);
           if (res.response == 'piggyback') {
             setTermSubscribed(true);
             number = res.subscriber;
@@ -154,18 +151,12 @@ const Modal = () => {
       if (isConnected) {
         Messaging.sendToBackground({ action: 'active_subscriptions' }).then(res => {
           activeSubs = res.filter((sub: any) => sub.subscription.app == 'herm');
-          console.log(activeSubs);
           if (activeSubs.length > 1) {
-            console.log(number);
             window.removeEventListener('message', handleHerm);
-            Messaging.sendToBackground({ action: 'remove_subscription', data: number }).then(res =>
-              console.log(res)
-            );
+            Messaging.sendToBackground({ action: 'remove_subscription', data: number });
           } else {
             window.removeEventListener('message', handleHerm);
-            urbitVisor
-              .unsubscribe(activeSubs[0].airlockID)
-              .then(res => console.log('unsubscribed terminal'));
+            urbitVisor.unsubscribe(activeSubs[0].airlockID);
           }
         });
       }
@@ -180,7 +171,6 @@ const Modal = () => {
 
   const handleHerm = useCallback(
     (message: any) => {
-      console.log(message);
       if (
         message.data.app == 'urbitVisorEvent' &&
         message.data.event.data &&
@@ -197,7 +187,6 @@ const Modal = () => {
 
   const handleMessage = (e: any) => {
     if (e.data == 'focus') {
-      console.log('focusing');
       rootRef.current.focus();
       if (selectedToInput) {
         rootRef.current.focus();
@@ -214,8 +203,6 @@ const Modal = () => {
 
   useEffect(() => {
     if (argPreview) {
-      console.log(selected, 'selected changed');
-
       setSelectedToInput(selected);
     }
   }, [selected]);
@@ -230,11 +217,10 @@ const Modal = () => {
 
   const handleConnection = () => {
     if (isConnected) {
-      console.log('connected');
+      return;
     } else {
       urbitVisor.isConnected().then(connected => {
         if (connected.response) {
-          console.log('setting connected');
           setIsConnected(true);
           setConnectShip(null);
         }
@@ -246,7 +232,6 @@ const Modal = () => {
     if (contextItems) {
       setSendCommand(true);
     } else {
-      console.log('selecting to input');
       setSelectedToInput(selected);
       setAirlockResponse(null);
     }
@@ -254,13 +239,11 @@ const Modal = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key == 'Escape') {
-      console.log('sending close');
       event.preventDefault();
       window.top.postMessage('close', '*');
     }
     if (isConnected) {
       if (event.key == 'Enter' && selectedToInput !== selected && !contextItems) {
-        console.log('selecting to input');
         event.preventDefault();
         handleSelectCurrentItem(selected);
       } else if (event.key == 'Enter' && selected == selectedToInput) {
@@ -276,7 +259,6 @@ const Modal = () => {
         event.preventDefault();
         setNextArg(true);
       } else if (event.key == 'Escape') {
-        console.log('sending close');
         event.preventDefault();
         window.top.postMessage('close', '*');
         setClearSelected(true);

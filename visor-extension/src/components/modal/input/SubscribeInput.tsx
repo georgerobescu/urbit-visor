@@ -32,16 +32,13 @@ const SubscribeInput = (props: InputProps) => {
     return () => {
       urbitVisor.unsubscribe(num);
       urbitVisor.off(subscription);
-      console.log('off sub at', num);
     };
   }, [props.selectedToInput, num]);
 
   useEffect(() => {
     if (app?.length) {
-      console.log('sending sub');
       const setSubData = () => {
         urbitVisor.subscribe({ app: app, path: path }).then(res => {
-          console.log('subscription sent', res);
           setNum(res.response);
         });
       };
@@ -51,7 +48,6 @@ const SubscribeInput = (props: InputProps) => {
 
   const handleRefSet = (refs: any) => {
     if (refs.length) {
-      console.log(refs);
       setApp(refs[0]);
       setPath(refs[1]);
     }
