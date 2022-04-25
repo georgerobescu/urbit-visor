@@ -31,9 +31,7 @@ const NotificationInput = (props: InputProps) => {
   useEffect(() => {
     if (url) {
       const data = { url: `${url}/apps/grid/leap/notifications` };
-      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-        res => console.log(res)
-      );
+      Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data });
       props.clearSelected(true);
     }
   }, [url]);

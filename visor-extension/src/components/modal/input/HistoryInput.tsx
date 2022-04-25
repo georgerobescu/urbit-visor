@@ -31,7 +31,6 @@ const HistoryInput = (props: InputProps) => {
     let i = true;
     if (i) {
       Messaging.sendToBackground({ action: 'get_command_history' }).then(res => {
-        console.log(res);
         let commandHistory: Command[] = [];
         res.commandHistory.forEach((item: { command: string; arguments: string[] }) => {
           let command = commands.find(
@@ -44,7 +43,6 @@ const HistoryInput = (props: InputProps) => {
 
           commandHistory.push(new_command);
         });
-        console.log(commandHistory);
         props.setCommands(commandHistory);
       });
       props.setArgPreview(true);

@@ -12,6 +12,8 @@ interface MenuOptionProps {
   commands: MenuItem[];
   contextItems: ContextMenuItem[];
   handleSelectCurrentItem: (menuItem: MenuItem) => void;
+  argPreview?: Boolean;
+  clearSelected: (clear: Boolean) => void;
 }
 
 const MenuOptions = (props: MenuOptionProps) => {
@@ -34,7 +36,6 @@ const MenuOptions = (props: MenuOptionProps) => {
   }, [props.firstSelected]);
 
   useEffect(() => {
-    console.log('got keydown');
     if (!props.keyDown) {
       return;
     } else if (

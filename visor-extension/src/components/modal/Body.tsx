@@ -10,6 +10,8 @@ interface BodyProps {
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
+  argPreview?: Boolean;
+  clearSelected: (clear: Boolean) => void;
   airlockResponse: any;
   firstSelected: Boolean;
   commands: MenuItem[];
@@ -22,6 +24,8 @@ const Body = (props: BodyProps) => {
       <Menu
         commands={props.commands}
         selected={props.selected}
+        argPreview={props.argPreview}
+        clearSelected={props.clearSelected}
         handleSelection={props.handleSelection}
         keyDown={props.keyDown}
         contextItems={props.contextItems}

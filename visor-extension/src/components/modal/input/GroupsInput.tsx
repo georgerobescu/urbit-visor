@@ -43,7 +43,6 @@ const GroupsInput = (props: InputProps) => {
 
   useEffect(() => {
     if (props.metadata) {
-      console.log(props.metadata);
       if (groups.length == 0) {
         const groups = Object.values(props.metadata)
           .filter(data => data['app-name'] == 'groups')
@@ -63,7 +62,6 @@ const GroupsInput = (props: InputProps) => {
   }, [props.metadata]);
 
   const handleInputChange = (change: any) => {
-    console.log('handleInputChange');
     if (change.target) {
       const inp = change.target.innerText.toLowerCase();
 
@@ -71,7 +69,7 @@ const GroupsInput = (props: InputProps) => {
         const filtered = groups.filter(group => group.title.toLowerCase().includes(inp));
 
         if (contextItems.length == filtered.length) {
-          console.log('same');
+          return;
         } else {
           setContextItems(filtered);
         }
@@ -96,13 +94,7 @@ const GroupsInput = (props: InputProps) => {
               ? `${url}/apps/escape/~landscape/ship/${props.selected.title}`
               : `${url}/apps/landscape/~landscape/ship/${props.selected.title}`,
         };
-        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-          res => {
-            if (isSubscribed) {
-              console.log(res);
-            }
-          }
-        );
+        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data });
         props.clearSelected(true);
       }
     }

@@ -8,6 +8,8 @@ interface MenuOptionProps {
   handleSelection: (command: MenuItem) => void;
   keyDown: React.KeyboardEvent;
   selected: MenuItem;
+  argPreview?: Boolean;
+  clearSelected: (clear: Boolean) => void;
   firstSelected: Boolean;
   commands: Command[];
   contextItems?: ContextMenuItem[];
@@ -16,7 +18,13 @@ interface MenuOptionProps {
 
 const Menu = (props: MenuOptionProps) => {
   return (
-    <div className="command-launcher-menu">
+    <div
+      className={
+        props.contextItems || props.argPreview
+          ? 'command-launcher-menu sub-menu'
+          : 'command-launcher-menu'
+      }
+    >
       <MenuOptions
         commands={props.commands}
         contextItems={props.contextItems}
@@ -25,7 +33,14 @@ const Menu = (props: MenuOptionProps) => {
         keyDown={props.keyDown}
         firstSelected={props.firstSelected}
         handleSelectCurrentItem={props.handleSelectCurrentItem}
+        argPreview={props.argPreview}
+        clearSelected={props.clearSelected}
       />
+      {props.contextItems || props.argPreview ? (
+        <button className="back-button" onClick={event => props.clearSelected(true)}>
+          <span className="back-arrow"></span>BACK
+        </button>
+      ) : null}
     </div>
   );
 };

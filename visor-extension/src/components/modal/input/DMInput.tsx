@@ -34,7 +34,6 @@ const DMInput = (props: InputProps) => {
 
   useEffect(() => {
     if (refs?.length) {
-      console.log(refs);
       if (ob.isValidPatp(refs)) {
         const data = {
           url:
@@ -42,16 +41,13 @@ const DMInput = (props: InputProps) => {
               ? `${url}/apps/escape/~landscape/messages/dm/${refs}`
               : `${url}/apps/landscape/~landscape/messages/dm/${refs}`,
         };
-        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data }).then(
-          res => console.log(res)
-        );
+        Messaging.relayToBackground({ app: 'command-launcher', action: 'route', data: data });
       } else
         props.airlockResponse({ type: 'internal', message: 'Please enter a valid ship name.' });
     }
   }, [refs]);
 
   const handleRefSet = (refs: any) => {
-    console.log(refs);
     if (refs.length) {
       if (refs[0].startsWith('~')) {
         setRefs(refs[0]);

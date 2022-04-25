@@ -14,13 +14,13 @@ export const DM: Command = {
   arguments: ['ship', 'message'],
   schema: [
     (props: any[]) =>
-      addDmMessage(props[0], checkSig(props[1][0].innerHTML), [{ text: props[2][1].innerHTML }]),
+      addDmMessage(props[0], checkSig(props[1][0].innerText), [{ text: props[2][1].innerText }]),
   ],
 };
-function checkSig(innerHTML: any): string {
-  if (innerHTML.startsWith('~')) {
-    return innerHTML;
+function checkSig(innerText: any): string {
+  if (innerText.startsWith('~')) {
+    return innerText;
   } else {
-    return '~' + innerHTML;
+    return '~' + innerText;
   }
 }
