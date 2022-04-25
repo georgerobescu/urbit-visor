@@ -62,6 +62,7 @@ function deletedWasActive(
 function messageListener() {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.app == 'urbit-visor-internal') handleInternalMessage(request, sender, sendResponse);
+    else if (sender.url == "chrome-extension://oadimaacghcacmfipakhadejgalcaepg/launcher.html") handleVisorCall(request, sender, sendResponse, 'extension')
     else if (request.app == 'urbitVisor') handleVisorCall(request, sender, sendResponse, 'website');
     else if (request.app == 'command-launcher')
       handleCommandLauncherCall(request, sender, sendResponse);
@@ -432,6 +433,7 @@ function checkPerms(
   sender: any,
   sendResponse: any
 ) {
+  console.log(callType, "calltype")
   const id: string = callType === 'extension' ? sender.id : sender.origin;
   const recipient = sender.tab ? sender.tab.id : sender.id;
   const extension = state.consumer_extensions.find(sumer => sumer.id === id);

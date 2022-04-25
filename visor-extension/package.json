@@ -1,6 +1,6 @@
 {
   "name": "urbit-visor",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -37,7 +37,7 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
-    "@dcspark/uv-core": "^0.3.1",
+    "@dcspark/uv-core": "^0.3.6",
     "@tlon/sigil-js": "^1.4.5",
     "@urbit/api": "^2.1.0",
     "@urbit/http-api": "^2.1.0",

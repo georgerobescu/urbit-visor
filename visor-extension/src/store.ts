@@ -55,7 +55,6 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
       const airlock = (get() as any).airlock;
       airlock.reset();
       const ships = await removeShip(ship);
-      console.log(ships);
       set(state => ({ ships: ships, activeShip: null, airlock: null, activeSubscriptions: [] }));
     } else {
       const ships = await removeShip(ship);
@@ -156,9 +155,7 @@ export const useStore = create<UrbitVisorState>((set, get) => ({
   },
   storeCommandHistory: async command => {
     const history = await storeCommandHistory(command);
-    console.log(history);
     const rest = get().commandHistory;
-    console.log(rest);
     set(state => ({ commandHistory: [history, ...rest] }));
   },
 }));
