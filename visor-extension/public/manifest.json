@@ -39,10 +39,10 @@
     },
     "command-launcher": {
       "suggested_key": {
-        "windows": "Ctrl+Period",
+        "windows": "Ctrl+Comma",
         "mac": "Command+Comma",
-        "chromeos": "Ctrl+Period",
-        "linux": "Ctrl+Period"
+        "chromeos": "Ctrl+Comma",
+        "linux": "Ctrl+Comma"
       },
       "description": "UV command launcher"
     }
