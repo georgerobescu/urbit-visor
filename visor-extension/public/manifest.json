@@ -40,7 +40,7 @@
     "command-launcher": {
       "suggested_key": {
         "windows": "Ctrl+Period",
-        "mac": "Command+Period",
+        "mac": "Command+Comma",
         "chromeos": "Ctrl+Period",
         "linux": "Ctrl+Period"
       },

@@ -147,8 +147,8 @@ const SelectionPreview = ({ selected = Welcome }: DisplayProps) => {
           once you have selected a command.
         </p>
         <p className="tab-description">
-          Press <span className="tab-symbol">Ctrl + .</span> hotkey to open the Visor Command
-          Launcher from anywhere.
+          Press <span className="tab-symbol">Ctrl + ,</span> hotkey to open the Visor Command
+          Launcher from anywhere (<span className="tab-symbol">⌘ + ,</span> on macOS).
         </p>
       </div>
     </div>
