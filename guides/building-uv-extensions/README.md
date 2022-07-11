@@ -823,7 +823,7 @@ Alternatively, as we move into a world more and more dominated by blockchain, yo
 
 These are just a couple examples of novel experiences that Urbit Visor enables via UV Extensions, and we at dcSpark are very excited to have built the infrastructure, and now be producing the guides, to enable developers to start building the UV ecosystem.
 
-We look forward to seeing what you the developer community will build, and are always interested to hear about what you are working on in the UV ecosystem. Please feel free to drop by `~havbex/dcspark` and share your latest projects with us.
+We look forward to seeing what you the developer community will build, and are always interested to hear about what you are working on in the UV ecosystem.
 
 ### Credits
 
