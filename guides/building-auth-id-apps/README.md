@@ -26,9 +26,7 @@ If you're excited by the possibilities, and you very well should be, in the foll
 
 ### Installation
 
-First of all go to your Urbit terminal, either `dojo` or the web terminal interface, and run the following command to install the agent:
-
-`|install ~dister-dozzod-havbex %auth-id`
+First of all you will need to [install %auth-id](https://github.com/dcSpark/authenticate-with-urbit-id#installation).
 
 After a short period, you will have the agent installed on your ship. The following message will be printed at the terminal:
 
@@ -375,7 +373,7 @@ Back in the frontend, we'll handle the responses from the `check` endpoint of ou
 
 And that's it! Try it out, and you have a fully functional Urbit authentication server running. No more relying on external services to secure your application. While our code got more complicated than usual, juggling three elements: an Urbit server, a web frontend and a Node backend, the code for each is very simple and straightforward, which is what Urbit is all about: owning our code and infrastructure, and being able to understand it fully.
 
-The full code for this `auth-id` as well as this demo application is public at [our Github repo](https://github.com/dcspark/urbit-visor), so please go check it out and try it by yourself. You can also reach us at our Urbit group, `havbex/dcspark` and [Discord](https://discord.gg/dcspark) for any doubts or suggestions.
+The full code for this `auth-id` as well as this demo application is public at [our Github repo](https://github.com/dcspark/urbit-visor), so please go check it out and try it by yourself.
 
 
 #### Credits
